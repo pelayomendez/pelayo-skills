@@ -1,0 +1,21 @@
+{
+  "name": "pelayomendez",
+  "owner": {
+    "name": "Pelayo Méndez",
+    "url": "https://github.com/pelayomendez"
+  },
+  "description": "Pelayo Méndez's agent skills, as an installable Claude Code plugin.",
+  "plugins": [
+    {
+      "name": "pelayo-skills",
+      "source": "./",
+      "description": "Agent skills for high-signal engineering work — communication altitude, and more to come.",
+      "category": "engineering",
+      "keywords": [
+        "engineering",
+        "skills",
+        "communication"
+      ]
+    }
+  ]
+}
