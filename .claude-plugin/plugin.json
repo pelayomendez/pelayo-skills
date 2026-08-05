@@ -1,0 +1,20 @@
+{
+  "name": "pelayo-skills",
+  "version": "0.1.0",
+  "description": "Agent skills for high-signal engineering work — starting with communication altitude: why, what changed, impact, next step.",
+  "author": {
+    "name": "Pelayo Méndez",
+    "url": "https://github.com/pelayomendez"
+  },
+  "repository": "https://github.com/pelayomendez/pelayo-skills",
+  "license": "MIT",
+  "keywords": [
+    "engineering",
+    "skills",
+    "communication",
+    "reporting"
+  ],
+  "skills": [
+    "./skills/communication/high-level-communication"
+  ]
+}
