@@ -1,6 +1,6 @@
 ---
 name: high-level-communication
-description: "Communicate like a senior engineer talking to another senior engineer — lead with why, what changed, impact and next step. Use when reporting progress, summarizing completed work, describing a changeset, writing a PR or code-review description, or when the user asks what changed, for a status update, or for a summary."
+description: "Communicate like a senior engineer speaking to another senior engineer. Organize updates by concepts and outcomes, not files or implementation details. Lead with why, what changed, impact, trade-offs, risks, and next steps. Use for implementation updates, plans, investigations, architectural decisions, code reviews, PR/MR descriptions, handoffs, root-cause analyses, and whenever summarizing technical work or progress."
 ---
 
 # High-Level Communication
