@@ -1,26 +1,30 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Validates every skill in this repo against the conventions in
-# .agents/invocation.md. Catches the failure modes that are silent at runtime:
-# a description that isn't strict YAML, a name that drifts from its directory,
-# a missing agents/openai.yaml, invocation mode out of sync between harnesses,
-# and a skill missing from .claude-plugin/plugin.json.
+# Validates this repo's two artifact kinds against .agents/invocation.md.
+#
+# Skills — the failure modes that are silent at runtime: a description that
+# isn't strict YAML, a name that drifts from its directory, a missing
+# agents/openai.yaml, invocation mode out of sync between harnesses, a skill
+# missing from .claude-plugin/plugin.json.
+#
+# Instructions — imported verbatim into a global memory file, so they must NOT
+# carry YAML frontmatter (it would land in context as literal noise), must lead
+# with an H1, and must stay short enough to justify permanent context cost.
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 exec python3 - "$REPO" <<'PY'
 import json, sys, pathlib, yaml
 
 repo = pathlib.Path(sys.argv[1])
-errors, checked = [], 0
+errors = []
+skills_checked = instructions_checked = 0
 
-registered = {
-    (repo / p.lstrip("./")).resolve()
-    for p in json.loads((repo / ".claude-plugin/plugin.json").read_text())["skills"]
-}
+plugin = json.loads((repo / ".claude-plugin/plugin.json").read_text())
+registered = {(repo / p.lstrip("./")).resolve() for p in plugin.get("skills", [])}
 
 for skill_md in sorted(repo.glob("skills/**/SKILL.md")):
-    checked += 1
+    skills_checked += 1
     d = skill_md.parent
     rel = skill_md.relative_to(repo)
     text = skill_md.read_text()
@@ -65,11 +69,29 @@ for skill_md in sorted(repo.glob("skills/**/SKILL.md")):
     if d.resolve() not in registered:
         errors.append(f"{rel}: not registered in .claude-plugin/plugin.json")
 
+MAX_LINES = 80
+
+for doc in sorted(repo.glob("instructions/*.md")):
+    instructions_checked += 1
+    rel = doc.relative_to(repo)
+    text = doc.read_text()
+
+    if text.startswith("---\n"):
+        errors.append(f"{rel}: has YAML frontmatter — instructions are imported verbatim, strip it")
+    if not text.lstrip().startswith("# "):
+        errors.append(f"{rel}: should open with an H1 heading")
+    n = len(text.splitlines())
+    if n > MAX_LINES:
+        errors.append(f"{rel}: {n} lines — over the {MAX_LINES}-line budget for always-on context")
+
+if not skills_checked and not instructions_checked:
+    errors.append("repo contains neither skills nor instructions")
+
 if errors:
-    print(f"✗ {len(errors)} problem(s) across {checked} skill(s):\n", file=sys.stderr)
+    print(f"✗ {len(errors)} problem(s):\n", file=sys.stderr)
     for e in errors:
         print(f"  {e}", file=sys.stderr)
     sys.exit(1)
 
-print(f"✓ {checked} skill(s) OK")
+print(f"✓ {skills_checked} skill(s), {instructions_checked} instruction(s) OK")
 PY
