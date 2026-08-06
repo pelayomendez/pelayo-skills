@@ -2,14 +2,15 @@
   "name": "pelayo-skills",
   "version": "0.1.0",
   "private": true,
-  "description": "Pelayo Méndez's agent skills for real engineering",
+  "description": "Pelayo Méndez's agent instructions and skills for real engineering",
   "repository": {
     "type": "git",
     "url": "https://github.com/pelayomendez/pelayo-skills"
   },
   "license": "MIT",
   "scripts": {
-    "check": "./scripts/check-skills.sh",
-    "list": "./scripts/list-skills.sh"
+    "check": "./scripts/check.sh",
+    "list": "./scripts/list.sh",
+    "install": "./scripts/install-instructions.sh"
   }
 }
