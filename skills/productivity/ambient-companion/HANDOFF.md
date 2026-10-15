@@ -16,8 +16,8 @@ Copy to `.companion/handoff-<YYYY-MM-DD>.md`. Keep it short enough to read in tw
 ## Event sources and triggers
 | Source | Trigger | How to re-arm |
 |---|---|---|
-| <repo / branch> | script loop, 15 min | `bash scripts/watch.sh start` |
-| <pipeline for SHA> | event wait | Monitor on the pipeline id |
+| <repo / branch> | watch.sh, 900 s | in the background: `<skill-dir>/scripts/watch.sh 900 git ls-remote origin refs/heads/main` |
+| <pipeline for SHA> | event wait | wait on the pipeline id for that SHA |
 
 ## State
 | Item | Stage | Owner | Evidence | Next step |

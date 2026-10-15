@@ -10,7 +10,7 @@
 #   watch.sh <interval-seconds> <command> [args...]
 # Examples:
 #   watch.sh 300 git ls-remote origin refs/heads/main
-#   watch.sh 120 glab mr view 42 -F json --jq .state
+#   watch.sh 120 sh -c 'glab mr view 42 -F json | jq -r .state'
 #
 # Writes a heartbeat to $WATCH_HEARTBEAT (default .companion/heartbeat) on
 # every poll, so a stalled watcher is visible. Exits 1 if the command fails
@@ -22,16 +22,22 @@ set -uo pipefail
 interval="${1:?usage: watch.sh <interval-seconds> <command> [args...]}"
 shift
 [ $# -gt 0 ] || { echo "watch.sh: no command given" >&2; exit 2; }
+case "$interval" in
+  ''|*[!0-9]*|0) echo "watch.sh: interval must be a positive whole number of seconds" >&2; exit 2 ;;
+esac
 
 heartbeat="${WATCH_HEARTBEAT:-.companion/heartbeat}"
-mkdir -p "$(dirname "$heartbeat")"
+if ! { mkdir -p "$(dirname "$heartbeat")" && : > "$heartbeat"; } 2>/dev/null; then
+  echo "watch.sh: cannot write heartbeat at $heartbeat" >&2
+  exit 2
+fi
 
 baseline=$("$@" 2>/dev/null) || { echo "watch.sh: command failed on first run: $*" >&2; exit 1; }
 failures=0
 
 while true; do
   sleep "$interval"
-  date -u +"%Y-%m-%dT%H:%M:%SZ $*" > "$heartbeat"
+  printf '%s %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*" > "$heartbeat"
   if current=$("$@" 2>/dev/null); then
     failures=0
     if [ "$current" != "$baseline" ]; then
