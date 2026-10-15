@@ -12,11 +12,10 @@
     "engineering",
     "skills",
     "communication",
-    "reporting",
-    "agents",
-    "orchestration"
+    "reporting"
   ],
   "skills": [
-    "./skills/productivity/ambient-companion"
+    "./skills/productivity/ambient-companion",
+    "./skills/workflow/night-shift"
   ]
 }
