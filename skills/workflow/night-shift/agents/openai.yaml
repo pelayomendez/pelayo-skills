@@ -1,0 +1,3 @@
+interface:
+  display_name: "Night Shift"
+  short_description: "Run an unattended overnight loop that takes a ticket queue through worker, review, smoke, MR and merge"

@@ -31,9 +31,11 @@ Open a new session for the import to take effect.
 
 ## Skills
 
-### Productivity — user-invoked
+### Workflow — model-invoked
 
-- **[ambient-companion](./skills/productivity/ambient-companion/SKILL.md)** — A day-long companion session that watches your work's event streams, keeps workers moving, and brings you only the decisions. Charter of alone / ask first / never, a handoff file across sessions, and a model-free watcher script so idle hours cost no tokens.
+- **[night-shift](./skills/workflow/night-shift/SKILL.md)** — Unattended orchestrator run while you're away: a decision round up front, then a self-paced loop that takes tickets through worker, verify, review, smoke, MR and merge, plus backend, package and deploy watches, ending in a morning report. Configure paths, tracker transitions and watched repos once per workspace.
+
+Install:
 
 ```bash
 npx skills@latest add pelayomendez/pelayo-skills
