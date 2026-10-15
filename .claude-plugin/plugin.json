@@ -1,6 +1,6 @@
 {
   "name": "pelayo-skills",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Always-on agent instructions and skills for high-signal engineering work — communication altitude: why, what changed, impact, trade-offs, risks, next steps.",
   "author": {
     "name": "Pelayo Méndez",
@@ -12,7 +12,11 @@
     "engineering",
     "skills",
     "communication",
-    "reporting"
+    "reporting",
+    "agents",
+    "orchestration"
   ],
-  "skills": []
+  "skills": [
+    "./skills/productivity/ambient-companion"
+  ]
 }
