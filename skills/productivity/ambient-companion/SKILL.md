@@ -15,8 +15,8 @@ State lives in `.companion/` at the root of the workspace you run from: the date
 Every action falls in one of three tiers. The human sets them; write each into the handoff with the sentence that set it.
 
 - **Alone**: reversible, internal or verifiable work. Spawn and watch workers, verify, review, keep the tracker consistent, open a change request, stack work behind a blocker, and in an unattended run make provisional product calls that are reversible and logged for the report.
-- **Ask first**: anything published under the human's name (comments, posts, descriptions), anything touching another team's system, destructive cleanup. Asking means showing the exact text or action and getting an OK for that item, one item at a time; an OK for one point covers only that point.
-- **Never**: merge or release, unless the human authorised it for this run and the head revision is green, reviewed and checked; force-push; rewriting shared docs; installing software; stopping or deleting anything you did not start; starting new work from a watch tick.
+- **Ask first**: anything published under the human's name (comments, posts, descriptions), anything touching another team's system, destructive cleanup, and a merge or release, which needs the human's go for this run and a head revision that is green, reviewed and checked. Asking means showing the exact text or action and getting an OK for that item, one item at a time; an OK for one point covers only that point.
+- **Never**: force-push; rewriting shared docs; installing software; stopping or deleting anything you did not start; starting new work from a watch tick.
 
 When an action is not clearly in a tier, it is _ask first_.
 

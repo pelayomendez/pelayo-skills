@@ -6,7 +6,7 @@ Read before arming watches or spawning a worker, and whenever something in the r
 
 Cheapest first. Use the lowest rung that works for each source.
 
-1. **Script loop, no model.** For anything mechanical: new commits on a branch, MR state, a package version. It writes a heartbeat and a state file. Run it as a background command that exits when it finds a change: the exit is what wakes the session. [`scripts/watch.sh`](scripts/watch.sh) does exactly this for any command whose output you want to watch. In Claude Code: a background Bash command, or a desktop scheduled task.
+1. **Script loop, no model.** For anything mechanical: new commits on a branch, a change request's state, a package version. It writes a heartbeat and a state file. Run it as a background command that exits when it finds a change: the exit is what wakes the session. [`scripts/watch.sh`](scripts/watch.sh) does exactly this for any command whose output you want to watch. In Claude Code: a background Bash command, or a desktop scheduled task.
 2. **Event wait.** A background process that returns when something reaches a terminal state: a worker exits, the pipeline for a given SHA finishes. The main wake signal for in-flight work. In Claude Code: Monitor, or a background command.
 3. **Self-paced loop.** A judgement pass for unattended runs, with a long fallback wake inside the prompt-cache lifetime (under an hour). The tick prompt is self-contained and re-reads the handoff. In Claude Code: `/loop` without an interval.
 4. **Scheduled prompt.** Only for a low-frequency check that needs interpretation. If the scheduler dies with the session, note when it expires.
