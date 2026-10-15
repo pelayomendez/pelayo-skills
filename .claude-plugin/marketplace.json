@@ -9,12 +9,14 @@
     {
       "name": "pelayo-skills",
       "source": "./",
-      "description": "Agent guidance for high-signal engineering work — communication altitude, and more to come.",
+      "description": "Agent guidance for high-signal engineering work — communication altitude, and a day-long ambient companion session.",
       "category": "engineering",
       "keywords": [
         "engineering",
         "skills",
-        "communication"
+        "communication",
+        "agents",
+        "orchestration"
       ]
     }
   ]

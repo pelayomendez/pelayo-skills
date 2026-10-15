@@ -31,7 +31,9 @@ Open a new session for the import to take effect.
 
 ## Skills
 
-None yet — `high-level-communication` began as a model-invoked skill and moved to `instructions/` once it turned out to be something I always want, not something situational. When a skill lands here, both install paths below start working.
+### Productivity — user-invoked
+
+- **[ambient-companion](./skills/productivity/ambient-companion/SKILL.md)** — A day-long companion session that watches your work's event streams, keeps workers moving, and brings you only the decisions. Charter of alone / ask first / never, a handoff file across sessions, and a model-free watcher script so idle hours cost no tokens.
 
 ```bash
 npx skills@latest add pelayomendez/pelayo-skills
