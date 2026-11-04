@@ -1,0 +1,139 @@
+<!doctype html>
+<!--
+  Release banner template. Self-contained: system fonts, inline CSS and SVG, no network.
+  Parameters (URL query string, all optional):
+    title     product or feature name           e.g. Orbit
+    version   shown in the chip                 e.g. v2.4
+    subtitle  one short line                    e.g. Faster sharing for teams
+    accent    hex colour without '#'            e.g. 6d5efc
+    layout    banner (default, ~1800x500, calm centre for the Teams headline)
+              inline (16:9, 1600x900, title centred)
+  Example:
+    file:///…/banner.html?title=Orbit&version=v2.4&subtitle=Faster%20sharing&accent=6d5efc
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Release banner</title>
+<style>
+  :root { --accent: #6d5efc; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    color: #fff;
+    background:
+      radial-gradient(120% 140% at 0% 0%, color-mix(in oklab, var(--accent) 70%, #000) 0%, transparent 55%),
+      radial-gradient(110% 130% at 100% 100%, color-mix(in oklab, var(--accent) 55%, #001) 0%, transparent 60%),
+      linear-gradient(115deg, color-mix(in oklab, var(--accent) 30%, #070812) 0%, #090a16 50%, color-mix(in oklab, var(--accent) 22%, #070812) 100%);
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+  }
+  svg.deco { position: absolute; pointer-events: none; }
+  svg.arcs { right: 0; top: 0; height: 100%; width: auto; aspect-ratio: 1; }
+  svg.bars { left: 0; bottom: 0; height: 60%; width: auto; aspect-ratio: 2; }
+  .grain {
+    position: absolute; inset: 0; opacity: .5;
+    background-image: radial-gradient(rgba(255,255,255,.07) 1px, transparent 1px);
+    background-size: 22px 22px;
+    -webkit-mask-image: linear-gradient(90deg, #000 0%, transparent 30%, transparent 70%, #000 100%);
+            mask-image: linear-gradient(90deg, #000 0%, transparent 30%, transparent 70%, #000 100%);
+  }
+  .brand {
+    position: absolute; left: 5.5vw; top: 13vh;
+    display: flex; align-items: center; gap: 1.1vw;
+  }
+  .mark {
+    width: 2.6vw; height: 2.6vw; border-radius: .7vw;
+    background: linear-gradient(135deg, #fff 0%, color-mix(in oklab, var(--accent) 45%, #fff) 100%);
+    box-shadow: 0 0 2.4vw color-mix(in oklab, var(--accent) 70%, transparent);
+    display: grid; place-items: center;
+    color: color-mix(in oklab, var(--accent) 75%, #000);
+    font-size: 1.5vw; font-weight: 750;
+  }
+  .title { font-size: 2.3vw; font-weight: 650; letter-spacing: -.01em; }
+  .chip {
+    font-size: 1.15vw; font-weight: 600; letter-spacing: .02em;
+    padding: .35vw .9vw; border-radius: 99vw;
+    background: color-mix(in oklab, var(--accent) 35%, transparent);
+    border: 1px solid color-mix(in oklab, var(--accent) 60%, #fff);
+    font-variant-numeric: tabular-nums;
+  }
+  .subtitle {
+    position: absolute; right: 5.5vw; bottom: 13vh;
+    font-size: 1.25vw; font-weight: 500; opacity: .78; max-width: 30vw; text-align: right;
+  }
+  .chip:empty, .subtitle:empty { display: none; }
+
+  /* 16:9 inline image: no overlay, so the title can take the centre. */
+  body.inline .brand {
+    left: 50%; top: 50%; transform: translate(-50%, -62%);
+    flex-direction: column; gap: 2.2vw; text-align: center;
+  }
+  body.inline .mark { width: 5vw; height: 5vw; border-radius: 1.3vw; font-size: 2.9vw; }
+  body.inline svg.arcs { height: 70%; }
+  body.inline svg.bars { height: 40%; }
+  body.inline .title { font-size: 5.6vw; font-weight: 700; letter-spacing: -.02em; }
+  body.inline .chip { font-size: 1.7vw; padding: .5vw 1.4vw; }
+  body.inline .subtitle {
+    left: 50%; right: auto; bottom: 22vh; transform: translateX(-50%);
+    max-width: 70vw; text-align: center; font-size: 2.1vw;
+  }
+  body.inline .grain {
+    -webkit-mask-image: radial-gradient(closest-side, transparent 40%, #000 100%);
+            mask-image: radial-gradient(closest-side, transparent 40%, #000 100%);
+  }
+</style>
+</head>
+<body>
+  <svg class="deco arcs" viewBox="0 0 600 600" aria-hidden="true">
+    <defs>
+      <linearGradient id="ln" x1="0" y1="1" x2="1" y2="0">
+        <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+        <stop offset=".6" stop-color="#fff" stop-opacity=".45"/>
+        <stop offset="1" stop-color="#fff" stop-opacity=".9"/>
+      </linearGradient>
+      <radialGradient id="orb">
+        <stop offset="0" style="stop-color:var(--accent);stop-opacity:.85"/>
+        <stop offset="1" style="stop-color:var(--accent);stop-opacity:0"/>
+      </radialGradient>
+    </defs>
+    <circle cx="560" cy="40" r="260" fill="url(#orb)"/>
+    <g fill="none" stroke="url(#ln)" stroke-width="1.6">
+      <circle cx="560" cy="40" r="150"/>
+      <circle cx="560" cy="40" r="230" stroke-opacity=".75"/>
+      <circle cx="560" cy="40" r="310" stroke-opacity=".5"/>
+      <circle cx="560" cy="40" r="390" stroke-opacity=".3"/>
+    </g>
+    <circle cx="331" cy="150" r="7" fill="#fff"/>
+    <circle cx="420" cy="263" r="4.5" fill="#fff" opacity=".7"/>
+    <circle cx="260" cy="300" r="3" fill="#fff" opacity=".45"/>
+  </svg>
+  <svg class="deco bars" viewBox="0 0 600 300" aria-hidden="true">
+    <g fill="#fff" transform="rotate(-20 0 300)">
+      <rect x="-40" y="190" width="460" height="12" rx="6" opacity=".16"/>
+      <rect x="-40" y="225" width="340" height="12" rx="6" opacity=".11"/>
+      <rect x="-40" y="260" width="220" height="12" rx="6" opacity=".07"/>
+      <rect x="40" y="150" width="150" height="12" rx="6" style="fill:var(--accent)" opacity=".9"/>
+    </g>
+  </svg>
+  <div class="grain"></div>
+  <div class="brand">
+    <div class="mark" id="mark"></div>
+    <div class="title" id="title">Product</div>
+    <div class="chip" id="version"></div>
+  </div>
+  <div class="subtitle" id="subtitle"></div>
+<script>
+  const q = new URLSearchParams(location.search);
+  const accent = (q.get('accent') || '').replace(/[^0-9a-fA-F]/g, '');
+  if (accent.length === 6 || accent.length === 3) document.documentElement.style.setProperty('--accent', '#' + accent);
+  document.getElementById('title').textContent = q.get('title') || 'Product';
+  document.getElementById('mark').textContent = (q.get('title') || 'P').trim().charAt(0).toUpperCase();
+  document.getElementById('version').textContent = q.get('version') || '';
+  document.getElementById('subtitle').textContent = q.get('subtitle') || '';
+  if (q.get('layout') === 'inline') document.body.classList.add('inline');
+  document.title = (q.get('title') || 'Release') + ' banner';
+</script>
+</body>
+</html>

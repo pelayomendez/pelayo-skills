@@ -1,0 +1,3 @@
+interface:
+  display_name: "Release announce"
+  short_description: "Turn a release into a Teams announcement: headline, paste-safe HTML body and a rendered banner"

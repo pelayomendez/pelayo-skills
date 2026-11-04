@@ -35,6 +35,10 @@ Open a new session for the import to take effect.
 
 - **[ambient-companion](./skills/productivity/ambient-companion/SKILL.md)** — A day-long companion session that watches your work's event streams, keeps workers moving, and brings you only the decisions. Charter of alone / ask first / never, a handoff file across sessions, and a model-free watcher script so idle hours cost no tokens.
 
+### Workflow — model-invoked
+
+- **[release-announce](./skills/workflow/release-announce/SKILL.md)** — Turn a release (tag, MR/PR, changelog or notes) into a Microsoft Teams announcement: a short reader-first post as paste-safe HTML and Markdown, a rendered banner, and a clipboard script so Cmd+V keeps the formatting.
+
 ```bash
 npx skills@latest add pelayomendez/pelayo-skills
 ```
