@@ -1,6 +1,6 @@
 {
   "name": "pelayo-skills",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Small skills for running coding agents, and flows that chain them: an always-on reporting style, a permission charter, backlog pruning and ordering, claim checks by a fresh agent, long-running companion and overnight sessions, and upkeep for the setup itself.",
   "author": {
     "name": "Pelayo Méndez",
@@ -12,7 +12,6 @@
     "agents",
     "backlog",
     "communication",
-    "contracts",
     "engineering",
     "flows",
     "maintenance",
@@ -20,7 +19,6 @@
     "skills"
   ],
   "skills": [
-    "./skills/engineering/contract-audit",
     "./skills/flows/backlog",
     "./skills/maintenance/reap-procs",
     "./skills/maintenance/tidy",
