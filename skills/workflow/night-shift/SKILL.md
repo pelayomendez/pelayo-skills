@@ -31,7 +31,7 @@ Read the newest handoff and the memory index first. Then:
    - **Queue.** Give the order and ask for extra tickets (follow-ups, bugs from today's smokes).
    - **Package bumps** allowed tonight, and whether a new release of a shared UI package may be picked up.
    - Any open product call a queued ticket depends on. Better to ask now than to guess later.
-2. **Record tonight's permissions** with the `charter` skill, scoped to `night run <date>` with `until` the next morning: merge authorization (which repos), package bumps, and any provisional product calls you may take alone. Answers that aren't permissions (the queue, a product call they settled) go in the handoff.
+2. **Record tonight's permissions** with the `charter` skill, scoped to `night run <date>` with `until` a time the next morning (e.g. `09:00`): merge authorization (which repos), package bumps, and any provisional product calls you may take alone. Answers that aren't permissions (the queue, a product call they settled) go in the handoff.
 3. **Record the decisions** in the handoff under `## Night run <date> → <date+1> (user decisions ~HH:MM)`. Put the queue there as one line (`A → B → C`). Take timestamps from `date`; don't estimate them (one night the log's clock ran an hour ahead).
 4. **Keep the machine awake** (macOS): `( caffeinate -ims -t 36000 & echo $! > <tasks>/caffeinate.pid )`. The display may still sleep.
 5. **Backend watch cron.** Crons are session-only, so re-create it every night: an hourly cron running `<tasks>/backend-merge-watch.sh`. Prompt rules: always report, even with no merges. For each merge, look up the ticket key and name the frontend tickets it unblocks. For deployer merges, give the wizard impact. Never start a worker from the watch.
@@ -80,7 +80,7 @@ Take one ticket at a time per project, in queue order. The whole ticket is done 
 Each rule comes from something that went wrong on a real run.
 
 - **Tracker and GitLab comments.** Draft each one, show the exact text, and post it only after an explicit OK for that item. Tonight, save drafts in the handoff. "Explain and post" still means one item at a time.
-- **Merging** happens only under tonight's grant in the charter and all three gates. Without it, the default is never merge.
+- **Merging** happens only under tonight's grant in the charter and all three gates. Without that grant nothing merges tonight: nobody is there to ask, so leave the MRs ready for the morning.
 - **Pushes are fast-forward only.** Commits are new commits: no amend, no rebase of pushed work, no stash, no `git add -A`.
 - **Product calls.** When the user isn't there to decide, take the option closest to their prior decisions. Log it under "Decisions taken on your behalf", and build it so it can be reversed.
 - **Kill a mistaken worker fast.** A misread "ready" once started a bump worker; it was stopped within a minute. Check `git status` shows no changes, keep the prompt for later, and report it.

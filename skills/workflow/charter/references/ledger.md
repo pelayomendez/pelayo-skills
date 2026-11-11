@@ -8,7 +8,7 @@ One Markdown file, three sections, one grant per line:
 
 - **action**: a verb phrase the agent can match against what it is about to do ("merge reviewed PRs, sha-pinned", "post comments on the tracker").
 - **scope**: `everywhere`, a repo (`owner/repo`), a set (`work repos`, `personal repos`), a run (`night run 2026-11-12`), an epic or a project. Define any set at the top of the file.
-- **until**: optional. Run-scoped grants always carry one.
+- **until**: optional. A date alone runs to the end of that day; run-scoped grants always carry a time (`until 2026-11-13 09:00`).
 - the quote: the sentence the user said. A line without one was not granted; it is a default the user accepted when the file was created.
 
 ## Default ledger
@@ -37,5 +37,4 @@ Sets: (define your own, e.g. `work repos: org/a, org/b`)
 - install software (brew, global npm/pip) · everywhere · since <today>
 - stop another session's processes, or kill by pattern (pkill/killall) · everywhere · since <today>
 - delete temp or home roots · everywhere · since <today>
-- start new work from a watch tick · everywhere · since <today>
 ```
