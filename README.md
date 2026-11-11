@@ -10,6 +10,8 @@ Agent instructions and skills I use for real engineering work with coding agents
 | [ambient-companion](./skills/workflow/ambient-companion/SKILL.md) | A day-long companion session that watches your work's event streams, keeps workers moving, and brings you only the decisions. | **You type** `/ambient-companion` |
 | [contract-audit](./skills/engineering/contract-audit/SKILL.md) | Find gaps in the data contract between a producer repo and a consumer repo: key drift, ignored variants, conflicting defaults, absence semantics. | **Agent picks it up** when relevant, or you type it |
 | [night-shift](./skills/workflow/night-shift/SKILL.md) | An unattended overnight run: a decision round up front, then a loop that takes a ticket queue through worker, review, smoke, MR and merge, ending in a morning report. | **Agent picks it up** when relevant, or you type it |
+| [reap-procs](./skills/maintenance/reap-procs/SKILL.md) | Find what is eating the machine after agent sessions — orphaned test runs, dev servers, automation Chrome, old daemons — say whose each one is, and stop only what nobody owns. | **Agent picks it up** when relevant, or you type it |
+| [tidy](./skills/maintenance/tidy/SKILL.md) | A weekly and monthly tune-up of your agent setup: retro on the sessions that went badly, prune memory, audit steering files, skills, permissions and hooks. A session-start hook reminds you when a pass is due. | **You type** `/tidy` |
 
 The three ways a thing can start are the main design decision in this repo:
 
@@ -32,7 +34,9 @@ As a Claude Code plugin, a read-only bundle you subscribe to:
 /plugin install pelayo-skills@pelayomendez
 ```
 
-Or with [skills.sh](https://skills.sh), which copies them into your project so you can hack on them:
+The plugin also installs the one hook `tidy` needs: a session-start reminder that prints a line only when a pass is due (`TIDY_REMIND=0` silences it).
+
+Or with [skills.sh](https://skills.sh), which copies them into your project so you can hack on them (no hook; install one way, not both, or you get every skill twice):
 
 ```bash
 npx skills@latest add pelayomendez/pelayo-skills
@@ -53,6 +57,7 @@ This symlinks each file in `instructions/` into `~/.claude/` and appends an `@im
 ```
 instructions/            always-on instructions
 skills/engineering/      code and repo analysis
+skills/maintenance/      upkeep of the agent setup and the machine
 skills/workflow/         long-running sessions that drive other agents
 ```
 

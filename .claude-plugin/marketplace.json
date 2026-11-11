@@ -9,7 +9,7 @@
     {
       "name": "pelayo-skills",
       "source": "./",
-      "description": "Agent instructions and skills for engineering with coding agents: an always-on reporting style, a cross-repo data-contract audit, and long-running companion and overnight sessions.",
+      "description": "Agent instructions and skills for engineering with coding agents: an always-on reporting style, a cross-repo data-contract audit, long-running companion and overnight sessions, and upkeep for the setup itself.",
       "category": "engineering",
       "keywords": [
         "engineering",

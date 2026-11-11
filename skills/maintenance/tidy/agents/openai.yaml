@@ -1,0 +1,5 @@
+interface:
+  display_name: "Tidy"
+  short_description: "Regular tune-up of your agent setup: retro, memory pruning, steering-file and skill audit"
+policy:
+  allow_implicit_invocation: false
