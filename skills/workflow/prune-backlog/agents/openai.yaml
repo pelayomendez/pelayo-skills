@@ -1,0 +1,3 @@
+interface:
+  display_name: "Prune backlog"
+  short_description: "Propose which tickets can close, each with evidence, never by age alone"

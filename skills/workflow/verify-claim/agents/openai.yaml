@@ -1,0 +1,3 @@
+interface:
+  display_name: "Verify claim"
+  short_description: "Check an agent's claim with a fresh subagent that sees only the claim and its evidence"
