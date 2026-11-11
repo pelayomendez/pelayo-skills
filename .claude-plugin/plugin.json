@@ -1,7 +1,7 @@
 {
   "name": "pelayo-skills",
   "version": "0.9.0",
-  "description": "Small skills for running coding agents, and flows that chain them: an always-on reporting style, a permission charter, backlog pruning and ordering, claim checks by a fresh agent, worker briefs, watches and handoffs, a day companion and a night shift built from them, and upkeep for the setup itself.",
+  "description": "Skills for running your agent factory: plan the work (backlog), hand it out (delegate), check it (verify-claim), watch the line (watch), hand over shifts (handoff), keep permissions in a charter and the setup tuned. Small units, chained into flows.",
   "author": {
     "name": "Pelayo Méndez",
     "url": "https://github.com/pelayomendez"
@@ -9,6 +9,8 @@
   "repository": "https://github.com/pelayomendez/pelayo-skills",
   "license": "MIT",
   "keywords": [
+    "agent-factory",
+    "agent-operations",
     "agents",
     "backlog",
     "communication",

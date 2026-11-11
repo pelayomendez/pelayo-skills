@@ -2,7 +2,20 @@
 
 # pelayo-skills
 
-Agent instructions and skills I use for real engineering work with coding agents. Small, composable, model-agnostic. [Landing page](https://pelayomendez.github.io/pelayo-skills/).
+Skills for running your agent factory: plan the work, hand it out, check it, keep the line running. [Landing page](https://pelayomendez.github.io/pelayo-skills/).
+
+Matt Pocock's [skills](https://github.com/mattpocock/skills) are the machines: how an agent designs, tests and reviews code. These run the plant around them:
+
+| In the factory | Skills |
+| --- | --- |
+| production planning | `backlog` |
+| work orders | `delegate` |
+| quality control | `verify-claim` |
+| control panel | `watch` |
+| permits and safety rules | `charter` |
+| shift handover | `handoff` |
+| the night shift and the day supervisor | `night-shift`, `ambient-companion` |
+| plant maintenance | `tidy`, `reap-procs` |
 
 ## What's inside
 
