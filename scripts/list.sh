@@ -15,9 +15,9 @@ done
 
 find skills -name SKILL.md -not -path '*/node_modules/*' | sort | while read -r s; do
   if grep -q 'disable-model-invocation: true' "$s"; then
-    mode="user-invoke-only"
+    mode="you-type"
   else
-    mode="model-invocable"
+    mode="agent-picks-up"
   fi
   printf "%-16s %s\n" "$mode" "$(dirname "$s")"
 done
