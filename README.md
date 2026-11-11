@@ -30,7 +30,6 @@ Small units that each do one job, and flows that chain them, the way [mattpocock
 | [snapshot-backlog](./skills/workflow/snapshot-backlog/SKILL.md) | Reads a backlog scope into one local file the other units work from. Read only. | Agent picks it up |
 | [prune-backlog](./skills/workflow/prune-backlog/SKILL.md) | Proposes which tickets can close, each with evidence, never by age alone. | Agent picks it up |
 | [order-backlog](./skills/workflow/order-backlog/SKILL.md) | Ranks tickets by WSJF inside the dependency graph and marks which are ready to start. | Agent picks it up |
-| [contract-audit](./skills/engineering/contract-audit/SKILL.md) | Finds gaps in the data contract between a producer repo and a consumer repo. | Agent picks it up |
 | [reap-procs](./skills/maintenance/reap-procs/SKILL.md) | Finds what is eating the machine after agent sessions, says whose each process is, and stops only what nobody owns. | Agent picks it up |
 | [tidy](./skills/maintenance/tidy/SKILL.md) | A weekly and monthly tune-up of your agent setup: retro, memory, steering files, skills, permissions, hooks. A session-start hook reminds you when a pass is due. | You type `/tidy` |
 
@@ -87,7 +86,6 @@ This symlinks each file in `instructions/` into `~/.claude/` and appends an `@im
 ```
 instructions/            always-on instructions
 skills/flows/            flows: chains of units you type
-skills/engineering/      code and repo analysis
 skills/maintenance/      upkeep of the agent setup and the machine
 skills/workflow/         units for running agent work, and the long-running sessions
 ```
