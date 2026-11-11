@@ -19,6 +19,7 @@ import json, sys, pathlib, yaml
 repo = pathlib.Path(sys.argv[1])
 errors = []
 skills_checked = instructions_checked = 0
+skill_modes = {}  # skill name -> True if user-invoked
 
 plugin = json.loads((repo / ".claude-plugin/plugin.json").read_text())
 registered = {(repo / p.lstrip("./")).resolve() for p in plugin.get("skills", [])}
@@ -41,6 +42,10 @@ for skill_md in sorted(repo.glob("skills/**/SKILL.md")):
         where = f" (line {line + 2})" if line is not None else ""
         errors.append(f"{rel}: frontmatter is not strict YAML{where} — quote the description")
         continue
+
+    if d.name in skill_modes:
+        errors.append(f"{rel}: another skill is already named {d.name!r}")
+    skill_modes[d.name] = fm.get("disable-model-invocation") is True
 
     if fm.get("name") != d.name:
         errors.append(f"{rel}: name {fm.get('name')!r} != directory {d.name!r}")
@@ -68,6 +73,27 @@ for skill_md in sorted(repo.glob("skills/**/SKILL.md")):
 
     if d.resolve() not in registered:
         errors.append(f"{rel}: not registered in .claude-plugin/plugin.json")
+
+# Flows only chain units: each must be user-invoked and list, under "## Units",
+# skills that exist and are model-invoked (a user-invoked skill can't reach another).
+import re
+for flow in sorted(repo.glob("skills/flows/*/SKILL.md")):
+    rel = flow.relative_to(repo)
+    t = flow.read_text()
+    if skill_modes.get(flow.parent.name) is not True:
+        errors.append(f"{rel}: a flow must be user-invoked")
+    m = re.search(r"^## Units\n(.*?)(?=^## |\Z)", t, re.S | re.M)
+    if not m:
+        errors.append(f"{rel}: a flow needs a '## Units' list")
+        continue
+    units = re.findall(r"^- `([a-z0-9-]+)`", m.group(1), re.M)
+    if not units:
+        errors.append(f"{rel}: '## Units' lists no units")
+    for u in units:
+        if u not in skill_modes:
+            errors.append(f"{rel}: unit {u!r} does not exist")
+        elif skill_modes[u]:
+            errors.append(f"{rel}: unit {u!r} is user-invoked, so the flow can't call it")
 
 MAX_LINES = 80
 

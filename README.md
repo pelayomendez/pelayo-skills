@@ -6,25 +6,50 @@ Agent instructions and skills I use for real engineering work with coding agents
 
 ## What's inside
 
+Small units that each do one job, and flows that chain them, the way [mattpocock/skills](https://github.com/mattpocock/skills) composes `implement` out of `tdd` and `code-review`. A unit works on its own; a flow only decides the order and where it stops for you.
+
+### Always on
+
+| Name | What it does |
+| --- | --- |
+| [high-level-communication](./instructions/high-level-communication.md) | Report like a senior engineer to another: concepts and outcomes over files; why, what changed, impact, trade-offs, risks, next steps. |
+| [check-the-charter](./instructions/check-the-charter.md) | Before anything sensitive, the agent checks your charter with the `charter` unit. |
+
+### Flows
+
+| Flow | Chains | What you get |
+| --- | --- | --- |
+| [`/backlog <scope>`](./skills/flows/backlog/SKILL.md) | snapshot-backlog → prune-backlog → verify-claim → your OK → order-backlog | A cleaner backlog, closed only on checked evidence, and a ranked queue with one reason per ticket. |
+
+### Units
+
 | Name | What it does | How it starts |
 | --- | --- | --- |
-| [high-level-communication](./instructions/high-level-communication.md) | Report like a senior engineer to another: concepts and outcomes over files; why, what changed, impact, trade-offs, risks, next steps. | **Always on** — read in every session |
-| [check-the-charter](./instructions/check-the-charter.md) | Before anything sensitive, the agent checks your charter: one ledger of what it may do alone, must ask first, or never, per scope. | **Always on** — the reminder; the [charter skill](./skills/workflow/charter/SKILL.md) does the lookup |
-| [ambient-companion](./skills/workflow/ambient-companion/SKILL.md) | A day-long companion session that watches your work's event streams, keeps workers moving, and brings you only the decisions. | **You type** `/ambient-companion` |
-| [backlog](./skills/workflow/backlog/SKILL.md) | Tidy an existing backlog: prune with evidence instead of by age, map what blocks what, and propose a ranked queue (WSJF inside the dependency graph) with one reason per ticket. Nothing moves without your OK. | **You type** `/backlog <scope>` |
-| [charter skill](./skills/workflow/charter/SKILL.md) | Looks up a grant before an action and records the permissions you give in your own words, with date, scope and your sentence. Ships two opt-in guard hooks for the commonest nevers. | **Agent picks it up** before sensitive actions, or you type it |
-| [contract-audit](./skills/engineering/contract-audit/SKILL.md) | Find gaps in the data contract between a producer repo and a consumer repo: key drift, ignored variants, conflicting defaults, absence semantics. | **Agent picks it up** when relevant, or you type it |
-| [night-shift](./skills/workflow/night-shift/SKILL.md) | An unattended overnight run: a decision round up front, then a loop that takes a ticket queue through worker, review, smoke, MR and merge, ending in a morning report. | **Agent picks it up** when relevant, or you type it |
-| [reap-procs](./skills/maintenance/reap-procs/SKILL.md) | Find what is eating the machine after agent sessions — orphaned test runs, dev servers, automation Chrome, old daemons — say whose each one is, and stop only what nobody owns. | **Agent picks it up** when relevant, or you type it |
-| [tidy](./skills/maintenance/tidy/SKILL.md) | A weekly and monthly tune-up of your agent setup: retro on the sessions that went badly, prune memory, audit steering files, skills, permissions and hooks. A session-start hook reminds you when a pass is due. | **You type** `/tidy` |
+| [charter](./skills/workflow/charter/SKILL.md) | One ledger of what the agent may do alone, must ask first, or never, per scope, recorded in your own words. Ships two opt-in guard hooks. | Agent picks it up |
+| [verify-claim](./skills/workflow/verify-claim/SKILL.md) | Checks an agent's claim ("it's done", "the worker fixed it") with a fresh subagent that sees only the claim and its evidence. | Agent picks it up |
+| [snapshot-backlog](./skills/workflow/snapshot-backlog/SKILL.md) | Reads a backlog scope into one local file the other units work from. Read only. | Agent picks it up |
+| [prune-backlog](./skills/workflow/prune-backlog/SKILL.md) | Proposes which tickets can close, each with evidence, never by age alone. | Agent picks it up |
+| [order-backlog](./skills/workflow/order-backlog/SKILL.md) | Ranks tickets by WSJF inside the dependency graph and marks which are ready to start. | Agent picks it up |
+| [contract-audit](./skills/engineering/contract-audit/SKILL.md) | Finds gaps in the data contract between a producer repo and a consumer repo. | Agent picks it up |
+| [reap-procs](./skills/maintenance/reap-procs/SKILL.md) | Finds what is eating the machine after agent sessions, says whose each process is, and stops only what nobody owns. | Agent picks it up |
+| [tidy](./skills/maintenance/tidy/SKILL.md) | A weekly and monthly tune-up of your agent setup: retro, memory, steering files, skills, permissions, hooks. A session-start hook reminds you when a pass is due. | You type `/tidy` |
 
-The three ways a thing can start are the main design decision in this repo:
+### Long-running sessions
 
-- **Always on** — an *instruction*. Imported into your global agent memory, so it costs context in every session. Reserved for how to behave at all times.
-- **You type** — a *user-invoked skill*. Only runs when you type its name; the agent never reaches for it alone.
-- **Agent picks it up** — a *model-invoked skill*. The agent loads it when the task matches its description; you can also type it.
+| Name | What it does | How it starts |
+| --- | --- | --- |
+| [ambient-companion](./skills/workflow/ambient-companion/SKILL.md) | A day-long companion that watches your work's event streams, keeps workers moving, and brings you only the decisions. | You type `/ambient-companion` |
+| [night-shift](./skills/workflow/night-shift/SKILL.md) | An unattended overnight run: a decision round, then a loop through worker, review, smoke, MR and merge, ending in a morning report. | Agent picks it up, or you type it |
 
-Details in [`.agents/invocation.md`](./.agents/invocation.md).
+They become flows once `delegate`, `watch` and `handoff` exist as units.
+
+### How things start
+
+- **Always on**: an *instruction*, imported into your global agent memory. It costs context in every session, so it is kept for how to behave at all times.
+- **You type**: a *user-invoked skill*. Every flow is one.
+- **Agent picks it up**: a *model-invoked skill*. The agent loads it when the task matches; you can also type it. Every unit a flow calls is one, because a skill you type can't call another skill you type.
+
+Units pass work through files with fixed names (for `/backlog`: `tickets.json`, `prune.md`, `queue.md` in one folder per run), so a run survives a `/clear` and any unit can pick up where another left off. Details in [`.agents/invocation.md`](./.agents/invocation.md).
 
 ## Install
 
@@ -61,12 +86,13 @@ This symlinks each file in `instructions/` into `~/.claude/` and appends an `@im
 
 ```
 instructions/            always-on instructions
+skills/flows/            flows: chains of units you type
 skills/engineering/      code and repo analysis
 skills/maintenance/      upkeep of the agent setup and the machine
-skills/workflow/         long-running sessions that drive other agents
+skills/workflow/         units for running agent work, and the long-running sessions
 ```
 
-Each bucket has its own README, split into user-invoked and model-invoked.
+Each bucket has its own README.
 
 ## Working on this repo
 
@@ -75,7 +101,7 @@ npm run check    # validate instructions and skills
 npm run list     # show everything, by how it starts
 ```
 
-`check` enforces the conventions that fail silently at runtime: unquoted YAML descriptions, frontmatter leaking into an always-on instruction, invocation mode out of sync between harnesses, and the context budget on instruction files. See [`CONTRIBUTING.md`](./CONTRIBUTING.md) to add something.
+`check` enforces the conventions that fail silently at runtime: unquoted YAML descriptions, frontmatter leaking into an always-on instruction, invocation mode out of sync between harnesses, the context budget on instruction files, and flows calling units that don't exist or can't be reached. See [`CONTRIBUTING.md`](./CONTRIBUTING.md) to add something.
 
 Convention follows [mattpocock/skills](https://github.com/mattpocock/skills).
 

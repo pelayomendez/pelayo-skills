@@ -1,7 +1,7 @@
 {
   "name": "pelayo-skills",
-  "version": "0.6.0",
-  "description": "Agent instructions and skills for engineering with coding agents: an always-on reporting style, a cross-repo data-contract audit, long-running companion and overnight sessions, and upkeep for the setup itself.",
+  "version": "0.7.0",
+  "description": "Small skills for running coding agents, and flows that chain them: an always-on reporting style, a permission charter, backlog pruning and ordering, claim checks by a fresh agent, long-running companion and overnight sessions, and upkeep for the setup itself.",
   "author": {
     "name": "Pelayo Méndez",
     "url": "https://github.com/pelayomendez"
@@ -10,20 +10,26 @@
   "license": "MIT",
   "keywords": [
     "agents",
+    "backlog",
     "communication",
     "contracts",
     "engineering",
+    "flows",
     "maintenance",
     "orchestration",
     "skills"
   ],
   "skills": [
     "./skills/engineering/contract-audit",
+    "./skills/flows/backlog",
     "./skills/maintenance/reap-procs",
     "./skills/maintenance/tidy",
     "./skills/workflow/ambient-companion",
-    "./skills/workflow/backlog",
     "./skills/workflow/charter",
-    "./skills/workflow/night-shift"
+    "./skills/workflow/night-shift",
+    "./skills/workflow/order-backlog",
+    "./skills/workflow/prune-backlog",
+    "./skills/workflow/snapshot-backlog",
+    "./skills/workflow/verify-claim"
   ]
 }

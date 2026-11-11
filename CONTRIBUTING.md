@@ -19,11 +19,20 @@ Installed by `./scripts/install-instructions.sh`, which symlinks it into `~/.cla
 
 1. Pick a bucket under `skills/` (or create one, with a `README.md` split into **User-invoked** / **Model-invoked**).
 2. Create `skills/<bucket>/<skill-name>/SKILL.md`. `name` must match the directory name.
-3. Decide invocation. Default to model-invoked; the test is _could the model usefully reach for this autonomously?_
+3. Decide invocation. Default to model-invoked; the test is _could the model usefully reach for this autonomously?_ A unit that a flow calls must be model-invoked.
 4. Add `agents/openai.yaml` beside the `SKILL.md` with `interface.display_name` and `interface.short_description`. For a user-invoked skill also add `policy.allow_implicit_invocation: false`.
 5. Register the skill path in `.claude-plugin/plugin.json` under `skills` — a skill absent from that array will not load as a plugin.
 6. Add it to the bucket `README.md` and the top-level `README.md`.
 7. Run `npm run check`.
+
+## Adding a flow
+
+1. Build or find the units first. A flow holds no logic of its own.
+2. Create `skills/flows/<name>/SKILL.md`, user-invoked, with a `## Units` list of the skills it calls.
+3. Write the steps as calls to those units, plus where it stops for the user.
+4. Steps 4 and 5 of *Adding a skill* apply: `agents/openai.yaml` with `policy.allow_implicit_invocation: false`, and registration in `.claude-plugin/plugin.json`.
+5. Add it to `skills/flows/README.md` and to the **Flows** table in the top-level `README.md`.
+6. Run `npm run check`.
 
 ## Rules that bite
 
