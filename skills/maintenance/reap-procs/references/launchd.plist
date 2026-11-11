@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Runs reap-procs --kill every 15 minutes (orphans only; never a process with a live owner).
+  Copy the script somewhere stable, set its path below, then:
+    cp launchd.plist ~/Library/LaunchAgents/local.reap-procs.plist
+    launchctl load ~/Library/LaunchAgents/local.reap-procs.plist
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>local.reap-procs</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/path/to/reap-procs.sh</string>
+    <string>--kill</string>
+  </array>
+  <key>StartInterval</key>
+  <integer>900</integer>
+  <key>StandardOutPath</key>
+  <string>/tmp/reap-procs.out</string>
+  <key>StandardErrorPath</key>
+  <string>/tmp/reap-procs.err</string>
+</dict>
+</plist>
