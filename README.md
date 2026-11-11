@@ -4,7 +4,7 @@
 
 Skills for running your agent factory: plan the work, hand it out, check it, keep the line running. [Landing page](https://pelayomendez.github.io/pelayo-skills/).
 
-Matt Pocock's [skills](https://github.com/mattpocock/skills) are the machines: how an agent designs, tests and reviews code. These run the plant around them:
+The agents and their coding skills are the machines. These run the plant around them:
 
 | In the factory | Skills |
 | --- | --- |
@@ -19,7 +19,7 @@ Matt Pocock's [skills](https://github.com/mattpocock/skills) are the machines: h
 
 ## What's inside
 
-Small units that each do one job, and flows that chain them, the way [mattpocock/skills](https://github.com/mattpocock/skills) composes `implement` out of `tdd` and `code-review`. A unit works on its own; a flow only decides the order and where it stops for you.
+Small units that each do one job, and flows that chain them. A unit works on its own; a flow only decides the order and where it stops for you.
 
 ### Always on
 
@@ -110,7 +110,6 @@ npm run list     # show everything, by how it starts
 
 `check` enforces the conventions that fail silently at runtime: unquoted YAML descriptions, frontmatter leaking into an always-on instruction, invocation mode out of sync between harnesses, the context budget on instruction files, and flows calling units that don't exist or can't be reached. See [`CONTRIBUTING.md`](./CONTRIBUTING.md) to add something.
 
-Convention follows [mattpocock/skills](https://github.com/mattpocock/skills).
 
 ## License
 

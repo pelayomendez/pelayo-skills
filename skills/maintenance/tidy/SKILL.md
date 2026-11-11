@@ -20,7 +20,7 @@ An agent setup only grows. Memory piles up, steering files collect rules nobody 
 
 ## Weekly
 
-1. **Retro.** Ask which one or two recent sessions went badly (a failed run, a loop, a wrong fix). Run the `/retro` skill on each if it is installed; if not, say it comes from `mattpocock/skills` and do a short retro yourself over that session's transcript under `<config>/projects/`: where did the agent search too long, make a mistake a tool could catch, or lack access to something? Skip a smooth week.
+1. **Retro.** Ask which one or two recent sessions went badly (a failed run, a loop, a wrong fix). Run a retro skill on each if one is installed; if not, do a short retro yourself over that session's transcript under `<config>/projects/`: where did the agent search too long, make a mistake a tool could catch, or lack access to something? Skip a smooth week.
 2. **Memory.** For each memory directory under `<config>/projects/*/memory/` touched since the last pass (`<config>` is `$CLAUDE_CONFIG_DIR`, default `~/.claude`):
    - Size of `MEMORY.md`: only the first 200 lines / 25 KB load. Flag any index near that.
    - **Stale**: project facts about work that has finished, dates long past, files or flags that no longer exist (check them).
