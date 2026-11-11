@@ -69,6 +69,32 @@ for skill_md in sorted(repo.glob("skills/**/SKILL.md")):
     if d.resolve() not in registered:
         errors.append(f"{rel}: not registered in .claude-plugin/plugin.json")
 
+# Flows only chain units: each must be user-invoked and list, under "## Units",
+# skills that exist and are model-invoked (a user-invoked skill can't reach another).
+import re
+skill_modes = {}
+for s in repo.glob("skills/**/SKILL.md"):
+    t = s.read_text()
+    skill_modes[s.parent.name] = "disable-model-invocation: true" in t.split("---\n", 2)[1] if t.startswith("---\n") else None
+
+for flow in sorted(repo.glob("skills/flows/*/SKILL.md")):
+    rel = flow.relative_to(repo)
+    t = flow.read_text()
+    if skill_modes.get(flow.parent.name) is not True:
+        errors.append(f"{rel}: a flow must be user-invoked")
+    m = re.search(r"^## Units\n(.*?)(?=^## |\Z)", t, re.S | re.M)
+    if not m:
+        errors.append(f"{rel}: a flow needs a '## Units' list")
+        continue
+    units = re.findall(r"^- `([a-z0-9-]+)`", m.group(1), re.M)
+    if not units:
+        errors.append(f"{rel}: '## Units' lists no units")
+    for u in units:
+        if u not in skill_modes:
+            errors.append(f"{rel}: unit {u!r} does not exist")
+        elif skill_modes[u]:
+            errors.append(f"{rel}: unit {u!r} is user-invoked, so the flow can't call it")
+
 MAX_LINES = 80
 
 for doc in sorted(repo.glob("instructions/*.md")):

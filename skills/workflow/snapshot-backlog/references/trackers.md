@@ -1,6 +1,6 @@
 # Reading the tracker
 
-Use the CLI that is already installed and logged in; never install one. Read every page. These are starting points: check each against `--help`, because flags change between versions.
+Read only. Use the CLI that is already installed and logged in; never install one. Read every page. These are starting points: check each against `--help`, because flags change between versions.
 
 ## Jira (`acli`)
 
@@ -12,7 +12,6 @@ acli jira workitem link list --key ABC-123 --json        # its links alone
 
 - Story points are a custom field whose id varies per site; find it on one ticket that has points.
 - **Link direction.** Check one known "blocks" pair by hand before trusting `inwardIssue` / `outwardIssue`: some tools invert them.
-- Writes, only after an OK and one per command: `acli jira workitem transition`, `acli jira workitem link create`, `acli jira workitem comment create`.
 
 ## GitLab (`glab`)
 
@@ -37,7 +36,3 @@ Blocked-by / blocking relations are read through `gh api` as above; `closedByPul
 ## Linear
 
 No first-party CLI: use the GraphQL API with the user's key (`issues { relations { type relatedIssue { identifier } } }`), only if they already have it set up.
-
-## Code evidence
-
-For "already done": `git log --all --oneline --grep '<KEY>'` in each relevant repo, merged MRs or PRs that mention the key (`glab mr list --merged --search '<KEY>'`, `gh pr list --state merged --search '<KEY>'`), and a direct read of the code the ticket describes.

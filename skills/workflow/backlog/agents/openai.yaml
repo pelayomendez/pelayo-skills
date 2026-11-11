@@ -1,5 +1,0 @@
-interface:
-  display_name: "Backlog"
-  short_description: "Prune a backlog with evidence, map dependencies, and propose a ranked queue with reasons"
-policy:
-  allow_implicit_invocation: false
