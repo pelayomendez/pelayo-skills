@@ -31,6 +31,10 @@ Open a new session for the import to take effect.
 
 ## Skills
 
+### Engineering — model-invoked
+
+- **[contract-audit](./skills/engineering/contract-audit/SKILL.md)** — Find gaps in the data contract between a producer repo and a consumer repo: key drift, ignored variants, conflicting defaults, absence semantics. Writes a report with recommended guards.
+
 ### Workflow — model-invoked
 
 - **[night-shift](./skills/workflow/night-shift/SKILL.md)** — Unattended orchestrator run while you're away: a decision round up front, then a self-paced loop that takes tickets through worker, verify, review, smoke, MR and merge, plus backend, package and deploy watches, ending in a morning report. Configure paths, tracker transitions and watched repos once per workspace.
