@@ -9,14 +9,15 @@
     {
       "name": "pelayo-skills",
       "source": "./",
-      "description": "Agent guidance for high-signal engineering work — communication altitude, and a day-long ambient companion session.",
+      "description": "Agent instructions and skills for engineering with coding agents: an always-on reporting style, a cross-repo data-contract audit, and long-running companion and overnight sessions.",
       "category": "engineering",
       "keywords": [
         "engineering",
         "skills",
         "communication",
         "agents",
-        "orchestration"
+        "orchestration",
+        "contracts"
       ]
     }
   ]

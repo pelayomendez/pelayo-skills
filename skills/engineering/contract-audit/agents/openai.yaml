@@ -1,0 +1,3 @@
+interface:
+  display_name: "Contract Audit"
+  short_description: "Find gaps in the data contract between a producer repo and a consumer repo"
