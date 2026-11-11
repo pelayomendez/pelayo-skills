@@ -5,7 +5,7 @@
 Weighted Shortest Job First, from Reinertsen's cost of delay divided by duration (CD3), in the form SAFe uses:
 
 ```
-WSJF = (business value + time criticality + risk reduction / opportunity enablement) ÷ job size
+WSJF = (business value + time criticality + risk reduction or opportunity enablement) ÷ job size
 ```
 
 Every input is **relative**, on 1, 2, 3, 5, 8, 13, 20, scored against the other tickets in scope, not in absolute terms. The smallest item in a column gets 1.
@@ -14,7 +14,7 @@ Every input is **relative**, on 1, 2, 3, 5, 8, 13, 20, scored against the other 
 |---|---|---|
 | business value | the user | none: ask |
 | time criticality | due date, release, sprint, a customer waiting | the user |
-| risk reduction / enablement | how many open tickets it unblocks, directly or transitively; whether it removes a known risk | — |
+| risk reduction or enablement | how many open tickets it unblocks, directly or transitively; whether it removes a known risk | — |
 | job size | points or estimate | a rough read of the description, marked *guessed* |
 
 Order: compute WSJF, then sort so that no ticket comes before one it depends on (a topological sort that picks the highest WSJF among the tickets whose blockers are done or ranked). Ties go to the ticket that unblocks more.
