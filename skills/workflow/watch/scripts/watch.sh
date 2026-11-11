@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Model-free watcher: the bottom rung of the trigger ladder.
+# Model-free watcher: the cheapest way to arm a watch (see ../SKILL.md).
 #
 # Runs a command every <interval> seconds and exits as soon as its output
 # differs from the first run, printing the new output. Run it as a background
-# command: its exit is what wakes the companion, so no model tokens are spent
+# command: its exit is what wakes the session, so no model tokens are spent
 # while nothing changes.
 #
 # Usage:
@@ -12,7 +12,7 @@
 #   watch.sh 300 git ls-remote origin refs/heads/main
 #   watch.sh 120 sh -c 'glab mr view 42 -F json | jq -r .state'
 #
-# Writes a heartbeat to $WATCH_HEARTBEAT (default .companion/heartbeat) on
+# Writes a heartbeat to $WATCH_HEARTBEAT (default .watches/heartbeat) on
 # every poll, so a stalled watcher is visible. Exits 1 if the command fails
 # three times in a row, so a broken watch wakes the session instead of
 # hanging silently.
@@ -26,7 +26,7 @@ case "$interval" in
   ''|*[!0-9]*|0) echo "watch.sh: interval must be a positive whole number of seconds" >&2; exit 2 ;;
 esac
 
-heartbeat="${WATCH_HEARTBEAT:-.companion/heartbeat}"
+heartbeat="${WATCH_HEARTBEAT:-.watches/heartbeat}"
 if ! { mkdir -p "$(dirname "$heartbeat")" && : > "$heartbeat"; } 2>/dev/null; then
   echo "watch.sh: cannot write heartbeat at $heartbeat" >&2
   exit 2

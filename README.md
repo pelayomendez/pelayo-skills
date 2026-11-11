@@ -20,6 +20,8 @@ Small units that each do one job, and flows that chain them, the way [mattpocock
 | Flow | Chains | What you get |
 | --- | --- | --- |
 | [`/backlog <scope>`](./skills/flows/backlog/SKILL.md) | snapshot-backlog → prune-backlog → verify-claim → your OK → order-backlog | A cleaner backlog, closed only on checked evidence, and a ranked queue with one reason per ticket. |
+| [`/ambient-companion`](./skills/flows/ambient-companion/SKILL.md) | charter → verify-claim on what's in flight → watch → each tick: delegate → verify-claim → handoff | A day-long companion that watches your work's event streams, keeps workers moving, and brings you only the decisions. |
+| [`/night-shift`](./skills/flows/night-shift/SKILL.md) | your decisions → charter → watch → each ticket: delegate → verify-claim → merge if granted → handoff | An unattended overnight run through worker, checks, MR and merge, ending in a morning report and a plan for the day. |
 
 ### Units
 
@@ -30,17 +32,11 @@ Small units that each do one job, and flows that chain them, the way [mattpocock
 | [snapshot-backlog](./skills/workflow/snapshot-backlog/SKILL.md) | Reads a backlog scope into one local file the other units work from. Read only. | Agent picks it up |
 | [prune-backlog](./skills/workflow/prune-backlog/SKILL.md) | Proposes which tickets can close, each with evidence, never by age alone. | Agent picks it up |
 | [order-backlog](./skills/workflow/order-backlog/SKILL.md) | Ranks tickets by WSJF inside the dependency graph and marks which are ready to start. | Agent picks it up |
-| [reap-procs](./skills/maintenance/reap-procs/SKILL.md) | Finds what is eating the machine after agent sessions, says whose each process is, and stops only what nobody owns. | Agent picks it up |
+| [delegate](./skills/workflow/delegate/SKILL.md) | Writes a self-sufficient brief to a file and launches a worker in its own worktree, with the standing forbids in every brief. | Agent picks it up |
+| [watch](./skills/workflow/watch/SKILL.md) | Watches a pipeline, MR, deploy or package version for one exact revision against a baseline, and reports changes. Never starts work. | Agent picks it up |
+| [handoff](./skills/workflow/handoff/SKILL.md) | Writes the one size-capped file a supervising session resumes from: state and owners, watches to re-arm, the charter scope in force. | Agent picks it up |
+| [reap-procs](./skills/maintenance/reap-procs/SKILL.md) | Finds what is eating the machine after agent sessions, says whose each process is, and stops only what nobody owns. Before a fan-out, says go or wait. | Agent picks it up |
 | [tidy](./skills/maintenance/tidy/SKILL.md) | A weekly and monthly tune-up of your agent setup: retro, memory, steering files, skills, permissions, hooks. A session-start hook reminds you when a pass is due. | You type `/tidy` |
-
-### Long-running sessions
-
-| Name | What it does | How it starts |
-| --- | --- | --- |
-| [ambient-companion](./skills/workflow/ambient-companion/SKILL.md) | A day-long companion that watches your work's event streams, keeps workers moving, and brings you only the decisions. | You type `/ambient-companion` |
-| [night-shift](./skills/workflow/night-shift/SKILL.md) | An unattended overnight run: a decision round, then a loop through worker, review, smoke, MR and merge, ending in a morning report. | Agent picks it up, or you type it |
-
-They become flows once `delegate`, `watch` and `handoff` exist as units.
 
 ### How things start
 
@@ -48,7 +44,7 @@ They become flows once `delegate`, `watch` and `handoff` exist as units.
 - **You type**: a *user-invoked skill*. Every flow is one.
 - **Agent picks it up**: a *model-invoked skill*. The agent loads it when the task matches; you can also type it. Every unit a flow calls is one, because a skill you type can't call another skill you type.
 
-Units pass work through files with fixed names (for `/backlog`: `tickets.json`, `prune.md`, `queue.md` in one folder per run), so a run survives a `/clear` and any unit can pick up where another left off. Details in [`.agents/invocation.md`](./.agents/invocation.md).
+Units pass work through files with fixed names (for `/backlog`: `tickets.json`, `prune.md`, `queue.md` in one folder per run; for the long-running flows: `brief.md`, `watches.md`, `handoff-<date>.md`), so a run survives a `/clear` and any unit can pick up where another left off. Details in [`.agents/invocation.md`](./.agents/invocation.md).
 
 ## Install
 
@@ -85,9 +81,9 @@ This symlinks each file in `instructions/` into `~/.claude/` and appends an `@im
 
 ```
 instructions/            always-on instructions
-skills/flows/            flows: chains of units you type
+skills/flows/            flows you type: backlog, ambient-companion, night-shift
 skills/maintenance/      upkeep of the agent setup and the machine
-skills/workflow/         units for running agent work, and the long-running sessions
+skills/workflow/         units for running agent work: permissions, backlogs, workers, watches, handoffs
 ```
 
 Each bucket has its own README.

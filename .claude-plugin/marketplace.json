@@ -9,7 +9,7 @@
     {
       "name": "pelayo-skills",
       "source": "./",
-      "description": "Small skills for running coding agents, and flows that chain them: an always-on reporting style, a permission charter, backlog pruning and ordering, claim checks by a fresh agent, long-running companion and overnight sessions, and upkeep for the setup itself.",
+      "description": "Small skills for running coding agents, and flows that chain them: an always-on reporting style, a permission charter, backlog pruning and ordering, claim checks by a fresh agent, worker briefs, watches and handoffs, a day companion and a night shift built from them, and upkeep for the setup itself.",
       "category": "engineering",
       "keywords": [
         "engineering",
