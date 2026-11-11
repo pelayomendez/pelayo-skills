@@ -1,0 +1,3 @@
+interface:
+  display_name: "Reap procs"
+  short_description: "Find and stop processes left behind by dead agent sessions, attributed to their session"
