@@ -55,9 +55,9 @@ function secs(t,   d, n, a, s, i) {
 }
 function klass(c) {
   if (c ~ OWNER || c ~ PLUMBING) return ""
+  if (c ~ DAEMON) return "daemon"
   if (c ~ /vitest/) return "vitest"
   if (c ~ /chrome-devtools-mcp/) return "chrome"
-  if (c ~ /nx\/src\/daemon/) return "daemon"
   if (c ~ /rsbuild|(^|[ \/])vite( |$)|vite\/bin|next dev|webpack(-| )serve|storybook|esbuild --service/) return "dev"
   return ""
 }
@@ -66,7 +66,7 @@ function owner(p,   q) {
   for (q = p; (q in pp) && q > 1; q = pp[q]) {
     if (q == SELF) return "self"
     if (cmd[q] ~ OWNER) return q
-    if (tty[q] != "??") return "tty"
+    if (tty[q] != "??" && tty[q] != "?") return "tty"
   }
   return ""
 }
@@ -77,13 +77,15 @@ function root(p, k,   q) {
   return q
 }
 function tree(p,   out, n, a, i) {
+  if (cmd[p] ~ DAEMON && klass(cmd[ROOT]) != "daemon") return ""
   out = p
   n = split(kids[p], a, " ")
   for (i = 1; i <= n; i++) out = out " " tree(a[i])
   return out
 }
 BEGIN {
-  OWNER = "(^|/)claude( |$)|Claude\\.app|/codex( |$)|Visual Studio Code|Code Helper|Cursor|WebStorm|idea"
+  OWNER = "(^|/)claude( |$)|Claude\\.app|/codex( |$)|Visual Studio Code|Code Helper|Cursor|WebStorm|IntelliJ|/idea( |$)"
+  DAEMON = "nx/src/daemon"
   PLUMBING = "^(/bin/|/usr/bin/)?(zsh|bash|sh) |^npm |^npx |^(pnpm|yarn) |/bin/(npm|npx|pnpm|yarn)( |$)|^node .*/(npm|npx)-cli"
 }
 {
@@ -102,7 +104,7 @@ END {
     else if (k == "vitest" && cmd[p] !~ PLUMBING && cmd[p] !~ /\(vitest [0-9]+\)/ && secs(et[p]) > STUCKMIN * 60) { status = "stuck"; r = p }
     else continue
     if ((r in seen) || (p in seen)) continue
-    pids = tree(r); n = split(pids, a, " "); c = 0; m = 0
+    ROOT = r; pids = tree(r); n = split(pids, a, " "); c = 0; m = 0
     # a tree that contains a live owner is a launcher (e.g. a detached worker wrapper), never an orphan
     hasowner = 0
     for (j = 1; j <= n; j++) if (cmd[a[j]] ~ OWNER) hasowner = 1
@@ -153,9 +155,14 @@ while IFS='|' read -r k status root cand owner cpu mem age pids what; do
   TOTAL_CPU="$(awk -v a="$TOTAL_CPU" -v b="$cpu" 'BEGIN{printf "%.1f", a+b}')"
 done < "$TMP/found"
 
+swap="$(sysctl -n vm.swapusage 2>/dev/null | awk '{print "swap " $6 " of " $3}')"
+[ -z "$swap" ] && swap="$(free -h 2>/dev/null | awk '/^Swap:/{print "swap " $3 " of " $2}')"
+load="$(sysctl -n vm.loadavg 2>/dev/null | tr -d '{}' || true)"
+[ -z "$load" ] && load="$(cut -d' ' -f1-3 /proc/loadavg 2>/dev/null)"
+
 count="$(grep -c . "$TMP/found" || true)"
 if [ "$count" = 0 ]; then
-  echo "reap-procs: nothing orphaned or stuck"
+  echo "reap-procs: nothing orphaned or stuck; ${swap:+$swap; }load $load"
   exit 0
 fi
 
@@ -169,7 +176,6 @@ if [ -n "$TO_KILL" ]; then
   [ -n "$survivors" ] && kill -KILL $survivors 2>/dev/null
   echo "reap-procs: killed $(echo $TO_KILL | wc -w | tr -d ' ') processes (SIGKILL needed for$(echo "${survivors:- none}"))"
 fi
-swap="$(sysctl -n vm.swapusage 2>/dev/null | awk '{print "swap " $6 " of " $3}')"
-echo "reap-procs: $count group(s), ${TOTAL_CPU}% CPU total; ${swap:+$swap; }load $(sysctl -n vm.loadavg 2>/dev/null | tr -d '{}')"
+echo "reap-procs: $count group(s), ${TOTAL_CPU}% CPU total; ${swap:+$swap; }load $load"
 [ "$KILL" = 0 ] && echo "reap-procs: report only; rerun with --kill (add --dev / --stuck to widen)"
 exit 0

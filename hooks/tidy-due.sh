@@ -22,10 +22,10 @@ weekly="$(awk '$1=="weekly"{print $2}' "$state")"
 monthly="$(awk '$1=="monthly"{print $2}' "$state")"
 
 due=""
-if [ -n "$monthly" ] && [[ ! "$today" < "$monthly" ]]; then due="monthly (due $monthly)"
-elif [ -n "$weekly" ] && [[ ! "$today" < "$weekly" ]]; then due="weekly (due $weekly)"
+if [ -n "$monthly" ] && [[ ! "$today" < "$monthly" ]]; then due="monthly"; since="$monthly"
+elif [ -n "$weekly" ] && [[ ! "$today" < "$weekly" ]]; then due="weekly"; since="$weekly"
 fi
 [ -z "$due" ] && exit 0
 
-printf '{"systemMessage":"tidy: a %s pass is due. Run /tidy when you have 15 minutes."}\n' "$due"
+printf '{"systemMessage":"tidy: your %s pass has been due since %s. Run /tidy when you have 15 minutes."}\n' "$due" "$since"
 exit 0

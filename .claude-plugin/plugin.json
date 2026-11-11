@@ -23,6 +23,5 @@
     "./skills/maintenance/tidy",
     "./skills/workflow/ambient-companion",
     "./skills/workflow/night-shift"
-  ],
-  "hooks": "./hooks/hooks.json"
+  ]
 }
