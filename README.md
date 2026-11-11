@@ -1,6 +1,8 @@
-# Pelayo's Skills
+<p align="center"><img src="assets/icon-sticker.png" width="128" alt=""></p>
 
-Agent instructions and skills I use for real engineering work with coding agents. Small, composable, model-agnostic.
+# pelayo-skills
+
+Agent instructions and skills I use for real engineering work with coding agents. Small, composable, model-agnostic. [Landing page](https://pelayomendez.github.io/pelayo-skills/).
 
 ## What's inside
 
@@ -31,7 +33,7 @@ As a Claude Code plugin, a read-only bundle you subscribe to:
 
 ```
 /plugin marketplace add pelayomendez/pelayo-skills
-/plugin install pelayo-skills@pelayomendez
+/plugin install pelayo-skills@pelayomendez-skills
 ```
 
 The plugin also installs the one hook `tidy` needs: a session-start reminder that prints a line only when a pass is due (`TIDY_REMIND=0` silences it).
