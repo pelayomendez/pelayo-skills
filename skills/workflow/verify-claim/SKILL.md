@@ -18,13 +18,15 @@ One or more claims. Each one has three parts:
 ## Run it
 
 1. Spawn one fresh subagent per claim, or one per batch of up to five small claims about the same repo. Use the harness's subagent tool, without forking the current context.
-2. Pass it the brief below and nothing else. Leave out your reasoning, your confidence and what you hope it finds.
+2. Pass it the brief below and nothing else besides where things live (repo path, tracker). Leave out your reasoning, your confidence and what you hope it finds.
 3. It works read-only: it opens files, reads history, runs read commands. It never edits, posts or merges.
 4. If no fresh subagent is available, say so and mark every claim **unchecked**. A check in the same context is not this check.
 
 ```text
 You are checking claims made by another agent. You did not see how they were reached.
-For each claim, open the evidence yourself and decide:
+Context: repo <path>, tracker <cli>, anything else needed to open the evidence.
+For each claim, look first for what would refute it, then open the evidence yourself
+and decide:
   holds      the evidence shows it
   fails      the evidence contradicts it
   partial    part holds; say exactly which part
