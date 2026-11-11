@@ -7,6 +7,8 @@ allowed-tools: Bash
 
 # Reap procs
 
+Built on macOS; the script also runs on Linux (`ps`, `free`, `/proc/loadavg`).
+
 Agent sessions start processes that can outlive them: test runs, dev servers, the automation browser, build daemons, worktrees. This skill finds them, says whose they are, and stops only what has no live owner.
 
 ## Rules
@@ -30,7 +32,7 @@ Show its table as-is, then one line: groups found, swap, what was stopped.
 | `chrome` orphan | yes | only the automation profile (chrome-devtools-mcp), never the user's own browser |
 | `dev` orphan | only with `--dev` | skipped when listening on a protected port |
 | `vitest*` stuck | only with `--stuck` | owned run older than `--stuck-min` (default 20); stops the run, not its owner |
-| `daemon` | never | e.g. the nx daemon; stop it cleanly with `npx nx daemon --stop` in its repo, after asking |
+| `daemon` | never, and never as part of another group | e.g. the nx daemon; stop it cleanly with `npx nx daemon --stop` in its repo, after asking |
 
 ## Read the machine right
 
