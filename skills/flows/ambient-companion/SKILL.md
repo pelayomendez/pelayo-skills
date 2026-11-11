@@ -18,13 +18,14 @@ This is a flow. Watching, delegating, checking and handing off are units that al
 - `verify-claim`
 - `handoff`
 - `order-backlog`
+- `reap-procs`
 
 ## Configuration
 
 State lives in `.companion/` at the root of the workspace you run from:
 
 - `handoff-<YYYY-MM-DD>.md`, written by `handoff` with `.companion` as its folder, and `archive.md` beside it.
-- `watches.md` and the `watch-*.json` baselines, written by `watch` with `.companion` as its state folder. Run `watch.sh` with `WATCH_HEARTBEAT=.companion/heartbeat`.
+- `watches.md` and the `watch-*.json` baselines, written by `watch` with `.companion` as its state folder. When a watch uses the `watch` unit's `scripts/watch.sh`, run it with `WATCH_HEARTBEAT=.companion/heartbeat`.
 - `runs/<item>/`, one `delegate` run folder per piece of delegated work.
 - `memory.md`: an index with one line per rule, each pointing to a note in `.companion/memory/`.
 
@@ -63,7 +64,7 @@ Re-arm every row under "Watches to re-arm" in the handoff, then give every remai
 On each wake:
 
 1. Re-read the handoff state.
-2. Advance each item one step: worker done → `verify-claim` on its claim → independent review → real-environment check → one fix round or open the change request. Spawn every worker and reviewer with `delegate`. Reviewers are read-only and get a fresh context.
+2. Advance each item one step: worker done → `verify-claim` on its claim → independent review → real-environment check → one fix round or open the change request. Spawn every worker and reviewer with `delegate`; before starting several at once, run `reap-procs` in preflight mode and launch only on go. Reviewers are read-only and get a fresh context.
 3. Act on what the watches report. A watch never starts work; you decide whether its news does.
 4. Log one timestamped line per event in the handoff.
 5. Tell the human only what needs them: a decision, a blocker, or something done that they would want to know. One decision per question, in plain words.
@@ -73,6 +74,7 @@ On each wake:
 
 ## When a step fails
 
+- **A worker exits without `WORKER_EXIT 0`**: read its log before trusting anything it committed. Record what the log shows in the handoff, and ask the human before launching it again.
 - **A claim doesn't hold** (`verify-claim` says fails or unclear): don't act on it. Correct the state, and ask the human if the next step depends on it.
 - **The fix round didn't fix it**: one fix round, then the human.
 - **A watch broke** (it exited with an error or its heartbeat went stale): re-arm it once; if it breaks again, tell the human which source is blind.

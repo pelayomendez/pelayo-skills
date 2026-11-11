@@ -18,19 +18,19 @@ Some state changes where the session can't see it: a pipeline finishing, a merge
 
 - **Key on the revision, not on "latest".** Ask for the pipeline of a given full SHA, not the newest pipeline. A watch keyed on "latest pipeline" once reported the previous commit's result as this one's.
 - **Only a terminal state is a result.** For a pipeline that is `success`, `failed`, `canceled` or `skipped`. `created`, `pending` and `running` are not results, and neither is "no pipeline yet": a merge once went through on "no pipeline running" while the pipeline was still queued.
-- **Record the baseline before arming.** Write the first output to `<state>/watch-<name>.json` (or `.txt`). A change is a difference from that file, so a restart compares against the same thing.
+- **Record the baseline before arming.** Write the first output to `<state>/watch-<name>.json` (or `.txt`). A change is a difference from that file, so a re-armed watch compares against the same thing and reports what moved while it was down.
 - **Report on change, and say when nothing changed.** A scheduled check reports every run, even "no change", so silence means the watch is broken, not that the world is quiet. With each change, say what it unblocks if the caller told you.
 - **Never start work from a watch.** A tick reports and updates the baseline. Launching a worker, merging or posting is a decision for the session that reads the report.
-- **Update the baseline after reporting**, so the same change is not reported twice.
+- **Update the baseline after reporting**, so the same change is not reported twice. The baseline means "seen", never "handled": if the caller must act on each change (review each new MR head, say), it keeps its own ledger of what it handled and updates it only once that work is done.
 
 ## How to arm it
 
 Use the cheapest mechanism that works. An idle session still re-sends its whole context on every model wake, so a model tick spent on a mechanical question is paid for in full; a weekend of hourly ticks can cost more than the work they watched.
 
-1. **Script loop, no model.** For anything a command can answer: new commits on a branch, an MR's state, a package version. [`scripts/watch.sh`](scripts/watch.sh) runs a command every N seconds and exits when its output changes; run it as a background command, and its exit wakes the session. It writes a heartbeat to `$WATCH_HEARTBEAT` (default `.watches/heartbeat`) and exits 1 after three failed runs in a row, so a broken watch wakes you too.
+1. **Script loop, no model.** For anything a command can answer: new commits on a branch, an MR's state, a package version. [`scripts/watch.sh`](scripts/watch.sh) runs a command every N seconds and exits when its output changes; run it as a background command, and its exit wakes the session. Pass `--baseline <state>/watch-<name>.txt` so it compares against the recorded baseline (and writes it if there is none yet); it never overwrites an existing one, that stays your step after reporting. It writes a heartbeat to `$WATCH_HEARTBEAT` (default `.watches/heartbeat`) and exits 1 after three failed runs in a row, so a broken watch wakes you too.
    ```bash
-   scripts/watch.sh 300 git ls-remote origin refs/heads/main
-   scripts/watch.sh 120 sh -c 'glab mr view 42 -F json | jq -r .state'
+   scripts/watch.sh --baseline .watches/watch-main.txt 300 git ls-remote origin refs/heads/main
+   scripts/watch.sh --baseline .watches/watch-mr-42.txt 120 sh -c 'glab mr view 42 -F json | jq -r .state'
    ```
 2. **Event wait.** A background command, or the harness's monitor tool, that returns when something reaches a terminal state: the pipeline for a given SHA finishes, a process exits. The main wake signal for work in flight.
    ```bash

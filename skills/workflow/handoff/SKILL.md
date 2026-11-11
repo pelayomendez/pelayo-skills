@@ -7,17 +7,18 @@ description: "Write or update the one handoff file a supervising session resumes
 
 A session that supervises other agents (workers, watches, an overnight run) holds state nobody else has: who owns what, what is being watched, what the user allowed. When the session ends that state is gone, unless it is in a file. The **handoff** is that file: the only thing a fresh session can trust.
 
-This is different from a session-end note for code work, like the `handoff` skill in [mattpocock/skills](https://github.com/mattpocock/skills). That one records where a piece of code stands. This one records the work around it: the owner of each item, the watches to re-arm, and the permissions in force, so that a session on the loop can pick up the supervision, not just the code.
+Unlike a session-end note for code work (the `handoff` in [mattpocock/skills](https://github.com/mattpocock/skills)), it carries owners, watches and permission scope, so a supervising session can resume.
 
 ## Where it lives
 
-- `<dir>/handoff-<YYYY-MM-DD>.md`, where the caller chooses `<dir>` (a flow's state folder, or `.handoff/` by default). A second handoff on the same day adds the time: `handoff-<YYYY-MM-DD-HHMM>.md`.
+- `<dir>/handoff-<YYYY-MM-DD>.md`, where the caller chooses `<dir>` (a flow's state folder, or `.handoff/` by default). One file per date, so the newest handoff is also the last in sorted order.
+- **A run keeps its start date.** A run that crosses midnight (an overnight shift) writes to the file named for the day it started, until it ends.
 - Older detail goes to `<dir>/archive.md`, which is never named `handoff-*`, so tools looking for the newest handoff don't pick it up.
 - Take every date and time from `date`. Never estimate one: one night a log's clock ran an hour ahead because the times were guessed.
 
 ## Write or update
 
-1. **Same day, file exists**: update it in place. **New day**: start a new file from the newest one, carrying forward what is still open.
+1. **The file for this date or run exists**: update it in place. **Otherwise**: start a new file from the newest one, carrying forward what is still open.
 2. Fill every section of [references/template.md](references/template.md), in that order. An empty section says `none`, so the reader knows it wasn't forgotten.
 3. **Watches**: copy the rows of the `watch` unit's `watches.md`, with the exact command that re-arms each. Harness crons and monitors die with the session; the next one re-arms from this list.
 4. **Charter**: point at the scope, don't copy the grants. Name the scope (`night run <date>`, a repo, an epic) and list only today's changes, each with the user's sentence. The ledger stays the source; the `charter` unit reads it.
