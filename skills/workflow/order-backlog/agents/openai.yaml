@@ -1,0 +1,3 @@
+interface:
+  display_name: "Order backlog"
+  short_description: "Rank open tickets by WSJF inside the dependency graph, marking which rows are ready"

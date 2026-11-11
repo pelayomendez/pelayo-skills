@@ -28,7 +28,7 @@ Read the newest handoff and the memory index first. Then:
 
 1. **Decision round.** Ask everything in one question call, because once they leave you can't ask:
    - **Merge authorization for tonight.** Yes or no, and for which repos. If yes, an MR merges only when CI is green, the independent review approves and the browser smoke passes. If no, stack commits and leave MRs for the morning.
-   - **Queue.** Give the order (the ready rows of the latest `/backlog` report, if there is one) and ask for extra tickets (follow-ups, bugs from today's smokes).
+   - **Queue.** Give the order (the ready rows of the newest `backlog-*/queue.md` from the `order-backlog` skill, if there is one) and ask for extra tickets (follow-ups, bugs from today's smokes).
    - **Package bumps** allowed tonight, and whether a new release of a shared UI package may be picked up.
    - Any open product call a queued ticket depends on. Better to ask now than to guess later.
 2. **Record tonight's permissions** with the `charter` skill, scoped to `night run <date>` with `until` a time the next morning (e.g. `09:00`): merge authorization (which repos), package bumps, and any provisional product calls you may take alone. Answers that aren't permissions (the queue, a product call they settled) go in the handoff.

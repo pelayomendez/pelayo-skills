@@ -19,6 +19,15 @@ Every `SKILL.md` is a skill, loaded on demand. Two sub-modes, split by who can r
 
 Keep the two harnesses in sync: a skill is user-invoked in **both** or **neither**.
 
+## Units and flows
+
+Skills come in two sizes.
+
+- A **unit** does one job and can be used on its own: snapshot a backlog, check a claim, look up a permission. Units are model-invoked by default, so the agent can reach for one whenever the task fits and flows can call them. A unit only you should start (`tidy`) can be user-invoked, but then no flow can call it. A unit that hands work on writes it to a file with a fixed name, and the next unit reads that file.
+- A **flow** lives in `skills/flows/` and only chains units: in what order, where it stops for the user, and what happens when a unit fails. Flows are user-invoked. If a step needs logic of its own, that logic is a new unit, not a paragraph in the flow.
+
+Each flow lists the units it calls under a `## Units` heading, one backticked name per line. `npm run check` fails if a listed unit doesn't exist or is user-invoked, because a user-invoked skill can't reach another one.
+
 ## Frontmatter must be strict YAML
 
 Quote the `description` (or use a `>-` block scalar). An unquoted value containing `: ` parses as a nested mapping and strict YAML parsers reject the whole file — Claude Code's lenient parser will accept it while `npx skills` silently skips the skill.
@@ -39,7 +48,7 @@ If a piece of guidance exists both as an instruction and as a skill, the two cop
 
 ## READMEs
 
-Bucket `README.md`s and the top-level `README.md` group entries into **Always-on**, **User-invoked** and **Model-invoked**.
+The top-level `README.md` groups entries into **Always on**, **Flows**, **Units** and **Long-running sessions**, each with how it starts. Bucket `README.md`s group theirs into **User-invoked** and **Model-invoked**.
 
 ---
 

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Snapshot backlog"
+  short_description: "Read a backlog scope into one local snapshot file, read only"

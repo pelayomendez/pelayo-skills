@@ -1,0 +1,5 @@
+interface:
+  display_name: "Backlog"
+  short_description: "Flow: snapshot, prune with checked evidence, and order a backlog into a ranked queue"
+policy:
+  allow_implicit_invocation: false
