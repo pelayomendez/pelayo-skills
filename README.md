@@ -41,7 +41,7 @@ Small units that each do one job, and flows that chain them, the way [mattpocock
 | [ambient-companion](./skills/workflow/ambient-companion/SKILL.md) | A day-long companion that watches your work's event streams, keeps workers moving, and brings you only the decisions. | You type `/ambient-companion` |
 | [night-shift](./skills/workflow/night-shift/SKILL.md) | An unattended overnight run: a decision round, then a loop through worker, review, smoke, MR and merge, ending in a morning report. | Agent picks it up, or you type it |
 
-These two are next in line to become flows once their units exist.
+They become flows once `delegate`, `watch` and `handoff` exist as units.
 
 ### How things start
 
