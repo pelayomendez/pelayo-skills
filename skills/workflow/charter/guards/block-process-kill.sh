@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# PreToolUse(Bash) guard: block pattern-based process kills (added 2026-10-19
-# after Microsoft Defender flagged a sub-agent's `pkill -f "rsbuild dev" -P 1`
-# as tampering with its sensor). pkill/killall scan every process, Defender's
-# own included, so each run raises a security alert. Stop processes by PID, or
-# by the PID listening on a port: `lsof -tiTCP:<port> -sTCP:LISTEN`.
+# PreToolUse(Bash) guard for the charter's "never" tier: block pattern-based
+# process kills. pkill/killall match every process on the machine, other
+# sessions' work and endpoint-security sensors included (one such run was
+# flagged as tampering with the sensor). Stop processes by PID, or by the PID
+# listening on a port: `lsof -tiTCP:<port> -sTCP:LISTEN`. Needs jq; without it
+# the guard does nothing.
 cmd=$(jq -r '.tool_input.command // empty')
 [ -z "$cmd" ] && exit 0
 
@@ -13,7 +14,9 @@ cmd=$(jq -r '.tool_input.command // empty')
 norm=$(printf '%s' "$cmd" | perl -pe 's/"(?!\s*(?:pkill|killall)\s)([^"]*\s[^"]*)"/ /g; s/\x27(?!\s*(?:pkill|killall)\s)([^\x27]*\s[^\x27]*)\x27/ /g; s/["\x27]//g')
 
 # Command position only: start, after ; & | ( ` or a command prefix.
-start="(^|[;&|(\`]|(-c|do|then|else|xargs|sudo|exec|nohup|time|timeout[[:space:]]+[0-9]+)[[:space:]])[[:space:]]*"
+# Command position: start, after ; & | ( { ` or a command prefix (env, command, nice, VAR=x…),
+# with or without a path (/usr/bin/pkill).
+start="(^|[;&|({\`]|(-c|do|then|else|xargs|sudo|exec|nohup|time|env|command|builtin|nice|timeout[[:space:]]+[0-9]+|[A-Za-z_][A-Za-z0-9_]*=[^[:space:]]*)[[:space:]])[[:space:]]*([^;&|[:space:]]*/)?"
 if printf '%s' "$norm" | grep -Eq "${start}(pkill|killall)([[:space:]]|$)"; then
   echo "blocked: pkill/killall trips the endpoint security sensor; kill only your own processes by PID (or the PID from lsof -tiTCP:<port> -sTCP:LISTEN)" >&2
   exit 2
