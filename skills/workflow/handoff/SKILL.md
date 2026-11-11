@@ -7,7 +7,7 @@ description: "Write or update the one handoff file a supervising session resumes
 
 A session that supervises other agents (workers, watches, an overnight run) holds state nobody else has: who owns what, what is being watched, what the user allowed. When the session ends that state is gone, unless it is in a file. The **handoff** is that file: the only thing a fresh session can trust.
 
-Unlike a session-end note for code work (the `handoff` in [mattpocock/skills](https://github.com/mattpocock/skills)), it carries owners, watches and permission scope, so a supervising session can resume.
+Unlike a session-end note for code work, it carries owners, watches and permission scope, so a supervising session can resume.
 
 ## Where it lives
 
