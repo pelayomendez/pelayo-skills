@@ -12,13 +12,15 @@ State lives in `.companion/` at the root of the workspace you run from: the date
 
 ## The charter
 
-Every action falls in one of three tiers. The human sets them; write each into the handoff with the sentence that set it.
+Every action falls in one of three tiers, **alone**, **ask first** or **never**, and the tiers live in the user's charter ledger, not here. Run the `charter` skill before any action it lists, and to record a permission the user grants during the day. Scope this work's grants to it (its repos, or `companion <workspace>`), so they don't leak into other sessions.
 
-- **Alone**: reversible, internal or verifiable work. Spawn and watch workers, verify, review, keep the tracker consistent, open a change request, stack work behind a blocker, and in an unattended run make provisional product calls that are reversible and logged for the report.
-- **Ask first**: anything published under the human's name (comments, posts, descriptions), anything touching another team's system, destructive cleanup, and a merge or release, which needs the human's go for this run and a head revision that is green, reviewed and checked. Asking means showing the exact text or action and getting an OK for that item, one item at a time; an OK for one point covers only that point.
+For this kind of work the usual split is:
+
+- **Alone**: spawn and watch workers, verify, review, keep the tracker consistent, open a change request, stack work behind a blocker, and in an unattended run make provisional product calls that are reversible and logged for the report.
+- **Ask first**: anything published under the human's name, anything touching another team's system, destructive cleanup, and a merge or release, which also needs a head revision that is green, reviewed and checked.
 - **Never**: force-push; rewriting shared docs; installing software; stopping or deleting anything you did not start; starting new work from a watch tick.
 
-When an action is not clearly in a tier, it is _ask first_.
+When an action is not clearly covered, it is _ask first_.
 
 ## 1. Start
 
@@ -26,7 +28,7 @@ Read the newest handoff and `memory.md`. No handoff yet: ask the human three thi
 
 - **The work**: which tickets, branches or releases this session looks after, and what "done" means for each.
 - **The sources**: where changes that matter appear, such as repos and branches, the code host's change requests and pipelines, the tracker, deploys, other teams' releases.
-- **The charter**: what you may do alone, what to ask first, what never. Offer the defaults below and let them edit.
+- **The charter**: read the grants that cover this work with the `charter` skill. Where none exist, offer the split above as grants scoped to this work and let them edit before recording.
 
 Then check every in-flight item against **evidence**, as described under _Trusting the claim_ in the reference.
 
