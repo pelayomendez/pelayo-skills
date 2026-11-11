@@ -6,7 +6,7 @@ Start from the `delegate` unit's brief template, which carries the goal, scope, 
 
 ```markdown
 ## Ticket <KEY>: <one-line problem>
-<What happens today, and why. Root cause with file:line, confirmed by verify-claim against the browser / network log / DEV data. Line numbers are from <sha>; re-locate them.>
+<What happens today, and why. Root cause with file:line, confirmed by verify-claim against the browser / network log / the dev environment's data. Line numbers are from <sha>; re-locate them.>
 
 ## Fix
 - <Each change: behaviour first, then where. Say what must NOT change.>

@@ -29,8 +29,8 @@ Write `<run>/brief.md` from [references/brief.md](references/brief.md). It has s
 2. **Scope**: the worktree path, the files or areas it may change, and what is out of scope. This is its write boundary.
 3. **Done when**: a check it can run itself, and the last thing it does (commit, report file, final line).
 4. **Domain rules**: the product and domain rules that bind this work, copied in full. Without them a worker invents behaviour.
-5. **Permissions**: the charter lines that apply, quoted.
-6. **Standing forbids**, always, word for word from the template: no software installs; no `pkill` or `killall`; kill only processes it started, by PID; delete only directories it created; no attribution trailers; no force-push.
+5. **Permissions**: only the charter lines that fit the worker's own job, quoted. Never pass on the session's grants (merge, post, release): the worker doesn't get them by being launched.
+6. **Standing forbids**, always, word for word from the template: no software installs, and no install through a symlinked `node_modules`; no `pkill` or `killall`; kill only processes it started, by PID; delete only directories it created; no attribution trailers; no force-push; no push, MR/PR, merge, comments or tracker writes. A caller may lift one of the last only explicitly, naming it in the brief.
 
 Everything the worker needs goes in the file. A root cause belongs there with its file:line, not "see the ticket".
 
@@ -50,7 +50,7 @@ Say which you chose in the record, so a bad result can be traced to it.
 
 ```bash
 R=<run>
-cd <worktree> && ( claude -p --permission-mode acceptEdits --model <model> < "$R/brief.md" > "$R/worker.log" 2>&1 & echo $! > "$R/worker.pid" )
+cd "<worktree>" && ( claude -p --permission-mode acceptEdits --model <model> < "$R/brief.md" > "$R/worker.log" 2>&1 & echo $! > "$R/worker.pid" )
 ```
 
 - Never splice the brief into a command string (`sh -c "claude -p \"$(cat brief.md)\""`). The shell re-parses it: once, every backticked path and command in a brief was *executed* (type check, tests, `npm ci`, `git add`) and stripped from the prompt, so the worker ran blind.
@@ -58,7 +58,7 @@ cd <worktree> && ( claude -p --permission-mode acceptEdits --model <model> < "$R
 - Detaching wrappers such as `nohup` misbehave under some harnesses. The subshell with `&` above is enough; confirm the PID is alive.
 - Other harnesses take the same shape: the brief file on stdin, the log to `worker.log`, the PID to `worker.pid`.
 
-**Subagent**, for read-only or short work (a review, a check, a smoke test): the harness's subagent tool with an isolated worktree if it writes. Pass the brief file's content, and have it write its report to `<run>/report.md`.
+**Subagent**, for read-only or short work (a review, a check, a smoke test): the harness's subagent tool with an isolated worktree if it writes. Pass the brief file's content, and have it write its report to `<run>/<CHECK>-<KEY>.md` (`VERIFY-ABC-123.md`, `REVIEW-ABC-123.md`), so it never overwrites the worker's `report.md`.
 
 ## 5. Record
 

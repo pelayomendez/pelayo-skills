@@ -2,15 +2,20 @@
 # Model-free watcher: the cheapest way to arm a watch (see ../SKILL.md).
 #
 # Runs a command every <interval> seconds and exits as soon as its output
-# differs from the first run, printing the new output. Run it as a background
+# differs from the baseline, printing the new output. The baseline is the
+# first run, or, with --baseline <file>, that file: if it exists the watch
+# compares against it from the first poll, so a re-armed watch also reports
+# what changed while it was down; if it doesn't, the first run is written to
+# it. The script never updates an existing baseline file: the caller does,
+# after reporting the change. Run it as a background
 # command: its exit is what wakes the session, so no model tokens are spent
 # while nothing changes.
 #
 # Usage:
-#   watch.sh <interval-seconds> <command> [args...]
+#   watch.sh [--baseline <file>] <interval-seconds> <command> [args...]
 # Examples:
 #   watch.sh 300 git ls-remote origin refs/heads/main
-#   watch.sh 120 sh -c 'glab mr view 42 -F json | jq -r .state'
+#   watch.sh --baseline .watches/watch-mr-42.txt 120 sh -c 'glab mr view 42 -F json | jq -r .state'
 #
 # Writes a heartbeat to $WATCH_HEARTBEAT (default .watches/heartbeat) on
 # every poll, so a stalled watcher is visible. Exits 1 if the command fails
@@ -19,7 +24,13 @@
 
 set -uo pipefail
 
-interval="${1:?usage: watch.sh <interval-seconds> <command> [args...]}"
+usage="usage: watch.sh [--baseline <file>] <interval-seconds> <command> [args...]"
+baseline_file=""
+if [ "${1:-}" = "--baseline" ]; then
+  baseline_file="${2:?$usage}"
+  shift 2
+fi
+interval="${1:?$usage}"
 shift
 [ $# -gt 0 ] || { echo "watch.sh: no command given" >&2; exit 2; }
 case "$interval" in
@@ -32,7 +43,21 @@ if ! { mkdir -p "$(dirname "$heartbeat")" && : > "$heartbeat"; } 2>/dev/null; th
   exit 2
 fi
 
-baseline=$("$@" 2>/dev/null) || { echo "watch.sh: command failed on first run: $*" >&2; exit 1; }
+first=$("$@" 2>/dev/null) || { echo "watch.sh: command failed on first run: $*" >&2; exit 1; }
+if [ -n "$baseline_file" ] && [ -f "$baseline_file" ]; then
+  baseline=$(cat "$baseline_file")
+  if [ "$first" != "$baseline" ]; then
+    echo "changed: $*"
+    printf '%s\n' "$first"
+    exit 0
+  fi
+else
+  baseline=$first
+  if [ -n "$baseline_file" ]; then
+    mkdir -p "$(dirname "$baseline_file")" && printf '%s\n' "$first" > "$baseline_file" \
+      || { echo "watch.sh: cannot write baseline at $baseline_file" >&2; exit 2; }
+  fi
+fi
 failures=0
 
 while true; do

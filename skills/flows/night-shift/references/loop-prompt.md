@@ -3,9 +3,10 @@
 Arm the loop with `/loop` and no interval, so it paces itself. Fill in the `<…>` from tonight's decision round. The prompt must stand alone: a tick may run after a context compaction.
 
 ```text
-Night shift <date> (user away until ~<time>). Handoff: <tasks>/handoff-<date>.md. Read it first every tick, and follow the night-shift flow.
+Night shift <date> (user away until ~<time>). Handoff: <tasks>/handoff-<start date>.md (keep this file all night, even past midnight). Read it first every tick, and follow the night-shift flow.
 
 Tonight's decisions:
+- Push + open MRs: <AUTHORIZED for <repos> | NOT authorized: commits stay local>.
 - Merge: <AUTHORIZED for <repos> when CI is green on the head SHA + the independent review approves + the browser smoke passes | NOT authorized: stack commits, leave the MRs ready>.
 - Queue: <A → B → C …>. Extras: <…>. Package bumps allowed: <…>.
 - Product calls pending: <…>. Otherwise take the option closest to the user's prior decisions and log it.
@@ -13,11 +14,11 @@ Tonight's decisions:
 Each tick:
 1. Ticket. Is a worker or subagent running? Check its pid, and whether its wait has returned.
    - Worker exited: verify, then review, then smoke, in that order, never two suites at once.
-   - Gates done: verify-claim on the worker's claim, then a fix worker, or push → MR → watch CI on the full SHA → merge (only if authorized) → fast-forward the worktree → tracker Done.
+   - Gates done: verify-claim on the worker's claim, then a fix worker, or push → MR (only if authorized) → watch CI on the full SHA → merge (only if authorized) → fast-forward the worktree → tracker Done.
    - Nothing running: the next ticket in the queue. Confirm its cause with verify-claim, tracker In Progress, then delegate.
    Never start a worker while a smoke is running.
 2. Watches: read <tasks>/watches.md and act on what changed. Re-arm any watch that died. A watch never starts work by itself.
-3. Open MRs in the watched repos: review each head SHA not in watch-backend-mrs.json, in a read-only subagent, into <tasks>/backend-reviews/<repo>-<iid>.md. Never post.
+3. Open MRs in the watched repos: review each head SHA not in reviewed-mrs.json, in a read-only subagent, into <tasks>/backend-reviews/<repo>-<iid>.md; add it to reviewed-mrs.json only once that report exists. Never post.
 4. Packages: on a new version, an impact summary, then update the baseline.
 5. Main branch: the latest release, and whether build + deploy succeeded. Which merges are live?
 6. Log one timestamped line per event in the handoff (time from `date`).
