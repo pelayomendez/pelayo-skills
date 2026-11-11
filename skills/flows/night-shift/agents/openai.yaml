@@ -1,0 +1,5 @@
+interface:
+  display_name: "Night Shift"
+  short_description: "Flow: an unattended overnight run that takes a ticket queue through worker, checks, MR and merge"
+policy:
+  allow_implicit_invocation: false

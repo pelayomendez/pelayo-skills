@@ -1,7 +1,7 @@
 {
   "name": "pelayo-skills",
-  "version": "0.8.0",
-  "description": "Small skills for running coding agents, and flows that chain them: an always-on reporting style, a permission charter, backlog pruning and ordering, claim checks by a fresh agent, long-running companion and overnight sessions, and upkeep for the setup itself.",
+  "version": "0.9.0",
+  "description": "Small skills for running coding agents, and flows that chain them: an always-on reporting style, a permission charter, backlog pruning and ordering, claim checks by a fresh agent, worker briefs, watches and handoffs, a day companion and a night shift built from them, and upkeep for the setup itself.",
   "author": {
     "name": "Pelayo Méndez",
     "url": "https://github.com/pelayomendez"
@@ -19,15 +19,18 @@
     "skills"
   ],
   "skills": [
+    "./skills/flows/ambient-companion",
     "./skills/flows/backlog",
+    "./skills/flows/night-shift",
     "./skills/maintenance/reap-procs",
     "./skills/maintenance/tidy",
-    "./skills/workflow/ambient-companion",
     "./skills/workflow/charter",
-    "./skills/workflow/night-shift",
+    "./skills/workflow/delegate",
+    "./skills/workflow/handoff",
     "./skills/workflow/order-backlog",
     "./skills/workflow/prune-backlog",
     "./skills/workflow/snapshot-backlog",
-    "./skills/workflow/verify-claim"
+    "./skills/workflow/verify-claim",
+    "./skills/workflow/watch"
   ]
 }

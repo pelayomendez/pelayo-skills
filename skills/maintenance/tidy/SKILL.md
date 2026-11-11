@@ -36,7 +36,10 @@ Do the weekly steps, then:
 4. **Steering files.** Global `CLAUDE.md` and everything it `@import`s (imports load in full; they organise, they don't save context). Flag lines that change nothing, rules contradicted elsewhere, rules duplicated in a skill, and anything past ~200 lines total. Propose deletions first.
 5. **Skills, plugins, MCP servers, hooks.** List what is installed. For each, when was it last used (transcripts, `/skill-doctor`)? Propose removing what has not been used since the last monthly pass, and any hook that encodes a preference rather than a hard rule.
 6. **Leftovers.** `git worktree list` in the repos the user names: prunable entries and worktrees whose branch is merged. Long-running processes from dead sessions: run the `/reap-procs` skill if installed. Report, then clean only what the user picks.
-7. **Charter.** If the user keeps a charter ledger (the `charter` skill), remove lines past their `until` and revoked ones, flag contradictions at equal scope, and propose a guard for any never that was broken since the last pass.
+7. **Charter.** If the user keeps a charter ledger (the `charter` skill), remove lines past their `until` and revoked ones, flag contradictions at equal scope, and propose a guard for any never that was broken since the last pass. Then compare the ledger's **alone** lines with the harness's allow rules (Claude Code: `permissions.allow`, `ask` and `deny` in the user's `settings.json` and `settings.local.json`, and in the project files under `.claude/`). List two things:
+   - **Grants the harness will still block**: an alone line with no matching allow rule, or with an ask or deny rule over it. An unattended run stops on the prompt.
+   - **Allow rules no grant justifies**: an allow rule for an action the ledger keeps at ask first or never (e.g. `Bash(git push:*)` while push is ask first). The harness lets it through without the lookup.
+   Propose the edits to either side; change nothing without the user's pick.
 8. **Cost.** If a usage tool is already installed (`ccusage`, `rtk gain`, …) show the month's trend in one line. Never install one.
 
 ## State

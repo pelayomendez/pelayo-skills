@@ -1,7 +1,7 @@
 ---
 name: reap-procs
-description: "Find what is eating the machine after agent sessions — orphaned test runs, dev servers, automation Chrome, old daemons, stale worktrees — attribute each to its session, and stop only what nobody owns. Use when the machine is slow, swapping, fans are loud, or the user asks about leftover vitest/node/Chrome processes."
-argument-hint: "[--kill] [--dev] [--stuck] [--stuck-min N]"
+description: "Find what is eating the machine after agent sessions — orphaned test runs, dev servers, automation Chrome, old daemons, stale worktrees — attribute each to its session, and stop only what nobody owns. Also a preflight that says go or wait before several agents start. Use when the machine is slow, swapping, fans are loud, the user asks about leftover vitest/node/Chrome processes, or before launching several agents at once."
+argument-hint: "[preflight] | [--kill] [--dev] [--stuck] [--stuck-min N]"
 allowed-tools: Bash
 ---
 
@@ -24,7 +24,7 @@ Agent sessions start processes that can outlive them: test runs, dev servers, th
 scripts/reap-procs.sh $ARGUMENTS
 ```
 
-Show its table as-is, then one line: groups found, swap, what was stopped.
+Show its table as-is, then one line: groups found, swap, what was stopped. For `preflight`, don't pass it to the script: follow **Preflight** below.
 
 | Class | Stopped by `--kill` | Notes |
 |---|---|---|
@@ -33,6 +33,22 @@ Show its table as-is, then one line: groups found, swap, what was stopped.
 | `dev` orphan | only with `--dev` | skipped when listening on a protected port |
 | `vitest*` stuck | only with `--stuck` | owned run older than `--stuck-min` (default 20); stops the run, not its owner |
 | `daemon` | never, and never as part of another group | e.g. the nx daemon; stop it cleanly with `npx nx daemon --stop` in its repo, after asking |
+
+## Preflight
+
+`preflight`: before launching several agents at once, say whether the machine can take them. It reads only. **Never stop anything in preflight**, not even an orphan: report it, and leave the reaping to a normal run.
+
+Check, in this order:
+
+1. **Swap**: `sysctl -n vm.swapusage` (macOS) or `free -h` (Linux). Swap in use and growing means wait.
+2. **Load against cores**: `uptime` and `sysctl -n hw.ncpu` (or `nproc`). Count running test suites and type checks with the command count below; one already running in the same large repo means wait.
+3. **Listening ports**: `lsof -iTCP -sTCP:LISTEN -P -n`. A port the new agents need, held by another session, means wait.
+4. **Browsers held by other sessions**: automation Chrome (chrome-devtools-mcp) with a live owner. If the new agents need that profile, wait, or use another instance.
+5. **Stale worktrees**: `git worktree list` in the target repos. Prunable entries, or a worktree already on the branch a new agent would create, mean wait until they are cleared.
+
+Then `scripts/reap-procs.sh` with no flags, for orphans worth reaping first.
+
+Report one line, **go** or **wait**, with the reason and what would turn a wait into a go ("wait: swap 6 of 8 GB and a type check running in the same repo; go once it finishes"). Name each finding's owner, as below.
 
 ## Read the machine right
 
