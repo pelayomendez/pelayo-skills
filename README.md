@@ -2,11 +2,13 @@
 
 # pelayo-skills
 
-Skills for running your agent factory: plan the work, hand it out, check it, keep the line running. [Landing page](https://pelayomendez.github.io/pelayo-skills/).
+On-the-loop operations for coding agents. [Landing page](https://pelayomendez.github.io/pelayo-skills/).
 
-The agents and their coding skills are the machines. These run the plant around them:
+I use these to automate code production. The coding agents are the machines; these skills run the line around them: what to build next, who may do what, launching work, checking it, watching it and handing it over. The point is to supervise from **on the loop** (change the system when a result is wrong) instead of **in the loop** (redo each result by hand).
 
-| In the factory | Skills |
+A factory is the easiest way to see what is here:
+
+| On the line | Skills |
 | --- | --- |
 | production planning | `backlog` |
 | work orders | `delegate` |
@@ -15,7 +17,9 @@ The agents and their coding skills are the machines. These run the plant around 
 | permits and safety rules | `charter` |
 | shift handover | `handoff` |
 | the night shift and the day supervisor | `night-shift`, `ambient-companion` |
-| plant maintenance | `tidy`, `reap-procs` |
+| maintenance | `tidy`, `reap-procs` |
+
+It is not a full factory, and not a "dark" one with nobody watching: a person stays on the loop. The line grows one concept at a time, from what real sessions needed.
 
 ## What's inside
 

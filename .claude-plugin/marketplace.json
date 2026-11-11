@@ -9,14 +9,14 @@
     {
       "name": "pelayo-skills",
       "source": "./",
-      "description": "Skills for running your agent factory: plan the work (backlog), hand it out (delegate), check it (verify-claim), watch the line (watch), hand over shifts (handoff), keep permissions in a charter and the setup tuned. Small units, chained into flows.",
+      "description": "On-the-loop operations for coding agents: the agents are the machines, these skills run the line around them. Plan the work (backlog), hand it out (delegate), check it (verify-claim), watch it (watch), hand over (handoff), keep permissions in a charter and the setup tuned. Small units, chained into flows.",
       "category": "productivity",
       "keywords": [
-        "agent-factory",
         "agent-operations",
         "agents",
         "communication",
         "engineering",
+        "on-the-loop",
         "orchestration",
         "skills"
       ]
