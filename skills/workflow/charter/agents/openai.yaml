@@ -1,0 +1,3 @@
+interface:
+  display_name: "Charter"
+  short_description: "Look up and record what the agent may do alone, ask first, or never, per scope"
