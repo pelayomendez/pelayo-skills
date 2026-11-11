@@ -9,7 +9,7 @@ Agent instructions and skills I use for real engineering work with coding agents
 | Name | What it does | How it starts |
 | --- | --- | --- |
 | [high-level-communication](./instructions/high-level-communication.md) | Report like a senior engineer to another: concepts and outcomes over files; why, what changed, impact, trade-offs, risks, next steps. | **Always on** — read in every session |
-| [charter](./instructions/charter.md) | Before anything sensitive, the agent checks your charter: one ledger of what it may do alone, must ask first, or never, per scope. | **Always on** — the reminder; the [charter skill](./skills/workflow/charter/SKILL.md) does the lookup |
+| [check-the-charter](./instructions/check-the-charter.md) | Before anything sensitive, the agent checks your charter: one ledger of what it may do alone, must ask first, or never, per scope. | **Always on** — the reminder; the [charter skill](./skills/workflow/charter/SKILL.md) does the lookup |
 | [ambient-companion](./skills/workflow/ambient-companion/SKILL.md) | A day-long companion session that watches your work's event streams, keeps workers moving, and brings you only the decisions. | **You type** `/ambient-companion` |
 | [charter skill](./skills/workflow/charter/SKILL.md) | Looks up a grant before an action and records the permissions you give in your own words, with date, scope and your sentence. Ships two opt-in guard hooks for the commonest nevers. | **Agent picks it up** before sensitive actions, or you type it |
 | [contract-audit](./skills/engineering/contract-audit/SKILL.md) | Find gaps in the data contract between a producer repo and a consumer repo: key drift, ignored variants, conflicting defaults, absence semantics. | **Agent picks it up** when relevant, or you type it |
