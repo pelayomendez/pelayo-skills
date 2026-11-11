@@ -8,4 +8,6 @@ Long-running sessions that drive other agents.
 
 ## Model-invoked
 
+- **[charter](./charter/SKILL.md)** — Look up and record what the agent may do alone, must ask first, or must never do, per scope, in your charter ledger. The other workflow skills read their permissions from it.
+
 - **[night-shift](./night-shift/SKILL.md)** — Unattended orchestrator run while you're away: a decision round up front, then a self-paced loop that takes tickets through worker, verify, review, smoke, MR and merge, plus backend, package and deploy watches, ending in a morning report.

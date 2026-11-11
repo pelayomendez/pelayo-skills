@@ -9,9 +9,8 @@ Copy to `.companion/handoff-<YYYY-MM-DD>.md`. Keep it short enough to read in tw
 <One paragraph a fresh session can act on: the body of work, where we are, the next step.>
 
 ## Charter
-- Alone: …  (set <date>: "<the human's sentence>")
-- Ask first: …
-- Never: …
+Grants live in the charter ledger (`charter` skill), scoped to `<this work's scope>`. Note here only what changed today:
+- <date>: <tier> · <action> — "<the human's sentence>"
 
 ## Event sources and triggers
 | Source | Trigger | How to re-arm |
