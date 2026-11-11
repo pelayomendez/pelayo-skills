@@ -3,7 +3,7 @@
 One Markdown file, three sections, one grant per line:
 
 ```
-- <action> · <scope> · since <YYYY-MM-DD>[ · until <YYYY-MM-DD or event>][ · revoked <YYYY-MM-DD>] — "<the user's sentence>"
+- <action> · <scope> · since <YYYY-MM-DD>[ · until <YYYY-MM-DD[ HH:MM]>][ · revoked <YYYY-MM-DD>] — "<the user's sentence>"
 ```
 
 - **action**: a verb phrase the agent can match against what it is about to do ("merge reviewed PRs, sha-pinned", "post comments on the tracker").
