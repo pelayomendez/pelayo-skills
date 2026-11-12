@@ -27,6 +27,7 @@ Each unit ends `done`, `blocked <reason>` or `needs-you <exact question>`. Per-i
 | watch | exists | parse forge JSON leniently (raw control chars in MR bodies) |
 | delegate | exists | implementer and reviewer briefs |
 | charter | exists | merge, tag/deploy and posts are ask-first |
+| support-report | todo | queue by state, untriaged items, items outside the intake, throughput; first done by hand 2026-11-12 |
 | release adapter | per installation | e.g. tag → manifest → environment sync |
 
 ## Lessons from runs
