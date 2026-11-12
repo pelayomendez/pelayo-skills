@@ -1,0 +1,3 @@
+interface:
+  display_name: "Tracker move"
+  short_description: "Move one item between the sections of a status board kept in a ticket description, leaving the rest untouched"
