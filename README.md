@@ -14,6 +14,7 @@ A factory is the easiest way to see what is here:
 | work orders | `delegate` |
 | quality control | `verify-claim` |
 | control panel | `watch` |
+| status board | `tracker-move` |
 | permits and safety rules | `charter` |
 | shift handover | `handoff` |
 | the night shift and the day supervisor | `night-shift`, `ambient-companion` |
@@ -51,6 +52,7 @@ Small units that each do one job, and flows that chain them. A unit works on its
 | [order-backlog](./skills/workflow/order-backlog/SKILL.md) | Ranks tickets by WSJF inside the dependency graph and marks which are ready to start. | Agent picks it up |
 | [delegate](./skills/workflow/delegate/SKILL.md) | Writes a self-sufficient brief to a file and launches a worker in its own worktree, with the standing forbids in every brief. | Agent picks it up |
 | [watch](./skills/workflow/watch/SKILL.md) | Watches a pipeline, MR, deploy or package version for one exact revision against a baseline, and reports changes. Never starts work. | Agent picks it up |
+| [tracker-move](./skills/workflow/tracker-move/SKILL.md) | Moves one item between the sections of a status board kept in a ticket's description, leaving the rest untouched. | Agent picks it up |
 | [handoff](./skills/workflow/handoff/SKILL.md) | Writes the one size-capped file a supervising session resumes from: state and owners, watches to re-arm, the charter scope in force. | Agent picks it up |
 | [reap-procs](./skills/maintenance/reap-procs/SKILL.md) | Finds what is eating the machine after agent sessions, says whose each process is, and stops only what nobody owns. Before a fan-out, says go or wait. | Agent picks it up |
 | [tidy](./skills/maintenance/tidy/SKILL.md) | A weekly and monthly tune-up of your agent setup: retro, memory, steering files, skills, permissions, hooks. A session-start hook reminds you when a pass is due. | You type `/tidy` |
