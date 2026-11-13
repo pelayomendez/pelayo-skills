@@ -21,7 +21,7 @@ Each unit ends `done`, `blocked <reason>` or `needs-you <exact question>`. Per-i
 | Unit | Status | Notes |
 |---|---|---|
 | tracker-move | built | first real use: 2026-11-12 |
-| qualify | todo | research each untriaged item (code, logs), check it has repro, env, expected, and needs no design/product decision; label it for agent work or record the missing question. Never fixes. Named 2026-11-13 |
+| qualify | todo | research each untriaged item (code, logs), check it has repro, env, expected, and needs no design/product decision; label it for agent work or record the missing question. Never fixes. Named 2026-11-13. Labels from config (SB: `auto-fixable` + `ready-for-agent`); labels alone and reports evidence, posts no comments |
 | ticket-pick | todo | readiness check + In Progress + assign + sprint/points |
 | ui-check | todo | check prompt + URL in a controlled browser; starts the app the way the repo needs it |
 | capacity | todo | who holds the dev port, the browser, the agent slots |
