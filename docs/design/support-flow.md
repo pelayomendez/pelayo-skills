@@ -21,6 +21,7 @@ Each unit ends `done`, `blocked <reason>` or `needs-you <exact question>`. Per-i
 | Unit | Status | Notes |
 |---|---|---|
 | tracker-move | built | first real use: 2026-11-12 |
+| qualify | todo | research each untriaged item (code, logs), check it has repro, env, expected, and needs no design/product decision; label it for agent work or record the missing question. Never fixes. Named 2026-11-13 |
 | ticket-pick | todo | readiness check + In Progress + assign + sprint/points |
 | ui-check | todo | check prompt + URL in a controlled browser; starts the app the way the repo needs it |
 | capacity | todo | who holds the dev port, the browser, the agent slots |
@@ -38,3 +39,5 @@ Each unit ends `done`, `blocked <reason>` or `needs-you <exact question>`. Per-i
 - 2026-11-12: the check project had no fixture objects. The check adds and saves fixtures in a project the agent owns.
 - 2026-11-12: the forge's MR JSON broke a strict parser. The poll stopped on the parse error instead of spinning, which is the right behaviour.
 - The predecessor was a single sweep command (label → worker → MR). Keep its per-item decision: skip / retry-MR / needs-info / spawn. Also keep: idempotent sweeps, reaping dead workers first, injecting ticket text into workers, and no MR without a `ready` review.
+- 2026-11-12: the board drifted from the tracker (items moved by others never reached it). The flow needs a reconcile pass, not only moves of its own items.
+- 2026-11-13: the predecessor swept a label (`auto-fixable`, plus `ready-for-agent` and `auto-fix-attempted`) that people applied by hand. Nothing decided who earned it; `qualify` is that missing step.
