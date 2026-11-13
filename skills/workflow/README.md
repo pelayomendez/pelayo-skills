@@ -12,4 +12,5 @@ Units for running agent work: permissions, backlogs, workers, watches and handof
 - **[delegate](./delegate/SKILL.md)**: writes a self-sufficient worker brief (`brief.md`), picks the model, and launches the worker in its own worktree, recording its log and PID (`worker.log`, `worker.pid`, `workers.md`).
 - **[watch](./watch/SKILL.md)**: watches external state for one exact revision (a pipeline, an MR, a deploy, a package version) against a recorded baseline, reports changes, and lists every armed watch (`watches.md`). Never starts work.
 - **[handoff](./handoff/SKILL.md)**: writes the one size-capped file a supervising session resumes from (`handoff-<date>.md`): restart prompt, state and owners, the charter scope in force, watches to re-arm.
+- **[qualify](./qualify/SKILL.md)**: researches each reported bug (code, logs, browser when needed) and labels it ready for an agent, or names the missing question. Never fixes.
 - **[tracker-move](./tracker-move/SKILL.md)**: moves one item between the sections of a status board kept in a ticket's description (an epic's Tracker), leaving the rest of the description untouched.

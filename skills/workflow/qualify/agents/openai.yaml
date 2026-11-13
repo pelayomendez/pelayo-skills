@@ -1,0 +1,3 @@
+interface:
+  display_name: "Qualify"
+  short_description: "Research each reported bug and label it ready for an agent, or name the question that is missing"

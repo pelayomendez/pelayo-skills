@@ -1,6 +1,6 @@
 {
   "name": "pelayo-skills",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "On-the-loop operations for coding agents: the agents are the machines, these skills run the line around them. Plan the work (backlog), hand it out (delegate), check it (verify-claim), watch it (watch), hand over (handoff), keep permissions in a charter and the setup tuned. Small units, chained into flows.",
   "author": {
     "name": "Pelayo Méndez",
@@ -33,6 +33,7 @@
     "./skills/workflow/prune-backlog",
     "./skills/workflow/snapshot-backlog",
     "./skills/workflow/tracker-move",
+    "./skills/workflow/qualify",
     "./skills/workflow/verify-claim",
     "./skills/workflow/watch"
   ]
