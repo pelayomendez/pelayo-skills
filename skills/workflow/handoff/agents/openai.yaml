@@ -1,0 +1,3 @@
+interface:
+  display_name: "Handoff"
+  short_description: "Write the size-capped handoff a supervising session resumes from: state, owners, watches, charter scope"

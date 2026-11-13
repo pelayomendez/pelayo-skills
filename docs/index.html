@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>pelayo-skills · instructions and skills for coding agents</title>
-  <meta name="description" content="Agent instructions and skills for engineering with coding agents: a reporting style, a permission charter, backlog pruning and ordering, long-running companion and overnight sessions, and upkeep for the setup itself.">
+  <title>pelayo-skills · on-the-loop operations for coding agents</title>
+  <meta name="description" content="On-the-loop operations for coding agents: the agents are the machines, these skills run the line around them. Plan, hand out, check, watch, hand over, under a permission charter.">
   <link rel="icon" href="icon.png">
   <meta property="og:title" content="pelayo-skills">
-  <meta property="og:description" content="Agent instructions and skills for real engineering work, small and model-agnostic.">
+  <meta property="og:description" content="On-the-loop operations for coding agents.">
   <meta property="og:url" content="https://pelayomendez.github.io/pelayo-skills/">
   <meta property="og:image" content="https://pelayomendez.github.io/pelayo-skills/og.png">
   <meta property="og:image:width" content="1200">
@@ -42,17 +42,26 @@
   <header>
     <img src="icon.png" alt="">
     <h1>pelayo-skills</h1>
-    <p class="tag">The instructions and skills I use every day with coding agents, each one labelled by how it starts: always on, when you type it, or when the agent picks it up.</p>
+    <p class="tag">The coding agents are the machines; these skills run the line around them, so one person can supervise from on the loop instead of in it. Small units, chained into flows.</p>
     <p class="cta"><a class="primary" href="#install">Install</a><a href="https://github.com/pelayomendez/pelayo-skills">GitHub</a></p>
   </header>
 
-  <h2>What's inside</h2>
+  <h2>Flows</h2>
+  <table>
+    <tr><td class="accent">/backlog</td><td>Snapshot, prune and order a backlog: closes only what a fresh agent confirmed, then ranks the rest by what unblocks most.</td></tr>
+    <tr><td class="accent">/ambient-companion</td><td>A day-long session that watches your work's event streams, delegates and checks, and brings you only the decisions.</td></tr>
+    <tr><td class="accent">/night-shift</td><td>An unattended overnight run: a decision round, then queue → delegate → verify → review → smoke → merge, and a morning report.</td></tr>
+  </table>
+
+  <h2>Units</h2>
   <table>
     <tr><td class="accent">high-level-communication</td><td>Always on. Report like a senior engineer to another: why, what changed, impact, trade-offs, risks, next steps.</td></tr>
-    <tr><td>ambient-companion</td><td>You type it. A day-long session that watches your work's event streams and brings you only the decisions.</td></tr>
-    <tr><td>night-shift</td><td>An unattended overnight run that takes a ticket queue through worker, review, smoke, MR and merge, and leaves a morning report.</td></tr>
-    <tr><td>tidy</td><td>You type it. A weekly and monthly tune-up of your agent setup: retro, memory pruning, steering files, skills, hooks.</td></tr>
+    <tr><td>charter</td><td>One ledger of what the agent may do alone, must ask first, or never, per scope, in your own words.</td></tr>
+    <tr><td>verify-claim</td><td>A fresh agent checks another agent's claim, seeing only the claim and its evidence.</td></tr>
+    <tr><td>delegate · watch · handoff</td><td>Brief and launch a worker safely, watch a pipeline or MR until it settles, and leave a handoff another session can resume.</td></tr>
+    <tr><td>snapshot · prune · order-backlog</td><td>Read a backlog once, propose what can close with evidence, rank the rest by WSJF inside the dependency graph.</td></tr>
     <tr><td>reap-procs</td><td>Finds what is eating the machine after agent sessions, says whose each process is, and stops only what nobody owns.</td></tr>
+    <tr><td>tidy</td><td>You type it. A weekly and monthly tune-up of your agent setup: retro, memory pruning, steering files, skills, hooks.</td></tr>
   </table>
 
   <h2 id="install">Install</h2>

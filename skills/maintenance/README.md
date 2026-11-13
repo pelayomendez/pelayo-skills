@@ -8,4 +8,4 @@ Keeping the agent setup and the machine it runs on healthy.
 
 ## Model-invoked
 
-- **[reap-procs](./reap-procs/SKILL.md)** — Find what is eating the machine after agent sessions (orphaned test runs, dev servers, automation Chrome, old daemons, stale worktrees), attribute each to its session, and stop only what nobody owns.
+- **[reap-procs](./reap-procs/SKILL.md)** — Find what is eating the machine after agent sessions (orphaned test runs, dev servers, automation Chrome, old daemons, stale worktrees), attribute each to its session, and stop only what nobody owns. Its preflight mode says go or wait before several agents start.
