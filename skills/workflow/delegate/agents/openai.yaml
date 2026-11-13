@@ -1,0 +1,3 @@
+interface:
+  display_name: "Delegate"
+  short_description: "Write a self-sufficient worker brief to a file and launch the worker safely in its own worktree"

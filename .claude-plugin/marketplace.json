@@ -9,14 +9,16 @@
     {
       "name": "pelayo-skills",
       "source": "./",
-      "description": "Small skills for running coding agents, and flows that chain them: an always-on reporting style, a permission charter, backlog pruning and ordering, claim checks by a fresh agent, long-running companion and overnight sessions, and upkeep for the setup itself.",
-      "category": "engineering",
+      "description": "On-the-loop operations for coding agents: the agents are the machines, these skills run the line around them. Plan the work (backlog), hand it out (delegate), check it (verify-claim), watch it (watch), hand over (handoff), keep permissions in a charter and the setup tuned. Small units, chained into flows.",
+      "category": "productivity",
       "keywords": [
-        "engineering",
-        "skills",
-        "communication",
+        "agent-operations",
         "agents",
-        "orchestration"
+        "communication",
+        "engineering",
+        "on-the-loop",
+        "orchestration",
+        "skills"
       ]
     }
   ]

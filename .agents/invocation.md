@@ -48,7 +48,7 @@ If a piece of guidance exists both as an instruction and as a skill, the two cop
 
 ## READMEs
 
-The top-level `README.md` groups entries into **Always on**, **Flows**, **Units** and **Long-running sessions**, each with how it starts. Bucket `README.md`s group theirs into **User-invoked** and **Model-invoked**.
+The top-level `README.md` groups entries into **Always on**, **Flows** and **Units**, each with how it starts. Bucket `README.md`s group theirs into **User-invoked** and **Model-invoked**.
 
 ---
 
