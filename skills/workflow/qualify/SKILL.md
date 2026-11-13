@@ -5,7 +5,9 @@ description: "Decide, bug by bug, whether a reported bug is ready for an agent t
 
 # Qualify
 
-A fix worker can only be as good as the ticket it gets. A sweep that picks up "every bug labelled for agents" is safe only if something decided, with evidence, which bugs earn the label. This unit is that decision. It reads each open bug from the intake, researches it, and ends in one of three places: **ready** (labelled), **needs you** (a question you can answer), or **waiting** (a question only someone else can answer).
+A fix worker can only be as good as the ticket it gets. A sweep that picks up "every bug labelled for agents" is safe only if something decided, with evidence, which bugs earn the label. This unit is that decision. It reads each open bug from the intake, researches it, and ends in one of four places: **ready** (labelled), **needs you** (a question you can answer), **waiting** (a question only someone else can answer), or **for a human** (real, but an agent can't fix or verify it).
+
+The point is a short list: find the bugs an agent can take end to end, and turn everything else into either a few sharp questions for the user or a clear hand-off.
 
 It never writes code and never opens a branch.
 
@@ -33,7 +35,8 @@ It never writes code and never opens a branch.
 4. **End in one place.**
    - **ready**: add the ready labels. Check the charter first (run the `/charter` skill). A grant for this flow covers it; without one, ask.
    - **needs you**: one question, short, with what the research found. Collect these for the grilling step below; don't label yet.
-   - **waiting**: the decision belongs to someone else (a designer, a backend team, the reporter). Name who and what. Don't label, and don't ask the user to guess.
+   - **waiting**: the decision belongs to someone else (a designer, a backend team, the reporter), or the bug is already covered by other work. Name who and what. Don't label, and don't ask the user to guess.
+   - **for a human**: the bug needs hands-on work an agent can't verify: real hardware, a live realtime session, a browser or device the agent has no controlled instance of, timing that only shows up interactively. Say what the human needs to have in front of them. Don't label.
 
 ## Grilling the gaps
 
@@ -53,9 +56,10 @@ After the pass, take the **needs you** bugs one at a time. Ask one question per 
 
 ## Output
 
-A report with three groups:
+A report with four groups:
 - **ready**: key, one line of evidence, the fix hint.
 - **needs you**: key and the question.
 - **waiting**: key, who, and what is being waited for.
+- **for a human**: key and what setup it needs.
 
 Then a line saying which labels were added, and whether any were blocked by the charter.
