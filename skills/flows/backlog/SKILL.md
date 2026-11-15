@@ -11,10 +11,15 @@ argument-hint: "<scope: project, epic, label or query> [--prune-only | --order-o
 
 ## Units
 
+Steps, in order:
+
 - `snapshot-backlog`
 - `prune-backlog`
 - `verify-claim`
 - `order-backlog`
+
+Throughout:
+
 - `charter`
 
 All of them write into one run folder, `backlog-<scope-slug>-<YYYY-MM-DD>/`, so a run can be resumed after a `/clear` or picked up by another session.

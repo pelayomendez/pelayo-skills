@@ -12,11 +12,16 @@ This is a flow. Watching, delegating, checking and handing off are units that al
 
 ## Units
 
-- `charter`
+Steps, in order:
+
 - `watch`
 - `delegate`
 - `verify-claim`
 - `handoff`
+
+Throughout:
+
+- `charter`
 - `order-backlog`
 - `reap-procs`
 

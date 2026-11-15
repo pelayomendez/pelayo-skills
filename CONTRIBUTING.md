@@ -29,6 +29,7 @@ Installed by `./scripts/install-instructions.sh`, which symlinks it into `~/.cla
 
 1. Build or find the units first. A flow holds no logic of its own.
 2. Create `skills/flows/<name>/SKILL.md`, user-invoked, with a `## Units` list of the skills it calls.
+   Split it in two: under `Steps, in order:` the units that run one after another, under `Throughout:` the ones any step may call (like `charter`). Tools that draw flows read the order from there.
 3. Write the steps as calls to those units, plus where it stops for the user.
 4. Steps 4 and 5 of *Adding a skill* apply: `agents/openai.yaml` with `policy.allow_implicit_invocation: false`, and registration in `.claude-plugin/plugin.json`.
 5. Add it to `skills/flows/README.md` and to the **Flows** table in the top-level `README.md`.
