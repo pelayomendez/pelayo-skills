@@ -62,9 +62,19 @@ export const parseSkill = (text: string, folderName: string): Skill | undefined 
   if (lines[0]?.trim() === '---') {
     const end = lines.findIndex((line, at) => at > 0 && line.trim() === '---')
     if (end < 0) return undefined
-    for (const line of lines.slice(1, end)) {
-      const match = /^([A-Za-z][\w-]*):\s*(.*)$/.exec(line)
-      if (match?.[1] !== undefined) fields[match[1]] = unquote(match[2] ?? "")
+    const head = lines.slice(1, end)
+    for (let at = 0; at < head.length; at++) {
+      const match = /^([A-Za-z][\w-]*):\s*(.*)$/.exec(head[at] ?? '')
+      if (match?.[1] === undefined) continue
+      const value = (match[2] ?? '').trim()
+      if (/^[|>][-+]?$/.test(value)) {
+        // A YAML block value: the indented lines that follow, folded into one.
+        const parts: string[] = []
+        while (at + 1 < head.length && /^\s+\S/.test(head[at + 1] ?? '')) parts.push((head[++at] ?? '').trim())
+        fields[match[1]] = parts.join(' ')
+      } else {
+        fields[match[1]] = unquote(value)
+      }
     }
     body = end + 1
   }
@@ -76,7 +86,12 @@ export const parseSkill = (text: string, folderName: string): Skill | undefined 
     ...(fields.summary ? { summary: fields.summary } : {}),
     isSlash: fields['user-invocable'] !== 'false',
   }
-  const heading = lines.findIndex((line, at) => at >= body && /^##\s+Units\s*$/.test(line))
+  let isFenced = false
+  const heading = lines.findIndex((line, at) => {
+    if (at < body) return false
+    if (/^\s*(```|~~~)/.test(line)) isFenced = !isFenced
+    return !isFenced && /^##\s+Units\s*$/.test(line)
+  })
   if (heading >= 0) {
     const steps: string[] = []
     const throughout: string[] = []

@@ -15,7 +15,7 @@
     "sources": {
       "type": "string",
       "title": "Skill folders",
-      "description": "Comma-separated folders to scan for SKILL.md (up to three levels deep). ~ is your home.",
+      "description": "Comma-separated absolute folders to scan for SKILL.md (up to three levels deep); ~/ is your home. Empty means ~/.claude/skills.",
       "default": "~/.claude/skills"
     },
     "units": {

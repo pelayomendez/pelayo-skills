@@ -51,7 +51,8 @@ Small units that each do one job, and flows that chain them. A unit works on its
 A pane beside the chat that lists your flows (with their steps) and units, one line each. Click one and it goes into the prompt. It ships as a separate plugin, so the skills stay plain markdown:
 
 ```
-/plugin install flow-map --marketplace pelayomendez/pelayo-skills
+/plugin marketplace add pelayomendez/pelayo-skills
+/plugin install flow-map@pelayomendez-skills
 ```
 
 Details: [plugins/flow-map](./plugins/flow-map/README.md).

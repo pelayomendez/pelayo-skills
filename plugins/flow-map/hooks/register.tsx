@@ -26,7 +26,7 @@ async function scanDir($: EngineInterface, dir: string, depth: number, found: Sk
     if (entry.kind !== 'dir' && !entry.isLink) continue
     const path = `${dir}/${entry.name}`
     const file = `${path}/SKILL.md`
-    if (await $.fs.exists(file)) {
+    if (await $.fs.exists(file).catch(() => false)) {
       const text = await $.fs.read(file).catch(() => undefined)
       const skill = typeof text === 'string' ? parseSkill(text, entry.name) : undefined
       if (skill) found.push(skill)
@@ -45,18 +45,20 @@ async function scan($: EngineInterface, sources: string[]) {
   for (const source of sources) await scanDir($, expandHome(source, home), 0, skills, errors)
   const scannedAt = await $.clock.now()
   await update($, catalog, () => ({ skills, scannedAt, errors }) satisfies Catalog)
-  return skills.length
+  return { count: skills.length, errors }
 }
 
-/** Puts the skill's invocation in the prompt box, replacing the draft. */
+/** Puts the skill's invocation at the start of the prompt box, keeping what was typed after it. */
 async function pick($: EngineInterface, skill: Pick<Skill, 'name' | 'isSlash'>) {
-  const filled = await $.prompt.fill({ text: promptFor(skill), mode: 'replace' })
+  const draft = (await $.prompt.read().catch(() => ({ text: '' }))).text
+  const filled = await $.prompt.fill({ text: promptFor(skill) + draft.trimStart(), mode: 'replace' })
   if (!filled.isFilled) $.ui.toast(`Could not fill the prompt: type ${promptFor(skill).trim()}`)
 }
 
 export const register: Register = (on, options) => {
   const settings = settingsOf(options)
-  const sources = list(options.sources ?? '~/.claude/skills')
+  const listed = list(options.sources)
+  const sources = listed.length > 0 ? listed : ['~/.claude/skills']
 
   on('session.start', async ($, e, next) => {
     const result = await next(e)
@@ -65,16 +67,17 @@ export const register: Register = (on, options) => {
       description: 'Open the flow map: your flows and units, click one to put it in the prompt',
       argumentHint: '[reload]',
     })
-    await scan($, sources)
+    await scan($, sources).catch(() => undefined)
     if (options.openOnStart !== false) void $.ui.open({ id: PANE, title: TITLE }).catch(() => undefined)
     return result
   })
 
   on('command.run', { command: 'flow-map' }, async ($, e) => {
-    const count = await scan($, sources)
+    const { count, errors } = await scan($, sources)
     const isReload = String(e.args ?? '').trim() === 'reload'
     if (!isReload) await $.ui.open({ id: PANE, title: TITLE, focus: true }).catch(() => undefined)
-    return { text: `Flow map: ${count} skills read from ${sources.join(', ')}.` }
+    const problems = errors.length > 0 ? ` ${errors.length} problem(s): ${errors.slice(0, 3).join('; ')}.` : ''
+    return { text: `Flow map: ${count} skills read from ${sources.join(', ')}.${problems}` }
   })
 
   on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {

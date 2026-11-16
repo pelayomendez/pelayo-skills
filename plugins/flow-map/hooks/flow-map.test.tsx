@@ -65,6 +65,31 @@ test('a flow keeps its units in order and stops at the next heading', () => {
   expect(skill?.units).toEqual(['snapshot-backlog', 'prune-backlog', 'missing-unit', 'charter'])
 })
 
+test('an explicit Steps label, block descriptions and fenced headings', () => {
+  const text = [
+    '---',
+    'name: f',
+    'description: >-',
+    '  Folded over',
+    '  two lines.',
+    '---',
+    '```markdown',
+    '## Units',
+    '- `not-me`',
+    '```',
+    '## Units',
+    'Steps, in order:',
+    '- `a`',
+    'Throughout:',
+    '- `b`',
+  ].join('\r\n')
+  const skill = parseSkill(text, 'f')
+  expect(skill?.description).toBe('Folded over two lines.')
+  expect(skill?.steps).toEqual(['a'])
+  expect(skill?.throughout).toEqual(['b'])
+  expect(parseSkill('---\nname: x\n', 'x')).toBeUndefined()
+})
+
 test('show, hide, order and groups shape the view', () => {
   const skills = [FLOW, UNIT('snapshot-backlog'), UNIT('prune-backlog'), UNIT('loose')].map(
     (text, at) => parseSkill(text, `s${at}`)!,
@@ -111,8 +136,11 @@ test('the pane lists the flow and its chain, and a click fills the prompt', asyn
   })
   on('fs.exists', (_, e) => ({ value: e.path in FILES }))
   on('fs.read', (_, e) => ({ value: FILES[e.path] ?? '' }))
+  let draft = '  for ABC later'
+  on('prompt.read', () => ({ value: { text: draft, cursor: 0 } }))
   on('prompt.fill', (_, e) => {
     filled.push(e.text)
+    draft = ''
     return { isFilled: true }
   })
   on('command.register', () => ({ value: { command: 'flow-map' } }))
@@ -132,5 +160,5 @@ test('the pane lists the flow and its chain, and a click fills the prompt', asyn
     await ui.press({ key: 'unit:snapshot-backlog' })
     await ui.unmount()
   }
-  expect(filled.slice(0, 3)).toEqual(['/backlog ', 'Use the prune-backlog skill: ', '/snapshot-backlog '])
+  expect(filled).toEqual(['/backlog for ABC later', 'Use the prune-backlog skill: ', '/snapshot-backlog ', '/backlog ', 'Use the prune-backlog skill: ', '/snapshot-backlog '])
 })
