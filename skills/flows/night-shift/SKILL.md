@@ -19,11 +19,11 @@ Steps, in order:
 - `reap-procs`
 - `delegate`
 - `verify-claim`
-- `watch`
 
 Throughout:
 
 - `charter`
+- `watch`
 - `handoff`
 
 All state lives in `<tasks>`: the handoff (`handoff-<start date>.md`, one file for the whole night), the watch list and baselines (`watches.md`, `watch-*.json`), the ledger of reviewed MR heads (`reviewed-mrs.json`), and one run folder per ticket (`<tasks>/<KEY>/`, with the files `delegate` names plus `VERIFY-<KEY>.md`, `REVIEW-<KEY>.md`, `SMOKE-<KEY>.md` and `smoke/`).

@@ -42,7 +42,7 @@ Small units that each do one job, and flows that chain them. A unit works on its
 | [`/backlog <scope>`](./skills/flows/backlog/SKILL.md) | snapshot-backlog → prune-backlog → verify-claim → your OK → order-backlog | A cleaner backlog, closed only on checked evidence, and a ranked queue with one reason per ticket. |
 | [`/ambient-companion`](./skills/flows/ambient-companion/SKILL.md) | charter → verify-claim on what's in flight → watch → each tick: delegate → verify-claim → handoff | A day-long companion that watches your work's event streams, keeps workers moving, and brings you only the decisions. |
 | [`/night-shift`](./skills/flows/night-shift/SKILL.md) | your decisions → charter → watch → each ticket: delegate → verify-claim → merge if granted → handoff | An unattended overnight run through worker, checks, MR and merge, ending in a morning report and a plan for the day. |
-| [`/support <config>`](./skills/flows/support/SKILL.md) | qualify → your OK → each bug: ticket-pick → delegate (fix, review) → ui-check → watch → merge on your OK → ui-check on the test environment → close | A bug queue worked from report to released, one bug at a time, with the status board updated at every step. |
+| [`/support <config>`](./skills/flows/support/SKILL.md) | qualify → your OK → each bug: verify-claim → ticket-pick → delegate (fix, review) → ui-check → watch → merge on your OK or a charter grant → ui-check on the test environment → close | A bug queue worked from report to released, one bug at a time, with the status board updated at every step. |
 
 ### Units
 

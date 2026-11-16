@@ -16,6 +16,7 @@ It changes the ticket's status, assignee, sprint and points, nothing else. Movin
 - **In Progress**: the transition name or id.
 - **Sprint**: how to find the current sprint (board id, or the field and value), and the field that holds it.
 - **Points**: the field that holds the estimate, and the scale (for example Fibonacci).
+- **Points value** (optional): the size the user gave after an earlier `needs-you`.
 - **Assignee**: the user's account id. Read it from the tracker, never guess it from a name.
 
 ## Steps
@@ -26,11 +27,11 @@ It changes the ticket's status, assignee, sprint and points, nothing else. Movin
    - It is already In Progress, In Review or Done.
    - It lost its ready labels, or a comment since then asks a question nobody answered.
    - A link says it is blocked by an open ticket.
-3. **Size it if it has no points.** Propose a size with one line of reasoning (the files the fix touches, the tests it needs) and stop with `needs-you <size and reason>`. Never invent an estimate silently.
+3. **Size it if it has no points** and no points value was given. Propose a size with one line of reasoning (the files the fix touches, the tests it needs) and stop with `needs-you <size and reason>`. Never invent an estimate silently.
 4. **Write**, in this order, after checking the charter (run the `/charter` skill) for tracker writes in this scope:
    1. assignee: the user
    2. sprint: the current one, if it has none
-   3. points, if the user gave them
+   3. points, from the points value
    4. transition to In Progress
 5. **Read it back** and confirm every field took. Some trackers drop fields silently on a bulk or JSON edit.
 

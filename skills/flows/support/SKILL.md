@@ -14,6 +14,7 @@ argument-hint: "<config file> [KEY ...] [--qualify-only]"
 Steps, in order:
 
 - `qualify`
+- `verify-claim`
 - `ticket-pick`
 - `delegate`
 - `ui-check`
@@ -23,7 +24,6 @@ Throughout:
 
 - `charter`
 - `tracker-move`
-- `verify-claim`
 - `handoff`
 
 One run folder per bug, `<tasks>/<KEY>/`, holds the brief, the worker log, `REVIEW-<KEY>.md`, `check-<KEY>.md` and the `UI-<KEY>-*.md` reports, so a run survives a `/clear`.
@@ -49,9 +49,9 @@ One file per installation, named in the argument. Ask once for anything missing 
 
 Then, per bug:
 
-**3. Pick.** `ticket-pick`, then `tracker-move` to In progress.
+**3. Confirm the cause**, before anything moves. Pass to `verify-claim` the claim "the bug happens, caused by <file:line>", the qualify evidence, and what would refute it (the code path no longer exists, the logs show another cause, the behaviour is intended). **Holds**: go on. **Partial**: go on only if the confirmed part is the part the ticket asks to fix; otherwise treat it as unclear. **Fails** or **unclear**: put the bug in the board's waiting section with the reason, and take the next. Nothing on the ticket has changed yet, so there is nothing to undo.
 
-**4. Confirm the cause.** Pass "the bug happens, caused by <file:line>" with the qualify evidence to `verify-claim`. **Fails** or **unclear**: drop the bug back to the board's waiting section with the reason, and take the next.
+**4. Pick.** `ticket-pick`, then `tracker-move` to In progress.
 
 **5. Fix.** `delegate` an implementer in a fresh worktree from the base branch, test-first, committing at the end. Its brief carries the ticket text, the qualify evidence and fix hint, and the load limits.
 
@@ -60,14 +60,14 @@ Then, per bug:
 **7. Check locally.** Write `check-<KEY>.md` from the ticket's expected vs actual, then `ui-check` local. A fail goes back to step 5 with the report.
 
 **8. Ship.** Under the charter:
-1. Push and open the MR with the ticket in its description. The MR text goes out under the user's name: show it first, unless the charter grants it for this flow. Ticket to In Review, `tracker-move` to In review.
+1. Push and open the MR with the ticket in its description. The MR text goes out under the user's name: show it first, unless the charter grants it for this flow. Under the charter, ticket to In Review; `tracker-move` to In review.
 2. `watch` the pipeline for the head SHA until it ends.
-3. **Stop and ask** to merge, naming the MR and the SHA, unless the charter grants merges for this flow. Merge pinned to that SHA.
-4. Release as the config says, and `watch` it until the test environment has the change.
+3. Merge only when the pipeline ended `success` for that SHA and `REVIEW-<KEY>.md` passes for the same head. **Stop and ask**, naming the MR and the SHA, unless the charter grants merges for this flow. Merge pinned to that SHA.
+4. Release as the config says, under the charter: a release step that isn't the merge itself (a tag, a manual deploy) is ask-first without a grant. `watch` it until the test environment has the change.
 
 **9. Check on the test environment.** `ui-check` against the test environment URL with the same check file.
 
-**10. Close.** Ticket to Done, `tracker-move` to Released with the version and date, remove the worktree and the local branch. One line per bug in the handoff.
+**10. Close**, under the charter: ticket to Done, `tracker-move` to Released with the version and date, then remove only the worktree and local branch this run created. One line per bug in the handoff. Telling the reporter is a post under the user's name: draft it and ask.
 
 **11. Report.** When the queue is empty, or the user stops it: through `handoff`, per bug its end state (released, waiting with the reason, needs you with the question, for a human), what is still open, and the questions.
 
@@ -75,6 +75,7 @@ Then, per bug:
 
 - **A unit ends `blocked`**: record why in the handoff, put the bug in the board's waiting or blocked section, take the next bug.
 - **A unit ends `needs-you`**: ask at once if the user is there; otherwise park the bug with the question and take the next.
+- **Parking a bug after it was picked**: under the charter, move the ticket back to the status it had before the pick, so it doesn't sit In Progress with nobody on it. It stays assigned to the user; say so in the handoff.
 - **The pipeline fails**: read the failed job. A failure the change caused goes back to step 5; anything else is retried once, then parked with the job link.
 - **The check fails on the test environment but passed locally**: don't reopen the code yet. Report both reports side by side and ask.
 

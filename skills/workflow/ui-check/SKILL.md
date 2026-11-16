@@ -20,17 +20,17 @@ It reads and clicks; it never changes code.
 ## Steps
 
 1. **Capacity first.** Before starting anything, check that:
-   - **The port is free**: `lsof -iTCP:<port> -sTCP:LISTEN`. If another agent's server holds it, wait and check again; never kill it.
-   - **The browser is free**: one agent drives a browser at a time. If it is in use, use another controlled instance or wait.
+   - **The port is free** (local only): `lsof -iTCP:<port> -sTCP:LISTEN`. If another agent's server holds it, wait and check again; never kill it.
+   - **The browser is free**: one agent drives a browser at a time. List the controlled instance's pages; if that call fails with a profile lock or the instance shows pages another check opened, use the next controlled instance or wait.
    - **The machine has room**: no test suite or second dev server of the same app running.
    If any of these stays busy, stop with `blocked <what holds it>`.
-2. **Start the app** (local only) from the ticket's worktree, logging to a file next to the check. Wait until it answers on the port.
-3. **Run the check** in a fresh context: a subagent, or a headless session with only the browser tools allowed, given `check-<KEY>.md` and nothing else. It:
+2. **Start the app** (local only) from the ticket's worktree, logging to a file next to the check, and record the PID it launched. Wait until it answers on the port, and check the listener is that process or its child.
+3. **Run the check** in a fresh context: a subagent, or a headless session with only the browser tools allowed, given only the check file, the URL and the test project. It:
    - follows the steps, takes a text snapshot at each expected result, and a screenshot only where the result is visual
    - works only in the test project, and puts back anything it created unless the check says to keep it
    - never saves outside the test project, never uploads files the check doesn't name, never prints tokens
    - ends on a blank page (`about:blank`) and closes any page it opened
-4. **Stop the app** it started, by the PID listening on the port. Never by process name.
+4. **Stop the app** it started: the PID it recorded and that process's children, after checking the listener on the port is still theirs. Never by process name, and never a process it didn't start.
 5. **Write the report**, `UI-<KEY>-<where>.md`: each step, what was seen, pass or fail, and the evidence files.
 
 ## When it fails
