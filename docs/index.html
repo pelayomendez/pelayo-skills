@@ -47,26 +47,40 @@
   </header>
 
   <h2>Flows</h2>
+  <p>You type a flow. Each one chains units in order and stops for you where a decision is yours.</p>
   <table>
-    <tr><td class="accent">/backlog</td><td>Snapshot, prune and order a backlog: closes only what a fresh agent confirmed, then ranks the rest by what unblocks most.</td></tr>
+    <tr><td class="accent">/support</td><td>Takes bugs from report to released: qualify, confirm the cause with a fresh agent, pick, fix and review with workers, check in a controlled browser, ship, check again on the test environment, close.</td></tr>
+    <tr><td class="accent">/mr-review</td><td>Reviews the open MRs, yours and your teammates', at their current head, and stops for you on each one. Nothing is pushed, merged or posted without your word.</td></tr>
+    <tr><td class="accent">/backlog</td><td>Snapshot, prune and order a backlog: closes only what a fresh agent confirmed and you approved, then ranks the rest by WSJF inside the dependency graph.</td></tr>
     <tr><td class="accent">/ambient-companion</td><td>A day-long session that watches your work's event streams, delegates and checks, and brings you only the decisions.</td></tr>
     <tr><td class="accent">/night-shift</td><td>An unattended overnight run: a decision round, then queue → delegate → verify → review → smoke → merge, and a morning report.</td></tr>
   </table>
 
   <h2>Units</h2>
+  <p>Small one-job skills the agent reaches for on its own, inside a flow or outside one.</p>
   <table>
     <tr><td class="accent">high-level-communication</td><td>Always on. Report like a senior engineer to another: why, what changed, impact, trade-offs, risks, next steps.</td></tr>
     <tr><td>charter</td><td>One ledger of what the agent may do alone, must ask first, or never, per scope, in your own words.</td></tr>
     <tr><td>verify-claim</td><td>A fresh agent checks another agent's claim, seeing only the claim and its evidence.</td></tr>
     <tr><td>delegate · watch · handoff</td><td>Brief and launch a worker safely, watch a pipeline or MR until it settles, and leave a handoff another session can resume.</td></tr>
-    <tr><td>snapshot · prune · order-backlog</td><td>Read a backlog once, propose what can close with evidence, rank the rest by WSJF inside the dependency graph.</td></tr>
+    <tr><td>qualify · ticket-pick · tracker-move</td><td>Check a bug is ready for an agent, take a ready ticket into work, and move it on the status board.</td></tr>
+    <tr><td>review-change · ui-check</td><td>Review one MR at its current head, read-only; check a fix in a controlled browser, never yours.</td></tr>
+    <tr><td>snapshot-backlog · prune-backlog · order-backlog</td><td>Read a backlog once, propose what can close with evidence, rank the rest by WSJF inside the dependency graph.</td></tr>
     <tr><td>reap-procs</td><td>Finds what is eating the machine after agent sessions, says whose each process is, and stops only what nobody owns.</td></tr>
     <tr><td>tidy</td><td>You type it. A weekly and monthly tune-up of your agent setup: retro, memory pruning, steering files, skills, hooks.</td></tr>
   </table>
 
+  <h2>Flow map</h2>
+  <p>An optional pane beside the chat with your flows, their steps in order, and your units, each in one line. Click one to put it in the prompt; it never runs anything on its own. The skills stay plain markdown, so it reads any folder of them.</p>
+<pre><span class="accent">support</span>    Takes bugs from report to released
+  1. qualify   2. verify-claim   3. ticket-pick
+  4. delegate  5. ui-check       6. watch
+  <span class="mute">throughout: charter · tracker-move · handoff</span></pre>
+
   <h2 id="install">Install</h2>
 <pre>/plugin marketplace add pelayomendez/pelayo-skills
-/plugin install pelayo-skills@pelayomendez-skills</pre>
+/plugin install pelayo-skills@pelayomendez-skills
+/plugin install flow-map@pelayomendez-skills   <span class="mute"># optional pane</span></pre>
   <p>Or <code>npx skills@latest add pelayomendez/pelayo-skills</code> to copy them into a project. Install one way, not both. The always-on instruction installs with a script; details in the <a href="https://github.com/pelayomendez/pelayo-skills#readme">README</a>.</p>
 
   <footer>MIT · by <a href="https://github.com/pelayomendez">Pelayo Méndez</a></footer>
