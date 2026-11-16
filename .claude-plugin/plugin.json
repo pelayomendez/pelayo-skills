@@ -23,6 +23,7 @@
   "skills": [
     "./skills/flows/ambient-companion",
     "./skills/flows/backlog",
+    "./skills/flows/mr-review",
     "./skills/flows/night-shift",
     "./skills/flows/support",
     "./skills/maintenance/reap-procs",
@@ -32,6 +33,7 @@
     "./skills/workflow/handoff",
     "./skills/workflow/order-backlog",
     "./skills/workflow/prune-backlog",
+    "./skills/workflow/review-change",
     "./skills/workflow/snapshot-backlog",
     "./skills/workflow/ticket-pick",
     "./skills/workflow/tracker-move",

@@ -13,6 +13,7 @@ Units for running agent work: permissions, backlogs, workers, watches and handof
 - **[watch](./watch/SKILL.md)**: watches external state for one exact revision (a pipeline, an MR, a deploy, a package version) against a recorded baseline, reports changes, and lists every armed watch (`watches.md`). Never starts work.
 - **[handoff](./handoff/SKILL.md)**: writes the one size-capped file a supervising session resumes from (`handoff-<date>.md`): restart prompt, state and owners, the charter scope in force, watches to re-arm.
 - **[qualify](./qualify/SKILL.md)**: researches each reported bug (code, logs, browser when needed) and labels it ready for an agent, or names the missing question. Never fixes.
+- **[review-change](./review-change/SKILL.md)**: reviews one MR or PR at its head SHA, read-only, against its ticket and the repo's rules, and writes one report with verified findings.
 - **[ticket-pick](./ticket-pick/SKILL.md)**: checks a ready ticket is still ready and free, then takes it into work: In Progress, assigned to you, with a sprint and points.
 - **[ui-check](./ui-check/SKILL.md)**: checks a change in a controlled browser, locally or on a test environment, after making sure the port, the browser and the test project are free.
 - **[tracker-move](./tracker-move/SKILL.md)**: moves one item between the sections of a status board kept in a ticket's description (an epic's Tracker), leaving the rest of the description untouched.

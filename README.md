@@ -12,9 +12,10 @@ A factory is the easiest way to see what is here:
 | --- | --- |
 | production planning | `backlog` |
 | repair line | `support` |
+| final inspection | `mr-review` |
 | work orders | `delegate`, `ticket-pick` |
 | incoming inspection | `qualify` |
-| quality control | `verify-claim`, `ui-check` |
+| quality control | `verify-claim`, `ui-check`, `review-change` |
 | control panel | `watch` |
 | status board | `tracker-move` |
 | permits and safety rules | `charter` |
@@ -42,6 +43,7 @@ Small units that each do one job, and flows that chain them. A unit works on its
 | [`/backlog <scope>`](./skills/flows/backlog/SKILL.md) | snapshot-backlog → prune-backlog → verify-claim → your OK → order-backlog | A cleaner backlog, closed only on checked evidence, and a ranked queue with one reason per ticket. |
 | [`/ambient-companion`](./skills/flows/ambient-companion/SKILL.md) | charter → verify-claim on what's in flight → watch → each tick: delegate → verify-claim → handoff | A day-long companion that watches your work's event streams, keeps workers moving, and brings you only the decisions. |
 | [`/night-shift`](./skills/flows/night-shift/SKILL.md) | your decisions → charter → watch → each ticket: delegate → verify-claim → merge if granted → handoff | An unattended overnight run through worker, checks, MR and merge, ending in a morning report and a plan for the day. |
+| [`/mr-review <config>`](./skills/flows/mr-review/SKILL.md) | watch → review-change → verify-claim → you validate each MR → yours: fix, merge on your word, check on the test environment, close · theirs: comments on your OK | Every open MR reviewed at its current head, and a decision card per MR. Nothing merged or posted without you. |
 | [`/support <config>`](./skills/flows/support/SKILL.md) | qualify → your OK → each bug: verify-claim → ticket-pick → delegate (fix, review) → ui-check → watch → merge on your OK or a charter grant → ui-check on the test environment → close | A bug queue worked from report to released, one bug at a time, with the status board updated at every step. |
 
 ### Units
@@ -50,6 +52,7 @@ Small units that each do one job, and flows that chain them. A unit works on its
 | --- | --- | --- |
 | [charter](./skills/workflow/charter/SKILL.md) | One ledger of what the agent may do alone, must ask first, or never, per scope, recorded in your own words. Ships two opt-in guard hooks. | Agent picks it up |
 | [verify-claim](./skills/workflow/verify-claim/SKILL.md) | Checks an agent's claim ("it's done", "the worker fixed it") with a fresh subagent that sees only the claim and its evidence. | Agent picks it up |
+| [review-change](./skills/workflow/review-change/SKILL.md) | Reviews one MR or PR at its head SHA, read-only, against its ticket and the repo's rules, with verified findings in one report. | Agent picks it up |
 | [snapshot-backlog](./skills/workflow/snapshot-backlog/SKILL.md) | Reads a backlog scope into one local file the other units work from. Read only. | Agent picks it up |
 | [prune-backlog](./skills/workflow/prune-backlog/SKILL.md) | Proposes which tickets can close, each with evidence, never by age alone. | Agent picks it up |
 | [order-backlog](./skills/workflow/order-backlog/SKILL.md) | Ranks tickets by WSJF inside the dependency graph and marks which are ready to start. | Agent picks it up |
@@ -106,7 +109,7 @@ This symlinks each file in `instructions/` into `~/.claude/` and appends an `@im
 
 ```
 instructions/            always-on instructions
-skills/flows/            flows you type: backlog, ambient-companion, night-shift, support
+skills/flows/            flows you type: backlog, ambient-companion, night-shift, support, mr-review
 skills/maintenance/      upkeep of the agent setup and the machine
 skills/workflow/         units for running agent work: permissions, backlogs, workers, watches, handoffs
 ```

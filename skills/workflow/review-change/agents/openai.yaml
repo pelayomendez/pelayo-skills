@@ -1,0 +1,3 @@
+interface:
+  display_name: "Review change"
+  short_description: "Review one MR or PR at its head SHA, read-only: ticket, repo rules, guard tests, verified findings, one report"
