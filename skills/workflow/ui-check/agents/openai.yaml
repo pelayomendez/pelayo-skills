@@ -1,0 +1,3 @@
+interface:
+  display_name: "UI check"
+  short_description: "Check a change in a controlled browser, locally or on a test environment, after making sure port and browser are free"

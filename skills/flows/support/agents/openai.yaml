@@ -1,0 +1,5 @@
+interface:
+  display_name: "Support"
+  short_description: "Flow: qualify bugs, then one at a time pick, fix, review, check, ship, check again and close"
+policy:
+  allow_implicit_invocation: false

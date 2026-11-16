@@ -11,9 +11,10 @@ A factory is the easiest way to see what is here:
 | On the line | Skills |
 | --- | --- |
 | production planning | `backlog` |
-| work orders | `delegate` |
+| repair line | `support` |
+| work orders | `delegate`, `ticket-pick` |
 | incoming inspection | `qualify` |
-| quality control | `verify-claim` |
+| quality control | `verify-claim`, `ui-check` |
 | control panel | `watch` |
 | status board | `tracker-move` |
 | permits and safety rules | `charter` |
@@ -41,6 +42,7 @@ Small units that each do one job, and flows that chain them. A unit works on its
 | [`/backlog <scope>`](./skills/flows/backlog/SKILL.md) | snapshot-backlog → prune-backlog → verify-claim → your OK → order-backlog | A cleaner backlog, closed only on checked evidence, and a ranked queue with one reason per ticket. |
 | [`/ambient-companion`](./skills/flows/ambient-companion/SKILL.md) | charter → verify-claim on what's in flight → watch → each tick: delegate → verify-claim → handoff | A day-long companion that watches your work's event streams, keeps workers moving, and brings you only the decisions. |
 | [`/night-shift`](./skills/flows/night-shift/SKILL.md) | your decisions → charter → watch → each ticket: delegate → verify-claim → merge if granted → handoff | An unattended overnight run through worker, checks, MR and merge, ending in a morning report and a plan for the day. |
+| [`/support <config>`](./skills/flows/support/SKILL.md) | qualify → your OK → each bug: ticket-pick → delegate (fix, review) → ui-check → watch → merge on your OK → ui-check on the test environment → close | A bug queue worked from report to released, one bug at a time, with the status board updated at every step. |
 
 ### Units
 
@@ -54,6 +56,8 @@ Small units that each do one job, and flows that chain them. A unit works on its
 | [delegate](./skills/workflow/delegate/SKILL.md) | Writes a self-sufficient brief to a file and launches a worker in its own worktree, with the standing forbids in every brief. | Agent picks it up |
 | [watch](./skills/workflow/watch/SKILL.md) | Watches a pipeline, MR, deploy or package version for one exact revision against a baseline, and reports changes. Never starts work. | Agent picks it up |
 | [qualify](./skills/workflow/qualify/SKILL.md) | Researches each reported bug and labels it ready for an agent, or names the missing question. Never fixes. | Agent picks it up |
+| [ticket-pick](./skills/workflow/ticket-pick/SKILL.md) | Checks a ready ticket is still ready and free, then takes it into work: In Progress, assigned, sprint and points. | Agent picks it up |
+| [ui-check](./skills/workflow/ui-check/SKILL.md) | Checks a change in a controlled browser, locally or on a test environment, after making sure the port and the browser are free. | Agent picks it up |
 | [tracker-move](./skills/workflow/tracker-move/SKILL.md) | Moves one item between the sections of a status board kept in a ticket's description, leaving the rest untouched. | Agent picks it up |
 | [handoff](./skills/workflow/handoff/SKILL.md) | Writes the one size-capped file a supervising session resumes from: state and owners, watches to re-arm, the charter scope in force. | Agent picks it up |
 | [reap-procs](./skills/maintenance/reap-procs/SKILL.md) | Finds what is eating the machine after agent sessions, says whose each process is, and stops only what nobody owns. Before a fan-out, says go or wait. | Agent picks it up |
@@ -102,7 +106,7 @@ This symlinks each file in `instructions/` into `~/.claude/` and appends an `@im
 
 ```
 instructions/            always-on instructions
-skills/flows/            flows you type: backlog, ambient-companion, night-shift
+skills/flows/            flows you type: backlog, ambient-companion, night-shift, support
 skills/maintenance/      upkeep of the agent setup and the machine
 skills/workflow/         units for running agent work: permissions, backlogs, workers, watches, handoffs
 ```
