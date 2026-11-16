@@ -43,6 +43,15 @@ One file per installation, named in the argument. Ask once for anything missing 
 
 ## Steps
 
+**0. Pick up what is in flight.** Before qualifying, find the intake's bugs that are the user's and already have an open MR (In Review on the tracker, or in the board's review section). For each, read the MR's head SHA and pipeline, then join the steps below where it stands:
+- **No passing `REVIEW-<KEY>.md` for that head** (an MR from before this flow, or new commits since): run the review of step 6 on the MR branch first.
+- **Reviewed, pipeline running or not yet run**: step 8.2, watch it.
+- **Reviewed, pipeline green**: step 8.3, ask to merge.
+- **Merged, not yet on the test environment**: step 8.4.
+- **Pipeline failed, or review findings**: step 5 with the failed job or the report, on the MR's own branch.
+
+Bugs with an MR by someone else are not the flow's: list them in the report and leave them alone. Finish what is in flight before starting a new bug.
+
 **1. Qualify.** Run `qualify` over the intake (or only the keys given). Then ask the **needs you** questions one at a time. With `--qualify-only`, stop here and report.
 
 **2. Stop and ask.** Show the ready bugs in the order you would take them, smallest and clearest first. Take the first one on the user's OK; the next ones follow without asking unless something below says stop.
@@ -53,7 +62,7 @@ Then, per bug:
 
 **4. Pick.** `ticket-pick`, then `tracker-move` to In progress.
 
-**5. Fix.** `delegate` an implementer in a fresh worktree from the base branch, test-first, committing at the end. Its brief carries the ticket text, the qualify evidence and fix hint, and the load limits.
+**5. Fix.** `delegate` an implementer in a fresh worktree from the base branch (or, for a bug picked up in step 0, from its MR branch), test-first, committing at the end. Its brief carries the ticket text, the qualify evidence and fix hint, and the load limits.
 
 **6. Review.** `delegate` a fresh reviewer over the new commits, running the guard tests, into `REVIEW-<KEY>.md`. Blocking findings go back to an implementer (step 5) with the report. Cap at three rounds; after that, stop and ask.
 
