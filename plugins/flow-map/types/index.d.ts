@@ -1,0 +1,22 @@
+export type Skill = {
+  name: string
+  description: string
+  /** The `summary:` line, when the skill has one: what the pane shows. */
+  summary?: string
+  /** Typed as /name: false only when the skill sets `user-invocable: false`. */
+  isSlash: boolean
+  /** Every unit the flow's `## Units` lists; present only on a flow. */
+  units?: string[]
+  /** The units that run as steps, in order (the list before any `Throughout:` line). */
+  steps?: string[]
+  /** The units used at any step, listed after a `Throughout:` line. */
+  throughout?: string[]
+}
+
+export type Catalog = { skills: Skill[]; scannedAt: number; errors: string[] }
+
+declare module 'claude-code' {
+  interface PluginState {
+    'flow-map': { catalog: Shaped<Catalog> }
+  }
+}

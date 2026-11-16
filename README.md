@@ -46,6 +46,16 @@ Small units that each do one job, and flows that chain them. A unit works on its
 | [`/support <config>`](./skills/flows/support/SKILL.md) | qualify → your OK → each bug: verify-claim → ticket-pick → delegate (fix, review) → ui-check → watch → merge on your OK or a charter grant → ui-check on the test environment → close | A bug queue worked from report to released, one bug at a time, with the status board updated at every step. |
 | [`/mr-review <config>`](./skills/flows/mr-review/SKILL.md) | list open MRs → review-change → verify-claim → you validate each MR → yours: fix and push on your word, merge on your word, check on the test environment, close · theirs: comments on your OK | Every open MR reviewed at its current head, and a decision card per MR. Nothing merged or posted without you. |
 
+### Flow map
+
+A pane beside the chat that lists your flows (with their steps) and units, one line each. Click one and it goes into the prompt. It ships as a separate plugin, so the skills stay plain markdown:
+
+```
+/plugin install flow-map --marketplace pelayomendez/pelayo-skills
+```
+
+Details: [plugins/flow-map](./plugins/flow-map/README.md).
+
 ### Units
 
 | Name | What it does | How it starts |
@@ -112,6 +122,7 @@ instructions/            always-on instructions
 skills/flows/            flows you type: backlog, ambient-companion, night-shift, support, mr-review
 skills/maintenance/      upkeep of the agent setup and the machine
 skills/workflow/         units for running agent work: permissions, backlogs, workers, watches, handoffs
+plugins/flow-map/        the flow map pane, a separate plugin
 ```
 
 Each bucket has its own README.
