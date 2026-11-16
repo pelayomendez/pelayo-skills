@@ -1,6 +1,7 @@
 ---
 name: night-shift
 description: "Run an unattended overnight loop: a decision round before you leave, then tickets through worker, checks, MR and merge, ending in a morning report."
+summary: "Works tickets while you are away"
 disable-model-invocation: true
 argument-hint: "[until HH:MM]"
 ---
@@ -13,13 +14,18 @@ The session **decides and reports**. Workers and subagents do the heavy work; th
 
 ## Units
 
-- `charter`
+Steps, in order:
+
 - `order-backlog`
+- `reap-procs`
 - `delegate`
 - `verify-claim`
+
+Throughout:
+
+- `charter`
 - `watch`
 - `handoff`
-- `reap-procs`
 
 All state lives in `<tasks>`: the handoff (`handoff-<start date>.md`, one file for the whole night), the watch list and baselines (`watches.md`, `watch-*.json`), the ledger of reviewed MR heads (`reviewed-mrs.json`), and one run folder per ticket (`<tasks>/<KEY>/`, with the files `delegate` names plus `VERIFY-<KEY>.md`, `REVIEW-<KEY>.md`, `SMOKE-<KEY>.md` and `smoke/`).
 

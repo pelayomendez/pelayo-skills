@@ -1,0 +1,69 @@
+{
+  "name": "flow-map",
+  "version": "0.1.0",
+  "description": "A pane beside the chat with the flows and units your skills offer; click one to put it in the prompt.",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "flows",
+    "units",
+    "pane",
+    "on-the-loop"
+  ],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "sources": {
+      "type": "string",
+      "title": "Skill folders",
+      "description": "Comma-separated absolute folders to scan for SKILL.md (up to three levels deep); ~/ is your home. Empty means ~/.claude/skills.",
+      "default": "~/.claude/skills"
+    },
+    "units": {
+      "type": "string",
+      "title": "Units to list",
+      "description": "in-flows: only skills a flow chains; all: every skill that is not a flow; none: flows only.",
+      "options": [
+        "in-flows",
+        "all",
+        "none"
+      ],
+      "default": "in-flows"
+    },
+    "show": {
+      "type": "string",
+      "title": "Show only",
+      "description": "Comma-separated skill names. When set, everything else is hidden.",
+      "default": ""
+    },
+    "hide": {
+      "type": "string",
+      "title": "Hide",
+      "description": "Comma-separated skill names to leave out.",
+      "default": ""
+    },
+    "order": {
+      "type": "string",
+      "title": "Order",
+      "description": "Comma-separated names that come first, in this order; the rest follow alphabetically.",
+      "default": ""
+    },
+    "groups": {
+      "type": "string",
+      "title": "Unit groups",
+      "description": "Group the units: 'Backlog: snapshot-backlog, prune-backlog; Workers: delegate, watch'. Ungrouped units go under Units.",
+      "default": ""
+    },
+    "openOnStart": {
+      "type": "boolean",
+      "title": "Open on start",
+      "description": "Open the pane when a session starts (it docks only on wide terminals). Otherwise use /flow-map.",
+      "default": true
+    }
+  },
+  "author": {
+    "name": "Pelayo Méndez",
+    "url": "https://github.com/pelayomendez"
+  },
+  "homepage": "https://github.com/pelayomendez/pelayo-skills/tree/main/plugins/flow-map",
+  "repository": "https://github.com/pelayomendez/pelayo-skills"
+}

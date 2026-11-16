@@ -1,6 +1,6 @@
 # Support flow: working notes
 
-Status: being built from real runs, one unit at a time. First installation: a frontend app's bug epic.
+Status: being built from real runs, one unit at a time. The flow itself is `skills/flows/support` (2026-11-16). Its final report goes through `handoff` until `support-report` exists; telling the reporter is a drafted, ask-first post. First installation: a frontend app's bug epic.
 Review the cut of the units once the flow runs end to end.
 
 ## Shape
@@ -21,10 +21,10 @@ Each unit ends `done`, `blocked <reason>` or `needs-you <exact question>`. Per-i
 | Unit | Status | Notes |
 |---|---|---|
 | tracker-move | built | first real use: 2026-11-12 |
-| qualify | built | research each untriaged item (code, logs), check it has repro, env, expected, and needs no design/product decision; label it for agent work or record the missing question. Never fixes. Named 2026-11-13. Labels from config (SB: `auto-fixable` + `ready-for-agent`); labels alone and reports evidence, posts no comments. Reads only the intake's output (SB: the epic); `intake` is a separate unit that feeds it. Evidence: code + logs; browser repro only for a UI bug the report doesn't settle (one browser at a time) |
-| ticket-pick | todo | readiness check + In Progress + assign + sprint/points |
-| ui-check | todo | check prompt + URL in a controlled browser; starts the app the way the repo needs it |
-| capacity | todo | who holds the dev port, the browser, the agent slots |
+| qualify | built | research each untriaged item (code, logs), check it has repro, env, expected, and needs no design/product decision; label it for agent work or record the missing question. Never fixes. Named 2026-11-13. Labels from config (first installation: `auto-fixable` + `ready-for-agent`); labels alone and reports evidence, posts no comments. Reads only the intake's output (first installation: the epic); `intake` is a separate unit that feeds it. Evidence: code + logs; browser repro only for a UI bug the report doesn't settle (one browser at a time) |
+| ticket-pick | built | readiness check + In Progress + assign + sprint/points; proposes a size and stops when points are missing. 2026-11-16 |
+| ui-check | built | check file + URL in a controlled browser; starts the app the way the repo needs it. Holds the capacity check (port, browser, machine) as its first step for now. 2026-11-16 |
+| capacity | inside ui-check | who holds the dev port, the browser, the agent slots |
 | watch | exists | parse forge JSON leniently (raw control chars in MR bodies) |
 | delegate | exists | implementer and reviewer briefs |
 | charter | exists | merge, tag/deploy and posts are ask-first |

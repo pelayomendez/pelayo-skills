@@ -1,6 +1,7 @@
 ---
 name: tidy
 description: "Regular tune-up of your agent setup: retro on the sessions that went badly, prune memory, audit steering files, skills, permissions and hooks, then log the pass and set the next one."
+summary: "Monthly tune-up of your setup"
 disable-model-invocation: true
 argument-hint: "[weekly|monthly]"
 ---

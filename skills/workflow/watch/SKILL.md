@@ -1,6 +1,7 @@
 ---
 name: watch
 description: "Arm a watch on external state the harness can't notify you about (a pipeline for a given commit, a merge request's state, a deploy, a published package version, merges in another repo), with a recorded baseline and a report when it changes. Never starts work. Use when you need to wait for something outside the session, when another skill says to watch or re-arm watches, or when the user asks to keep an eye on a pipeline, MR, release or repo."
+summary: "Watches a pipeline, MR or deploy"
 ---
 
 # Watch

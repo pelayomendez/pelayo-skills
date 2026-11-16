@@ -1,0 +1,3 @@
+interface:
+  display_name: "Ticket pick"
+  short_description: "Check a ready ticket is still ready and free, then take it into work: In Progress, assigned, sprint and points"

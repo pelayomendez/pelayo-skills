@@ -1,6 +1,7 @@
 ---
 name: tracker-move
 description: "Move one item between the sections of a status board kept inside a ticket's description (an epic's Tracker: In review / In progress / Waiting / Blocked / Next up / Released), keeping the rest of the description untouched. Use when a ticket on a board changes state, when another skill says to update the tracker, or when the user asks to move, add or release an item on a tracker."
+summary: "Moves an item on a status board"
 ---
 
 # Tracker move

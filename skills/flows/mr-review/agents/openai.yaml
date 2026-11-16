@@ -1,0 +1,5 @@
+interface:
+  display_name: "MR review"
+  short_description: "Flow: review the open MRs, yours and your teammates', and stop for your validation on each one"
+policy:
+  allow_implicit_invocation: false

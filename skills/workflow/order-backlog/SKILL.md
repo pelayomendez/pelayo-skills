@@ -1,6 +1,7 @@
 ---
 name: order-backlog
 description: "Order the open tickets of a backlog snapshot into a ranked queue: map what blocks what, score by WSJF inside the dependency graph, mark which rows are ready, one reason per ticket. Proposes only. Use when a skill asks for a queue, or when the user asks what to do next, in what order, or what blocks what."
+summary: "Ranks tickets by value and blockers"
 ---
 
 # Order a backlog

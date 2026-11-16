@@ -1,6 +1,7 @@
 ---
 name: reap-procs
 description: "Find what is eating the machine after agent sessions — orphaned test runs, dev servers, automation Chrome, old daemons, stale worktrees — attribute each to its session, and stop only what nobody owns. Also a preflight that says go or wait before several agents start. Use when the machine is slow, swapping, fans are loud, the user asks about leftover vitest/node/Chrome processes, or before launching several agents at once."
+summary: "Kills leftover heavy processes"
 argument-hint: "[preflight] | [--kill] [--dev] [--stuck] [--stuck-min N]"
 allowed-tools: Bash
 ---

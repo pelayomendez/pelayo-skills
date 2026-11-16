@@ -1,6 +1,7 @@
 ---
 name: handoff
 description: "Write or update the one handoff file a supervising session resumes from: restart prompt, state table with owners, the charter scope in force, watches to re-arm, decisions taken for the user, open questions, files that matter. Size-capped; older detail goes to an archive. Use before a session that oversees agents or long-running work ends, clears or runs out of context, when another skill says to write the handoff, or when the user asks to hand off, wrap up or prepare a restart."
+summary: "Writes the file the next session resumes from"
 ---
 
 # Handoff

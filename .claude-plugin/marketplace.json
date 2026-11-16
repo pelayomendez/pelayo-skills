@@ -4,7 +4,7 @@
     "name": "Pelayo Méndez",
     "url": "https://github.com/pelayomendez"
   },
-  "description": "Pelayo Méndez's agent instructions and skills, as an installable Claude Code plugin.",
+  "description": "Pelayo Méndez's agent instructions and skills, plus a flow map pane, as installable Claude Code plugins.",
   "plugins": [
     {
       "name": "pelayo-skills",
@@ -19,6 +19,19 @@
         "on-the-loop",
         "orchestration",
         "skills"
+      ]
+    },
+    {
+      "name": "flow-map",
+      "source": "./plugins/flow-map",
+      "description": "A pane beside the chat with the flows and units your skills offer, each with a one-line summary. Click one to put it in the prompt. Works with any skill collection that lists its units under a flow's ## Units.",
+      "category": "productivity",
+      "keywords": [
+        "flows",
+        "units",
+        "pane",
+        "skills",
+        "on-the-loop"
       ]
     }
   ]
