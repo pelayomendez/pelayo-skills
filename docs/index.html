@@ -46,6 +46,25 @@
     <p class="cta"><a class="primary" href="#install">Install</a><a href="https://github.com/pelayomendez/pelayo-skills">GitHub</a></p>
   </header>
 
+  <h2>Start here</h2>
+  <table>
+    <tr><td class="accent">/support</td><td>bugs piling up in a queue</td></tr>
+    <tr><td class="accent">/mr-review</td><td>MRs waiting for review, yours and your team's</td></tr>
+    <tr><td class="accent">/backlog</td><td>a backlog nobody trusts any more</td></tr>
+    <tr><td class="accent">/night-shift</td><td>tickets ready and a night ahead</td></tr>
+    <tr><td class="accent">/ambient-companion</td><td>a day of agents running while you do something else</td></tr>
+    <tr><td>a unit</td><td>one job only: check a claim, review one MR, hand off. Ask for it and the agent picks the unit.</td></tr>
+  </table>
+
+  <h2>Where it stops for you</h2>
+  <p>Every flow names the points where it waits for you. Beyond those, your charter decides: what isn't granted there is asked first, and a permission only counts when it comes from you.</p>
+  <table>
+    <tr><td class="accent">/support</td><td>Waits: before the first bug; the merge and anything posted under your name, unless your charter grants them; a release step beyond the merge; after three review rounds; a check that passed locally and fails on the test environment. Never alone: merge without a green pipeline and a passing review on the same commit.</td></tr>
+    <tr><td class="accent">/mr-review</td><td>Waits: every MR, one card at a time; each push and merge on yours; each comment on theirs. Never alone: push to, approve or merge a teammate's MR.</td></tr>
+    <tr><td class="accent">/backlog</td><td>Waits: every close or change, approved by id; value and deadlines it can't infer. Never alone: close a ticket by age alone; bulk changes.</td></tr>
+    <tr><td class="accent">/night-shift</td><td>Waits: one decision round before you leave: merge tonight or not, and the product calls the queue depends on. Never alone: merge without that night's grant and all three gates on the commit (verify, review, browser smoke); post comments: they wait in the handoff for your OK.</td></tr>
+    <tr><td class="accent">/ambient-companion</td><td>Waits: by default, editable in your charter: anything under your name, merges and releases, destructive cleanup, another team's system. Never alone: force-push, rewrite shared docs, install software, stop or delete what it didn't start, start work from a watch.</td></tr>
+
   <h2>Flows</h2>
   <p>You type a flow. Each one chains units in order and stops for you where a decision is yours.</p>
   <table>

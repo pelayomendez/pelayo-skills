@@ -25,6 +25,29 @@ A factory is the easiest way to see what is here:
 
 It is not a full factory, and not a "dark" one with nobody watching: a person stays on the loop. The line grows one concept at a time, from what real sessions needed.
 
+## Start here
+
+| You have | Type |
+| --- | --- |
+| bugs piling up in a queue | `/support <config>` |
+| MRs waiting for review, yours and your team's | `/mr-review <config>` |
+| a backlog nobody trusts any more | `/backlog <scope>` |
+| tickets ready and a night ahead | `/night-shift` |
+| a day of agents running while you do something else | `/ambient-companion` |
+| one job only: check a claim, review one MR, hand off | nothing; ask for it and the agent picks the unit |
+
+## Where it stops for you
+
+Every flow names the points where it waits for you. Beyond those, your [charter](./skills/workflow/charter/SKILL.md) decides: what isn't granted there is asked first, and a permission only counts when it comes from you.
+
+| Flow | Waits for you | Never does alone |
+| --- | --- | --- |
+| `/support` | before the first bug; the merge and anything posted under your name, unless your charter grants them; a release step beyond the merge; after three review rounds; a check that passed locally and fails on the test environment | merge without a green pipeline and a passing review on the same commit |
+| `/mr-review` | every MR, one card at a time; each push and merge on yours; each comment on theirs | push to, approve or merge a teammate's MR |
+| `/backlog` | every close or change, approved by id; value and deadlines it can't infer | close a ticket by age alone; bulk changes |
+| `/night-shift` | one decision round before you leave: merge tonight or not, and the product calls the queue depends on | merge without that night's grant and all three gates on the commit (verify, review, browser smoke); post comments: they wait in the handoff for your OK |
+| `/ambient-companion` | by default, editable in your charter: anything under your name, merges and releases, destructive cleanup, another team's system | force-push, rewrite shared docs, install software, stop or delete what it didn't start, start work from a watch |
+
 ## What's inside
 
 Small units that each do one job, and flows that chain them. A unit works on its own; a flow only decides the order and where it stops for you.
