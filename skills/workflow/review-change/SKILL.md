@@ -18,12 +18,12 @@ A review is only worth something for the exact code it read. This unit reviews o
 
 1. **Read the change**: title, description, author, source branch, full head SHA, pipeline state, linked ticket, and the existing review threads.
 2. **Skip if done**: a report for this head SHA already exists → return it.
-3. **Check out** the head SHA in its own read-only worktree. Never the author's branch in place, never a worktree someone is working in.
+3. **Check out** the head SHA in a fresh worktree of its own, detached, and commit nothing there. Fetch it by the forge's ref so MRs from forks work too (`refs/merge-requests/<iid>/head` on GitLab, `pull/<n>/head` on GitHub). Never the author's branch in place, never a worktree someone is working in.
 4. **Read the ticket** (from the link, the branch name or the description). With no ticket, review against the description and say so.
 5. **Review** with the review skill if one is configured; otherwise along two axes:
    - **Spec**: does the change do what the ticket asks, all of it, and nothing it doesn't?
    - **Standards**: does it follow the repo's documented rules (its agent and contributing docs, ADRs, lint and architecture rules)?
-6. **Run the guard tests**, within the load limits.
+6. **Run the guard tests**, within the load limits. Install nothing: when the worktree lacks dependencies the repo's own setup would bring (and the brief doesn't name how to get them), report the tests as not run.
 7. **Verify each finding** before writing it down: open the line, confirm it is reachable, and drop what does not hold. A finding has a file and line, what goes wrong, and a fix.
 8. **Write the report**: verdict (`ready`, `changes needed`, `blocked`), the head SHA, the findings ranked blocking first, the guard test results, and the existing threads still open.
 9. **Remove the worktree** this unit created.
