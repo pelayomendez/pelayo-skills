@@ -1,6 +1,7 @@
 ---
 name: snapshot-backlog
 description: "Read a slice of a tracker backlog (project, epic, label or saved query) into one local snapshot file that other skills work from: tickets, links with direction, sizes, dates and recent comments. Read only. Use when a skill needs a backlog snapshot, or when the user asks to pull, export or look at the open tickets of a scope."
+summary: "Reads a backlog into one file"
 ---
 
 # Snapshot a backlog

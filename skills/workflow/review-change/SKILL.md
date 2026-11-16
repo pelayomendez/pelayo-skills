@@ -1,6 +1,7 @@
 ---
 name: review-change
 description: "Review one merge request or pull request at its current head: check it out read-only, read its ticket, review the diff against the ticket and the repo's own rules, run the repo's guard tests, verify each finding, and write one report keyed on the head SHA. Never pushes, comments or approves. Use when a flow reaches its review step, when another skill says to review an MR or PR, or when the user asks to review one."
+summary: "Reviews one MR at its current head"
 ---
 
 # Review change

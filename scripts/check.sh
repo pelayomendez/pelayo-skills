@@ -51,6 +51,11 @@ for skill_md in sorted(repo.glob("skills/**/SKILL.md")):
         errors.append(f"{rel}: name {fm.get('name')!r} != directory {d.name!r}")
     if not fm.get("description"):
         errors.append(f"{rel}: no description")
+    summary = fm.get("summary")
+    if not summary:
+        errors.append(f"{rel}: no summary (one short line for menus and panes)")
+    elif len(str(summary)) > 50:
+        errors.append(f"{rel}: summary is {len(str(summary))} chars, keep it to 50")
 
     oa_path = d / "agents/openai.yaml"
     if not oa_path.exists():

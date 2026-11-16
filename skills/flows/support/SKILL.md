@@ -1,6 +1,7 @@
 ---
 name: support
 description: "Work a bug queue end to end: qualify the bugs, then one at a time pick, fix with a worker, review, check in the browser, ship, check again on the test environment and close, with the status board updated at every step. Stops for your OK on merges and anything posted under your name."
+summary: "Takes bugs from report to released"
 disable-model-invocation: true
 argument-hint: "<config file> [KEY ...] [--qualify-only]"
 ---

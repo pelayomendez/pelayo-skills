@@ -1,6 +1,7 @@
 ---
 name: mr-review
 description: "Go through the open merge requests of your repos, yours and your teammates', review each at its current head, and stop for you on every one: yours to land (fix, pipeline, merge, check on the test environment, close), theirs to comment on. You validate each MR yourself; nothing is pushed, merged, moved or posted without your word."
+summary: "Reviews open MRs; you decide on each"
 disable-model-invocation: true
 argument-hint: "<config file> [!iid ...] [--mine | --theirs]"
 ---

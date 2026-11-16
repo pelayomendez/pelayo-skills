@@ -1,6 +1,7 @@
 ---
 name: verify-claim
 description: "Check an agent's claim with a fresh subagent that sees only the claim and its evidence, never the conversation that produced it. Use before presenting a claim as fact (\"this ticket is already done\", \"the worker fixed it\", \"the pipeline is green\", \"A blocks B\"), when another skill says to verify a claim, or when the user asks to double-check something an agent concluded."
+summary: "Checks a claim with a fresh agent"
 ---
 
 # Verify a claim

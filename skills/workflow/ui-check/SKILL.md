@@ -1,6 +1,7 @@
 ---
 name: ui-check
 description: "Check a change in a real browser: make sure the port, the browser and the test project are free, start the app the way the repo needs it, run a written check in a controlled browser (never the user's own), and report what it saw. Use when a flow reaches its browser check, local or on a test environment, when another skill says to smoke or check a fix in the UI, or when the user asks to see a fix working in the browser."
+summary: "Checks a fix in a controlled browser"
 ---
 
 # UI check

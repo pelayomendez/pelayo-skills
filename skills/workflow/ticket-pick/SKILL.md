@@ -1,6 +1,7 @@
 ---
 name: ticket-pick
 description: "Take one ready ticket into work: check it is still ready and still free, then move it to In Progress, assign it to the user, and make sure it has a sprint and points. Use when a flow reaches its pick step, when another skill says to pick or start a ticket, or when the user asks to take, start or pick up a ticket."
+summary: "Takes a ready ticket into work"
 ---
 
 # Ticket pick

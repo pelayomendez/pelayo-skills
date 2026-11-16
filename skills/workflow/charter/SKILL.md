@@ -1,6 +1,7 @@
 ---
 name: charter
 description: "Look up and record what the agent may do alone, must ask first, or must never do, per scope, in the user's charter ledger. Use before publishing anything under the user's name, pushing, merging, deleting, installing, or touching another team's system; when the user grants or revokes a permission (\"you can merge in X\", \"from now on don't…\"); or when another skill says to check the charter."
+summary: "What the agent may do alone, ask, or never"
 ---
 
 # Charter

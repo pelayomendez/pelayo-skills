@@ -1,6 +1,7 @@
 ---
 name: qualify
 description: "Decide, bug by bug, whether a reported bug is ready for an agent to fix: research it in the code and the logs (and the browser when the report doesn't settle a UI bug), check the report has what a worker needs, then label it for agent work or name the missing question. Never fixes. Use when a support flow reaches its qualify step, when the user asks which bugs can be automated, auto-fixed or handed to an agent, or asks to research, check or ready a bug list."
+summary: "Checks a bug is ready for an agent"
 ---
 
 # Qualify

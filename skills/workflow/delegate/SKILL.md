@@ -1,6 +1,7 @@
 ---
 name: delegate
 description: "Hand a piece of work to a separate worker agent safely: write a self-sufficient brief to a file, pick the model, launch the worker headless in its own worktree (or as a subagent), and record its log and PID. Use when a task should run in another agent's context, when another skill says to spawn or delegate a worker, or when the user asks to hand something to a worker, a subagent or a background agent."
+summary: "Hands work to a worker agent"
 ---
 
 # Delegate

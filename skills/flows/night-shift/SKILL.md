@@ -1,6 +1,7 @@
 ---
 name: night-shift
 description: "Run an unattended overnight loop: a decision round before you leave, then tickets through worker, checks, MR and merge, ending in a morning report."
+summary: "Works tickets while you are away"
 disable-model-invocation: true
 argument-hint: "[until HH:MM]"
 ---

@@ -1,6 +1,7 @@
 ---
 name: prune-backlog
 description: "Propose which tickets in a backlog snapshot can be closed, each with evidence (already done, duplicate, superseded, orphaned, unanswered), never by age alone. Proposes only. Use when a skill asks for prune proposals, or when the user asks which tickets can go, what is already done, or how to clean a backlog without closing important work."
+summary: "Proposes tickets to close, with evidence"
 ---
 
 # Prune a backlog

@@ -1,6 +1,7 @@
 ---
 name: backlog
 description: "Tidy and order an existing tracker backlog: prune with checked evidence instead of by age, map what blocks what, and propose a ranked queue with one reason per ticket. Nothing moves without your OK."
+summary: "Cleans and orders a backlog"
 disable-model-invocation: true
 argument-hint: "<scope: project, epic, label or query> [--prune-only | --order-only]"
 ---

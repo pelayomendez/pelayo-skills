@@ -1,6 +1,7 @@
 ---
 name: ambient-companion
 description: "Run a day-long companion session that watches your work's event streams, keeps workers moving, and brings you only the decisions."
+summary: "Watches your work during the day"
 disable-model-invocation: true
 ---
 
