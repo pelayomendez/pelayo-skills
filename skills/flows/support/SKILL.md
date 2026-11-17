@@ -29,6 +29,14 @@ Throughout:
 
 One run folder per bug, `<tasks>/<KEY>/`, holds the brief, the worker log, `REVIEW-<KEY>.md`, `check-<KEY>.md` and the `UI-<KEY>-*.md` reports, so a run survives a `/clear`.
 
+## Slots
+
+Jobs your own skills can fill; unset ones use the defaults (see `delegate`).
+
+- `implement`: the fix in step 5
+- `review`: the review in step 6, through `review-change`
+- `browser-check`: the checks in steps 7 and 9, through `ui-check`
+
 ## Config
 
 One file per installation, named in the argument. Ask once for anything missing and write it there.
@@ -36,7 +44,8 @@ One file per installation, named in the argument. Ask once for anything missing 
 - **Tracker**: the intake (epic, label or query), the ready labels, the transitions (In Progress, In Review, Done), sprint and points fields, the user's account id.
 - **Board**: the ticket and heading of the status board, and its section names, for `tracker-move`.
 - **Repo**: path, base branch, worktree and branch naming, the push and MR commands.
-- **Workers**: the implementer and reviewer agents, and the guard tests every review must run.
+- **Slots** (optional): your skill for `implement`, `review` or `browser-check`, one line each (`- review: my-review-skill`). Unset slots use your slots file, then the defaults.
+- **Guard tests**: the tests every review must run.
 - **Load limits**: how tests may run locally (for example one test command at a time, no full type check), and how many agents may work in the repo at once.
 - **App**: start command, port, the URL to open first, the test project, and what the check may do there.
 - **Release**: how a merge reaches the test environment (for example: merge to main deploys; or a tag), and its URL.
@@ -54,9 +63,9 @@ Then, per bug:
 
 **4. Pick.** `ticket-pick`, then `tracker-move` to In progress.
 
-**5. Fix.** `delegate` an implementer in a fresh worktree from the base branch, test-first, committing at the end. Its brief carries the ticket text, the qualify evidence and fix hint, and the load limits.
+**5. Fix.** `delegate` the `implement` slot in a fresh worktree from the base branch, test-first, committing at the end. Its brief carries the ticket text, the qualify evidence and fix hint, and the load limits.
 
-**6. Review.** `delegate` a fresh reviewer over the new commits, running the guard tests, into `REVIEW-<KEY>.md`. Blocking findings go back to an implementer (step 5) with the report. Cap at three rounds; after that, stop and ask.
+**6. Review.** `delegate` a fresh reviewer that runs `review-change` (the `review` slot) over the new commits, running the guard tests, into `REVIEW-<KEY>.md`. Blocking findings go back to an implementer (step 5) with the report. Cap at three rounds; after that, stop and ask.
 
 **7. Check locally.** Write `check-<KEY>.md` from the ticket's expected vs actual, then `ui-check` local. A fail goes back to step 5 with the report.
 

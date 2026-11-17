@@ -11,7 +11,7 @@ A review is only worth something for the exact code it read. This unit reviews o
 ## Input
 
 - **Change**: the forge, repo and MR/PR number.
-- **Review skill** (optional): a repo's own review skill to run instead of the method below (for example a team review skill). From config.
+- **The review slot** (optional): the user's own review skill, found the way `delegate` finds a slot's skill (the flow's config, then the user's slots file). Without one, the method below.
 - **Guard tests**: tests every review must run (architecture or ratchet tests), and the load limits for running them.
 - **Reports folder**: where `REVIEW-<repo>-<iid>-<short sha>.md` goes.
 
@@ -21,12 +21,12 @@ A review is only worth something for the exact code it read. This unit reviews o
 2. **Skip if done**: a report for this head SHA already exists → return it.
 3. **Check out** the head SHA in a fresh worktree of its own, detached, and commit nothing there. Fetch it by the forge's ref so MRs from forks work too (`refs/merge-requests/<iid>/head` on GitLab, `pull/<n>/head` on GitHub). Never the author's branch in place, never a worktree someone is working in.
 4. **Read the ticket** (from the link, the branch name or the description). With no ticket, review against the description and say so.
-5. **Review** with the review skill if one is configured; otherwise along two axes:
+5. **Review** with the skill in the review slot, giving it the slot's inputs (the worktree at the head SHA, the base, the ticket, the repo's rules) and the slot's nevers (no commit, push, comment, approval or thread resolve); it answers in its own words, and this unit takes the findings and the verdict from that answer. With no skill in the slot, or one that isn't installed (say so in the report), review along two axes:
    - **Spec**: does the change do what the ticket asks, all of it, and nothing it doesn't?
    - **Standards**: does it follow the repo's documented rules (its agent and contributing docs, ADRs, lint and architecture rules)?
 6. **Run the guard tests**, within the load limits. Install nothing: when the worktree lacks dependencies the repo's own setup would bring (and the brief doesn't name how to get them), report the tests as not run.
 7. **Verify each finding** before writing it down: open the line, confirm it is reachable, and drop what does not hold. A finding has a file and line, what goes wrong, and a fix.
-8. **Write the report**: verdict (`ready`, `changes needed`, `blocked`), the head SHA, the findings ranked blocking first, the guard test results, and the existing threads still open.
+8. **Write the report**: which skill reviewed (or the default), the verdict (`ready`, `changes needed`, `blocked`), the head SHA, the findings ranked blocking first, the guard test results, and the existing threads still open.
 9. **Remove the worktree** this unit created.
 
 ## Rules

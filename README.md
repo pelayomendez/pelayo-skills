@@ -69,6 +69,25 @@ Small units that each do one job, and flows that chain them. A unit works on its
 | [`/support <config>`](./skills/flows/support/SKILL.md) | qualify → your OK → each bug: verify-claim → ticket-pick → delegate (fix, review) → ui-check → watch → merge on your OK or a charter grant → ui-check on the test environment → close | A bug queue worked from report to released, one bug at a time, with the status board updated at every step. |
 | [`/mr-review <config>`](./skills/flows/mr-review/SKILL.md) | list open MRs → review-change → verify-claim → you validate each MR → yours: fix and push on your word, merge on your word, check on the test environment, close · theirs: comments on your OK | Every open MR reviewed at its current head, and a decision card per MR. Nothing merged or posted without you. |
 
+### Bring your own skills
+
+The flows are the line; the skills that do the heavy jobs on it can be yours. A flow hands three jobs to workers, and each is a **slot** you can fill with a skill you already trust:
+
+| Slot | The job | Default | Used by |
+| --- | --- | --- | --- |
+| `implement` | write the fix or the feature in its own worktree, and commit | a test-first fix | `/support`, `/mr-review`, `/night-shift` |
+| `review` | review one change at one commit: findings with file and line, and a verdict | `review-change`'s spec and standards review | `/support`, `/mr-review`, `/night-shift` |
+| `browser-check` | run a written check in a controlled browser | `ui-check` | `/support`, `/mr-review`, `/night-shift` |
+
+Name your skill in a slots file, `~/.claude/slots.md`, or per flow in its config under `## Slots`, one line per slot (`agent:<name>` for a subagent type):
+
+```
+- implement: coding-skills:tdd
+- review: coding-skills:code-review
+```
+
+Your skill answers in its own words. The unit around it (`delegate`, `review-change`, `ui-check`) gives it what it needs, checks what comes back, writes the report and keeps every stop and every never of the flow. Your skill doesn't need to know our formats. If it isn't installed, the default runs and the report says so. The contracts are in [delegate's slots reference](./skills/workflow/delegate/references/slots.md).
+
 ### Flow map
 
 A pane beside the chat that lists your flows (with their steps) and units, one line each. Click one and it goes into the prompt. It ships as a separate plugin, so the skills stay plain markdown:

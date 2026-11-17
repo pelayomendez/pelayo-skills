@@ -26,7 +26,7 @@ It reads and clicks; it never changes code.
    - **The machine has room**: no test suite or second dev server of the same app running.
    If any of these stays busy, stop with `blocked <what holds it>`.
 2. **Start the app** (local only) from the ticket's worktree, logging to a file next to the check, and record the PID it launched. Wait until it answers on the port, and check the listener is that process or its child.
-3. **Run the check** in a fresh context: a subagent, or a headless session with only the browser tools allowed, given only the check file, the URL and the test project. It:
+3. **Run the check** with the skill in the browser-check slot if the user named one (found the way `delegate` finds a slot's skill), giving it only the check file, the URL and the test project; with none, or one that isn't installed (say so in the report), run it as follows. Either way it runs in a fresh context, and the rules in the list below bind the user's skill too: a subagent, or a headless session with only the browser tools allowed, given only the check file, the URL and the test project. It:
    - follows the steps, takes a text snapshot at each expected result, and a screenshot only where the result is visual
    - works only in the test project, and puts back anything it created unless the check says to keep it
    - never saves outside the test project, never uploads files the check doesn't name, never prints tokens

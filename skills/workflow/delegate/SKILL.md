@@ -35,6 +35,10 @@ Write `<run>/brief.md` from [references/brief.md](references/brief.md). It has s
 
 Everything the worker needs goes in the file. A root cause belongs there with its file:line, not "see the ticket".
 
+## Slots: bring your own skill
+
+Some jobs are slots: `implement`, `review` and `browser-check`. The flow says which slot a job fills, and the user may have named their own skill for it. Fill it as [references/slots.md](references/slots.md) says. For `implement`: find the skill (flow config, then the user's slots file, then the default), name it in the brief, add the slot's contract to **Done when** and its nevers to the forbids; a named skill that isn't installed falls back to the default, and the record says so. For `review` and `browser-check`: launch `review-change` or `ui-check`, which resolve the slot themselves; never the user's skill directly.
+
 ## 3. Choose the model
 
 Pick the cheapest model that can do the job well:
@@ -66,10 +70,10 @@ cd "<worktree>" && ( claude -p --permission-mode acceptEdits --model <model> < "
 Append one line to `<run>/workers.md`, with the time from `date`:
 
 ```
-<HH:MM> · <job> · <model> · <worktree> · pid <pid> · log <run>/worker.log · claim lands in <where>
+<HH:MM> · <job> · <model> · slot <slot>=<skill or default> · <worktree> · pid <pid> · log <run>/worker.log · claim lands in <where>
 ```
 
-`<where>` is what the worker leaves when it finishes: the commit on its branch, `<run>/report.md`, and the final line `WORKER_EXIT 0` in the log.
+Leave out the slot part when the job fills no slot. `<where>` is what the worker leaves when it finishes: the commit on its branch, `<run>/report.md`, and the final line `WORKER_EXIT 0` in the log.
 
 ## Waiting and stopping
 
