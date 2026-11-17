@@ -37,7 +37,7 @@ Everything the worker needs goes in the file. A root cause belongs there with it
 
 ## Slots: bring your own skill
 
-Some jobs are slots: `implement`, `review` and `browser-check`. The flow says which slot a job fills, and the user may have named their own skill for it. Fill it as [references/slots.md](references/slots.md) says: find the skill (flow config, then the user's slots file, then the default), name it in the brief, add the slot's contract to **Done when** and its nevers to the forbids. A named skill that isn't installed falls back to the default, and the record says so.
+Some jobs are slots: `implement`, `review` and `browser-check`. The flow says which slot a job fills, and the user may have named their own skill for it. Fill it as [references/slots.md](references/slots.md) says. For `implement`: find the skill (flow config, then the user's slots file, then the default), name it in the brief, add the slot's contract to **Done when** and its nevers to the forbids; a named skill that isn't installed falls back to the default, and the record says so. For `review` and `browser-check`: launch `review-change` or `ui-check`, which resolve the slot themselves; never the user's skill directly.
 
 ## 3. Choose the model
 

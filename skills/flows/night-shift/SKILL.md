@@ -36,8 +36,8 @@ All state lives in `<tasks>`: the handoff (`handoff-<start date>.md`, one file f
 Jobs your own skills can fill; unset ones use the defaults (see `delegate`).
 
 - `implement`: each ticket's worker
-- `review`: the independent review gate, and reviews of open MRs in watched repos
-- `browser-check`: the smoke gate
+- `review`: the independent review gate, and reviews of open MRs in watched repos, through `review-change`
+- `browser-check`: the smoke gate, through `ui-check`
 
 ## Configure for your workspace
 
