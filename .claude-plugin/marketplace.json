@@ -9,7 +9,7 @@
     {
       "name": "pelayo-skills",
       "source": "./",
-      "description": "On-the-loop operations for coding agents: the agents are the machines, these skills run the line around them. Plan the work (backlog), hand it out (delegate), check it (verify-claim), watch it (watch), hand over (handoff), keep permissions in a charter and the setup tuned. Small units, chained into flows.",
+      "description": "More arms for your everyday work: coding agents work the daily loops (bug queue, MR reviews, backlog, the night shift) and stop for you on the calls. Small units, chained into flows, under a permission charter.",
       "category": "productivity",
       "keywords": [
         "agent-operations",

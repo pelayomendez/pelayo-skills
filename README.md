@@ -2,7 +2,7 @@
 
 # pelayo-skills
 
-On-the-loop operations for coding agents. [Landing page](https://pelayomendez.github.io/pelayo-skills/).
+More arms for your everyday work. [Landing page](https://pelayomendez.github.io/pelayo-skills/).
 
 I use these to automate code production. The coding agents are the machines; these skills run the line around them: what to build next, who may do what, launching work, checking it, watching it and handing it over. The point is to supervise from **on the loop** (change the system when a result is wrong) instead of **in the loop** (redo each result by hand).
 
