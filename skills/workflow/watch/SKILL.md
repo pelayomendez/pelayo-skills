@@ -17,8 +17,8 @@ Some state changes where the session can't see it: a pipeline finishing, a merge
 
 ## Rules
 
-- **Key on the revision, not on "latest".** Ask for the pipeline of a given full SHA, not the newest pipeline. A watch keyed on "latest pipeline" once reported the previous commit's result as this one's.
-- **Only a terminal state is a result.** For a pipeline that is `success`, `failed`, `canceled` or `skipped`. `created`, `pending` and `running` are not results, and neither is "no pipeline yet": a merge once went through on "no pipeline running" while the pipeline was still queued.
+- **Key on the revision, not on "latest".** Ask for the pipeline of a given full SHA, not the newest pipeline. A watch keyed on "latest pipeline" can report the previous commit's result as this one's.
+- **Only a terminal state is a result.** For a pipeline that is `success`, `failed`, `canceled` or `skipped`. `created`, `pending` and `running` are not results, and neither is "no pipeline yet": a merge can go through on "no pipeline running" while the pipeline is still queued.
 - **Record the baseline before arming.** Write the first output to `<state>/watch-<name>.json` (or `.txt`). A change is a difference from that file, so a re-armed watch compares against the same thing and reports what moved while it was down.
 - **Report on change, and say when nothing changed.** A scheduled check reports every run, even "no change", so silence means the watch is broken, not that the world is quiet. With each change, say what it unblocks if the caller told you.
 - **Never start work from a watch.** A tick reports and updates the baseline. Launching a worker, merging or posting is a decision for the session that reads the report.

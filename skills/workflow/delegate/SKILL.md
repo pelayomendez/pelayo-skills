@@ -58,7 +58,7 @@ R=<run>
 cd "<worktree>" && ( claude -p --permission-mode acceptEdits --model <model> < "$R/brief.md" > "$R/worker.log" 2>&1 & echo $! > "$R/worker.pid" )
 ```
 
-- Never splice the brief into a command string (`sh -c "claude -p \"$(cat brief.md)\""`). The shell re-parses it: once, every backticked path and command in a brief was *executed* (type check, tests, `npm ci`, `git add`) and stripped from the prompt, so the worker ran blind.
+- Never splice the brief into a command string (`sh -c "claude -p \"$(cat brief.md)\""`). The shell re-parses it: every backticked path and command in the brief gets *executed* (type check, tests, `npm ci`, `git add`) and stripped from the prompt, so the worker runs blind.
 - Check the launch: `ps -o command= -p $(cat "$R/worker.pid")` shows the process and no prompt text.
 - Detaching wrappers such as `nohup` misbehave under some harnesses. The subshell with `&` above is enough; confirm the PID is alive.
 - Other harnesses take the same shape: the brief file on stdin, the log to `worker.log`, the PID to `worker.pid`.
@@ -78,7 +78,7 @@ Leave out the slot part when the job fills no slot. `<where>` is what the worker
 ## Waiting and stopping
 
 - **Wait by PID, not by asking.** A background command that returns when the worker dies: `while kill -0 $(cat "$R/worker.pid") 2>/dev/null; do sleep 30; done; tail -60 "$R/worker.log"`. No `WORKER_EXIT 0` at the end means read the log before trusting anything it committed.
-- **A worker started by mistake is stopped at once**, by its PID. Check `git status` in its worktree shows nothing changed, keep the brief for later, and report it. A misread "ready" once started a bump worker; it was stopped within a minute.
+- **A worker started by mistake is stopped at once**, by its PID. Check `git status` in its worktree shows nothing changed, keep the brief for later, and report it.
 - **Fix rounds** are new workers with their own files: `fix-brief.md`, `fix.log`, `fix.pid`. They make new commits on top; nothing is amended.
 
 ## Output

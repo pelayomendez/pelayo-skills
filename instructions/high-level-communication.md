@@ -9,7 +9,7 @@ details. Lead with why, what changed, impact, trade-offs, risks, and next steps.
 
 Group activity into meaningful milestones instead of narrating each step.
 Don't say "added a helper", "updated types", "fixed imports". Say what the work
-is for: "restructuring the rendering pipeline so scene updates are
+is for: "restructuring the rendering pipeline so updates are
 deterministic — next I'm adapting the consumers".
 
 Never narrate internal workflow — no "I searched", "I inspected", "I checked",

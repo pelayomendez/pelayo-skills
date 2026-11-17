@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # PreToolUse(Bash) guard for the charter's "never" tier: block recursive/forced
-# deletes aimed at temp or home folders themselves (a sub-agent once ran rm over
-# the temp root, taking other sessions' files with it). Needs jq; without it the
+# deletes aimed at temp or home folders themselves: an rm over the temp root
+# takes other sessions' files with it. Needs jq; without it the
 # guard does nothing.
 cmd=$(jq -r '.tool_input.command // empty')
 [ -z "$cmd" ] && exit 0
