@@ -109,7 +109,7 @@ One ticket at a time per repo, in queue order. A ticket is done when it is merge
 - **A watch broke** (exited with an error, or its heartbeat went stale): re-arm it once from `watches.md`. If it breaks again, log that source as blind and name it in the morning report.
 - **Preflight says wait** before a launch: don't launch. Work what needs no new process (watch reports, handoff), and check again on the next tick.
 - **A blocking finding needs a product call** the decision round didn't cover: don't push; leave the branch and the finding in the handoff for the morning, and take the next ticket.
-- **Smoke can't run** (VPN down, environment unreachable, browser not allowed or held by another session): don't merge and don't idle. Finish everything else (verify, review, fixes, push, MR with CI green, description noting "smoke pending") so it can smoke and merge the moment access returns, keep working the queue, and list every MR waiting on a smoke in the morning report. Never stop another session's Chrome to get the browser.
+- **Smoke can't run** (the test environment is unreachable over the network or VPN, the browser is not allowed or held by another session): don't merge and don't idle. Finish everything else (verify, review, fixes, push, MR with CI green, description noting "smoke pending") so it can smoke and merge the moment access returns, keep working the queue, and list every MR waiting on a smoke in the morning report. Never stop another session's Chrome to get the browser.
 - **An MR blocks the queue** (unmerged, merge not authorized): stack the next ticket's commits on the same branch locally, but never push onto an MR under review. It must stay exactly as reviewed.
 - **A product call nobody can make**: take the option closest to the user's earlier decisions, build it so it can be reversed, and log it under "Decisions taken on your behalf".
 
@@ -119,11 +119,11 @@ Each comes from something that went wrong on a real run.
 
 - **Comments** on the tracker or the code host: draft them in the handoff, post none tonight. Posting later is one item at a time, each after an explicit OK for its exact text.
 - **Merging** needs tonight's grant in the charter and all three gates on the head SHA. Without the grant nothing merges: nobody is there to ask.
-- **Never merge while the pipeline is pending.** Auto-merge once saw "no pipeline running" while the pipeline was still queued, and merged before CI. Wait for `success` on the head SHA.
+- **Never merge while the pipeline is pending.** Auto-merge can read "no pipeline running" while the pipeline is still queued, and merge before CI. Wait for `success` on the head SHA.
 - **Pushes are fast-forward only**, and commits are new commits: no amend, no rebase of pushed work, no stash, no `git add -A`.
 - **The session doesn't commit.** If a mechanical revert is unavoidable, log it as the exception it is.
 - **Load.** One worker per repo; never two full test suites at once; no worker while a smoke is running, and hold even small commits during a smoke, because an edit hot-reloads the dev server and spoils it.
-- **Restart the dev server after any dependency change** (package bump, install) before a smoke. A server once kept serving the old bundle, and the first two smoke saves silently dropped a field into the test project.
+- **Restart the dev server after any dependency change** (package bump, install) before a smoke. A server that keeps serving the old bundle makes the smoke test old code, and can write wrong data into the test project.
 - **The browser profile is shared across sessions.** If another session holds it, stack the next ticket and retry the smoke later, or use an isolated browser instance if one is configured.
 - **Clean up a review worktree** only when the code host says its MR is merged or closed. A dead PID proves nothing.
 
@@ -139,7 +139,7 @@ When the user is back, or the queue is empty, put `## Morning report` at the top
 
 ## 7. Next-day plan
 
-Then write a second, separate report, `<tasks>/NEXT-DAY-PLAN-<date>.md`, and give it to the user as its own message, because they forward it to other teams and plan the day from it:
+Then write a second, separate report, `<tasks>/NEXT-DAY-PLAN-<date>.md`, and give it to the user as its own message, so it can be shared with other teams and used to plan the day:
 
 - **Tracker check**: a subagent audits every ticket touched in the last 24 hours (status matches reality, assignee, sprint, points). It fixes only a missing assignee, sprint or points, reports the rest, and never comments.
 - **Asks per team**: one bullet per thing another team must do to unblock our progress, with its ticket or MR and why it blocks.

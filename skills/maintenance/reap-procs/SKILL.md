@@ -70,7 +70,7 @@ For any process you are about to report:
 Report these; stop them only with the user's yes:
 
 - **Idle agent sessions** open for days (`claude --resume`/`--continue`, high memory, no CPU). They may hold unsaved work: point the user at them, never stop them.
-- **The automation browser parked on a heavy page** (a 3D scene keeps rendering unwatched): navigate it to `about:blank`.
+- **The automation browser parked on a heavy page** (a WebGL scene, for example, keeps rendering while unwatched): navigate it to `about:blank`.
 - **Editor language servers** for old worktrees (`typescript-language-server` and the like) usually belong to an editor: report.
 - **Stale worktrees**: `git worktree list` shows `prunable` entries and temporary trees (e.g. mutation-testing copies). Prune the prunable ones; remove others only when the user confirms nothing references them.
 
