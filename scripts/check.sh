@@ -100,6 +100,15 @@ for flow in sorted(repo.glob("skills/flows/*/SKILL.md")):
         elif skill_modes[u]:
             errors.append(f"{rel}: unit {u!r} is user-invoked, so the flow can't call it")
 
+# Slots a flow lists must have a contract in delegate's references/slots.md.
+contracts_path = repo / "skills/workflow/delegate/references/slots.md"
+contracts = set(re.findall(r"^### ([a-z0-9-]+)$", contracts_path.read_text(), re.M)) if contracts_path.exists() else set()
+for flow in sorted(repo.glob("skills/flows/*/SKILL.md")):
+    m = re.search(r"^## Slots\n(.*?)(?=^## |\Z)", flow.read_text(), re.S | re.M)
+    for s in re.findall(r"^- `([a-z0-9-]+)`", m.group(1), re.M) if m else []:
+        if s not in contracts:
+            errors.append(f"{flow.relative_to(repo)}: slot {s!r} has no contract in {contracts_path.relative_to(repo)}")
+
 MAX_LINES = 80
 
 for doc in sorted(repo.glob("instructions/*.md")):

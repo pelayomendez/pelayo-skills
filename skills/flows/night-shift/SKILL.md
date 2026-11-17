@@ -29,6 +29,14 @@ Throughout:
 
 All state lives in `<tasks>`: the handoff (`handoff-<start date>.md`, one file for the whole night), the watch list and baselines (`watches.md`, `watch-*.json`), the ledger of reviewed MR heads (`reviewed-mrs.json`), and one run folder per ticket (`<tasks>/<KEY>/`, with the files `delegate` names plus `VERIFY-<KEY>.md`, `REVIEW-<KEY>.md`, `SMOKE-<KEY>.md` and `smoke/`).
 
+## Slots
+
+Jobs your own skills can fill; unset ones use the defaults (see `delegate`).
+
+- `implement`: each ticket's worker
+- `review`: the independent review gate, and reviews of open MRs in watched repos
+- `browser-check`: the smoke gate
+
 ## Configure for your workspace
 
 Fill these in once, at the start of the decision round, and keep them in the handoff's "Files that matter" and "Rules in force". The steps refer to them by name.
@@ -39,8 +47,8 @@ Fill these in once, at the start of the decision round, and keep them in the han
 - **Repos**: the worktree the workers run in; the repos whose merges and open MRs you watch; the packages whose published versions you watch.
 - **Dev server**: port, start command, and the env var that pins the test project.
 - **Test project**: the one project the browser smoke may touch.
-- **Gates**: the verify commands (type check, scoped tests, cycle check, lint) and the review skill used for the independent review.
-- **Workers**: the implementer and reviewer sub-agents a worker brief names, and the model for each.
+- **Gates**: the verify commands (type check, scoped tests, cycle check, lint) and the review skill used for the independent review (the `review` slot).
+- **Slots** (optional): your skill for `implement` and `review` (see `delegate`); unset slots use your slots file, then the defaults. And the model for each worker.
 - **Domain rules**: the product and domain rules no worker may break. They go in "Rules in force" and into every brief.
 
 ## 1. Before the user leaves

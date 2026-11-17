@@ -35,6 +35,14 @@ Installed by `./scripts/install-instructions.sh`, which symlinks it into `~/.cla
 5. Add it to `skills/flows/README.md` and to the **Flows** table in the top-level `README.md`.
 6. Run `npm run check`.
 
+## Adding a slot
+
+A slot is a job a flow hands to a worker where users may bring their own skill. There are three (`implement`, `review`, `browser-check`), and the bar for a fourth is a flow that needs it.
+
+1. Write its contract in `skills/workflow/delegate/references/slots.md`: what the skill gets, the facts it must give back, its nevers, and the default.
+2. The unit that wraps it (like `review-change` for `review`) turns the skill's answer into its own output. A plugged-in skill never has to learn our formats.
+3. List it under `Slots` in each flow that uses it. `npm run check` fails on a slot with no contract.
+
 ## Rules that bite
 
 - **Quote the `description`.** An unquoted value containing `: ` is invalid YAML; Claude Code tolerates it, `npx skills` silently skips the skill.

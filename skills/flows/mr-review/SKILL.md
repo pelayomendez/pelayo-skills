@@ -30,6 +30,14 @@ Throughout:
 
 Reports go in `<tasks>/reviews/`, one per MR head: `REVIEW-<repo>-<iid>-<short sha>.md`. The ledger `<tasks>/reviews/ledger.json` records, per MR, the last head reviewed and your decision on it (`fix`, `merged`, `commented`, `left`, or none yet).
 
+## Slots
+
+Jobs your own skills can fill; unset ones use the defaults (see `delegate`).
+
+- `review`: step 2, through `review-change`
+- `implement`: the fix on your own MRs
+- `browser-check`: the check after a merge, through `ui-check`
+
 ## Config
 
 The same file as `/support`, plus a `## Review` section:
@@ -37,7 +45,8 @@ The same file as `/support`, plus a `## Review` section:
 - **Repos**: the repos whose open MRs to go through, each with its own app, check and release settings (as in the support config) when you land MRs there.
 - **Mine**: the user's username on the forge. Their MRs are "yours"; everyone else's are "theirs".
 - **Skip**: drafts, MRs labelled as not ready, or authors to leave out.
-- **Review skill**, **guard tests** and **load limits** for `review-change`.
+- **Slots** (optional): your skill for `review`, `implement` or `browser-check`, one line each. Unset slots use your slots file, then the defaults.
+- **Guard tests** and **load limits** for `review-change`.
 - **Comments**: the style for review comments (for example: one or two plain sentences, optional ones prefixed `Nit:`).
 
 ## Steps
@@ -49,7 +58,7 @@ The same file as `/support`, plus a `## Review` section:
 **3. Stop: you validate, one MR at a time.** One card per MR: title, ticket, author, head SHA, pipeline, verdict and whether it held up, the blocking findings in a line each, the report's path. Yours first, then theirs, oldest first. Wait for your call on each card before the next, and record it in the ledger.
 
 **4. Your MRs**, on your call:
-- **Fix**: `delegate` an implementer on the MR's branch with the report. When it ends, show the new commits and the diff. **Push only on your word**, fast-forward only. The new head goes back to step 2.
+- **Fix**: `delegate` the `implement` slot on the MR's branch with the report. When it ends, show the new commits and the diff. **Push only on your word**, fast-forward only. The new head goes back to step 2.
 - **Merge**: only on your word for this MR and this head, with the pipeline `success` for the same SHA. Pinned to that SHA. Your merge call covers what follows only if you say so ("merge and close"); otherwise ask again before each of: the release step when it is more than the merge (a tag, a deploy), the ticket to Done, and `tracker-move` to Released.
 - After the merge: `watch` until the test environment has the change, write `check-<KEY>.md` from the ticket's expected vs actual, `ui-check` there, and show the result before closing.
 - **Leave**: note it and move on.
