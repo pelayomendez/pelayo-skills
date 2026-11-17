@@ -1,8 +1,10 @@
 <p align="center"><img src="assets/icon-sticker.png" width="128" alt=""></p>
 
-# pelayo-skills
+# yatsude
 
-On-the-loop operations for coding agents. [Landing page](https://pelayomendez.github.io/pelayo-skills/).
+More arms for your everyday work. [Landing page](https://pelayomendez.github.io/yatsude/).
+
+A composable framework for AI-driven everyday work: small skills, chained into flows, with slots for your own skills and a charter for what needs you. The name is Japanese: *yatsude* (八つ手), "eight hands".
 
 I use these to automate code production. The coding agents are the machines; these skills run the line around them: what to build next, who may do what, launching work, checking it, watching it and handing it over. The point is to supervise from **on the loop** (change the system when a result is wrong) instead of **in the loop** (redo each result by hand).
 
@@ -93,8 +95,8 @@ Your skill answers in its own words. The unit around it (`delegate`, `review-cha
 A pane beside the chat that lists your flows (with their steps) and units, one line each. Click one and it goes into the prompt. It ships as a separate plugin, so the skills stay plain markdown:
 
 ```
-/plugin marketplace add pelayomendez/pelayo-skills
-/plugin install flow-map@pelayomendez-skills
+/plugin marketplace add pelayomendez/yatsude
+/plugin install flow-map@yatsude
 ```
 
 Details: [plugins/flow-map](./plugins/flow-map/README.md).
@@ -136,8 +138,8 @@ Instructions and skills install separately, because one is always loaded and the
 As a Claude Code plugin, a read-only bundle you subscribe to:
 
 ```
-/plugin marketplace add pelayomendez/pelayo-skills
-/plugin install pelayo-skills@pelayomendez-skills
+/plugin marketplace add pelayomendez/yatsude
+/plugin install yatsude@yatsude
 ```
 
 The plugin also installs the one hook `tidy` needs: a session-start reminder that prints a line only when a pass is due (`TIDY_REMIND=0` silences it).
@@ -145,14 +147,14 @@ The plugin also installs the one hook `tidy` needs: a session-start reminder tha
 Or with [skills.sh](https://skills.sh), which copies them into your project so you can hack on them (no hook; install one way, not both, or you get every skill twice):
 
 ```bash
-npx skills@latest add pelayomendez/pelayo-skills
+npx skills@latest add pelayomendez/yatsude
 ```
 
 ### Instructions
 
 ```bash
-git clone https://github.com/pelayomendez/pelayo-skills
-cd pelayo-skills
+git clone https://github.com/pelayomendez/yatsude
+cd yatsude
 ./scripts/install-instructions.sh          # or --dry-run first
 ```
 

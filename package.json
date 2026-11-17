@@ -1,11 +1,11 @@
 {
-  "name": "pelayo-skills",
-  "version": "0.15.0",
+  "name": "yatsude",
+  "version": "0.16.0",
   "private": true,
-  "description": "Pelayo Méndez's agent instructions and skills for real engineering",
+  "description": "yatsude: a composable framework for AI-driven everyday work",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pelayomendez/pelayo-skills"
+    "url": "https://github.com/pelayomendez/yatsude"
   },
   "license": "MIT",
   "scripts": {
