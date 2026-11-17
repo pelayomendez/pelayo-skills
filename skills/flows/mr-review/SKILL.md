@@ -45,7 +45,7 @@ The same file as `/support`, plus a `## Review` section:
 - **Repos**: the repos whose open MRs to go through, each with its own app, check and release settings (as in the support config) when you land MRs there.
 - **Mine**: the user's username on the forge. Their MRs are "yours"; everyone else's are "theirs".
 - **Skip**: drafts, MRs labelled as not ready, or authors to leave out.
-- **Slots** (optional): your skill for `review`, `implement` or `browser-check`, one line each. Unset slots use your slots file, then the defaults.
+- **Slots** (optional): your skill for `review`, `implement` or `browser-check`, one line each (`- review: my-review-skill`). Unset slots use your slots file, then the defaults.
 - **Guard tests** and **load limits** for `review-change`.
 - **Comments**: the style for review comments (for example: one or two plain sentences, optional ones prefixed `Nit:`).
 

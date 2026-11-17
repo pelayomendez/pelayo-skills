@@ -44,7 +44,7 @@ One file per installation, named in the argument. Ask once for anything missing 
 - **Tracker**: the intake (epic, label or query), the ready labels, the transitions (In Progress, In Review, Done), sprint and points fields, the user's account id.
 - **Board**: the ticket and heading of the status board, and its section names, for `tracker-move`.
 - **Repo**: path, base branch, worktree and branch naming, the push and MR commands.
-- **Slots** (optional): your skill for `implement`, `review` or `browser-check`, one line each (`review: my-review-skill`). Unset slots use your slots file, then the defaults.
+- **Slots** (optional): your skill for `implement`, `review` or `browser-check`, one line each (`- review: my-review-skill`). Unset slots use your slots file, then the defaults.
 - **Guard tests**: the tests every review must run.
 - **Load limits**: how tests may run locally (for example one test command at a time, no full type check), and how many agents may work in the repo at once.
 - **App**: start command, port, the URL to open first, the test project, and what the check may do there.

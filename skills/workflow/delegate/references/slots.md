@@ -6,11 +6,18 @@ A slot is a job a flow needs done by a worker, where the skill that does it can 
 
 First match wins:
 
-1. The flow's config file, under `## Slots` (for example `review: my-team-review`).
-2. The user's slots file, `<config dir>/slots.md` (`~/.claude/slots.md` for Claude Code), same format.
+1. The flow's config file, under `## Slots`.
+2. The user's slots file, `<config dir>/slots.md` (`~/.claude/slots.md` for Claude Code).
 3. The default below.
 
-A value is a skill (`coding-skills:tdd`) or a subagent type (`agent:my-implementer`). If the named skill or agent is not installed, use the default and say so in the record line and the report. Never fail a run because a plugged-in skill is missing.
+Both files use one line per slot:
+
+```
+- implement: coding-skills:tdd
+- review: agent:my-team-reviewer
+```
+
+A value is a skill (`coding-skills:tdd`) or, with `agent:`, a subagent type. If the named skill or agent is not installed, use the default and say so in the record line and the report. Never fail a run because a plugged-in skill is missing.
 
 ## The contracts
 
@@ -39,6 +46,6 @@ The skill in a slot answers in its own words. The caller turns the answer into t
 
 ## How delegate fills a slot
 
-- Resolve the skill as above, then write the brief as usual and add, in **Goal**: "Do this job with the `<skill>` skill" (or launch the named subagent type), and in **Done when**: the slot's *gives back*.
-- The slot's nevers go into the standing forbids, word for word.
+- **`implement`**: resolve the skill as above, then write the brief as usual and add, in **Goal**: "Do this job with the `<skill>` skill" (or launch the named subagent type), and in **Done when**: the slot's *gives back*. The slot's nevers go into the standing forbids, word for word.
+- **`review` and `browser-check`**: launch the wrapping unit (`review-change`, `ui-check`), never the user's skill directly. The unit resolves the slot itself and runs the skill inside its own steps, so the report, the guard tests, the checked findings and the browser rules stay in place.
 - The record line names the slot: `slot review=<skill>` (or `=default`, or `=default (<skill> not installed)`).

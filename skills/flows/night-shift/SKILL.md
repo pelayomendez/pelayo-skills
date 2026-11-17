@@ -19,6 +19,8 @@ Steps, in order:
 - `order-backlog`
 - `reap-procs`
 - `delegate`
+- `review-change`
+- `ui-check`
 - `verify-claim`
 
 Throughout:
@@ -47,8 +49,8 @@ Fill these in once, at the start of the decision round, and keep them in the han
 - **Repos**: the worktree the workers run in; the repos whose merges and open MRs you watch; the packages whose published versions you watch.
 - **Dev server**: port, start command, and the env var that pins the test project.
 - **Test project**: the one project the browser smoke may touch.
-- **Gates**: the verify commands (type check, scoped tests, cycle check, lint) and the review skill used for the independent review (the `review` slot).
-- **Slots** (optional): your skill for `implement` and `review` (see `delegate`); unset slots use your slots file, then the defaults. And the model for each worker.
+- **Gates**: the verify commands (type check, scoped tests, cycle check, lint).
+- **Slots** (optional): your skill for `implement`, `review` and `browser-check` (see `delegate`); unset slots use your slots file, then the defaults. And the model for each worker.
 - **Domain rules**: the product and domain rules no worker may break. They go in "Rules in force" and into every brief.
 
 ## 1. Before the user leaves
@@ -78,13 +80,13 @@ One ticket at a time per repo, in queue order. A ticket is done when it is merge
 
 1. **Confirm the cause.** For a bug, pass "the bug happens, caused by <file:line>" to `verify-claim`, with the browser, the network log or the dev environment's data as evidence. **Fails** (already fixed, or the cause lives in another team's service): drop the ticket and tell the user in the report.
 2. **Tracker**: In Progress, assigned to the user, with a sprint and points.
-3. **Launch** with `delegate`, run folder `<tasks>/<KEY>/`, starting from its brief template plus the ticket sections in [references/worker-brief.md](references/worker-brief.md). Wait on the PID as `delegate` describes.
+3. **Launch** the `implement` slot with `delegate`, run folder `<tasks>/<KEY>/`, starting from its brief template plus the ticket sections in [references/worker-brief.md](references/worker-brief.md). Wait on the PID as `delegate` describes.
 4. **Gates**, each a read-only subagent through `delegate`, each writing a report file, in this order and never two test suites at once:
    - **Verify**: the configured gate commands, scoped with `--root <worktree>`, after the worker's own suite has finished, into `VERIFY-<KEY>.md`.
-   - **Review**: the configured review skill over the new commits, into `REVIEW-<KEY>.md`. It reads code only.
-   - **Smoke**: the browser (chrome-devtools), into `SMOKE-<KEY>.md` and `smoke/`. Test project only; it restores the project to its starting state and removes what it created; it never prints or extracts tokens; if another driver holds the tab, it stops and reports.
+   - **Review**: `review-change` (the `review` slot) over the new commits, into `REVIEW-<KEY>.md`. It reads code only.
+   - **Smoke**: `ui-check` locally (the `browser-check` slot), in the controlled browser, into `SMOKE-<KEY>.md` and `smoke/`. Test project only; it restores the project to its starting state and removes what it created; it never prints or extracts tokens; if another driver holds the tab, it stops and reports.
    Then pass the worker's claim ("<KEY> is fixed at <sha>") with the three reports to `verify-claim`.
-5. **Fix round** on blocking findings: a new worker through `delegate` (new commits, `fix-brief.md`), then all three gates again: verify, review and smoke.
+5. **Fix round** on blocking findings: a new `implement` worker through `delegate` (new commits, `fix-brief.md`), then all three gates again: verify, review and smoke.
 6. **Push and open the MR**, only under tonight's push grant; without it, log the branch as ready and take the next ticket. Fast-forward push only. Put the ticket list in the MR description. Tracker to In Review.
 7. **CI** with `watch`, keyed on the full head SHA, until a terminal state.
 8. **Merge** only under tonight's grant and with all three gates passed on that SHA: `glab mr merge <iid> --sha <full sha>` (or the host's equivalent).
@@ -93,7 +95,7 @@ One ticket at a time per repo, in queue order. A ticket is done when it is merge
 ## 3. Every tick, besides the ticket
 
 - **Watch reports.** Act on what `watch` reports; the watch itself never starts work.
-- **Open MRs in watched repos.** Review each new head SHA in a read-only subagent with the review skill, into `<tasks>/backend-reviews/<repo>-<iid>.md`, then add that head to `reviewed-mrs.json`, only once the report exists. A review that failed stays unreviewed and is retried next tick. One line per MR in the handoff: its impact on our side, and any breaking change. Never post comments.
+- **Open MRs in watched repos.** Review each new head SHA in a read-only subagent running `review-change` (the `review` slot), into `<tasks>/backend-reviews/<repo>-<iid>.md`, then add that head to `reviewed-mrs.json`, only once the report exists. A review that failed stays unreviewed and is retried next tick. One line per MR in the handoff: its impact on our side, and any breaking change. Never post comments.
 - **New package version.** Read its changelog, write the impact (breaking changes, what it unblocks, whether it needs a bump ticket), update the baseline.
 - **Release and deploy.** On main, the latest release tag and whether its build and deploy jobs succeeded. Log which of tonight's merges are live.
 - **Handoff.** One timestamped line per event, through `handoff`.

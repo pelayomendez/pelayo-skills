@@ -79,7 +79,7 @@ The flows are the line; the skills that do the heavy jobs on it can be yours. A 
 | `review` | review one change at one commit: findings with file and line, and a verdict | `review-change`'s spec and standards review | `/support`, `/mr-review`, `/night-shift` |
 | `browser-check` | run a written check in a controlled browser | `ui-check` | `/support`, `/mr-review`, `/night-shift` |
 
-Name your skill in a slots file, `~/.claude/slots.md`, or per flow in its config under `## Slots`:
+Name your skill in a slots file, `~/.claude/slots.md`, or per flow in its config under `## Slots`, one line per slot (`agent:<name>` for a subagent type):
 
 ```
 - implement: coding-skills:tdd
