@@ -22,11 +22,11 @@ The pane draws each flow with its numbered steps, then a `throughout:` line for 
 ## Install
 
 ```
-/plugin marketplace add pelayomendez/pelayo-skills
-/plugin install flow-map@pelayomendez-skills
+/plugin marketplace add pelayomendez/yatsude
+/plugin install flow-map@yatsude
 ```
 
-It reads the skill folders you point it at, by default `~/.claude/skills`: [pelayo-skills](../../README.md) or your own. Skills that came from an installed plugin live elsewhere (under `~/.claude/plugins/`) and are typed with the plugin's name (`/pelayo-skills:backlog`); flow-map fills the plain `/backlog`, so for those, link or install the skills into `~/.claude/skills` (for example with `npx skills add`).
+It reads the skill folders you point it at, by default `~/.claude/skills`: [yatsude](../../README.md) or your own. Skills that came from an installed plugin live elsewhere (under `~/.claude/plugins/`) and are typed with the plugin's name (`/yatsude:backlog`); flow-map fills the plain `/backlog`, so for those, link or install the skills into `~/.claude/skills` (for example with `npx skills add`).
 
 A click puts the skill at the start of the prompt and keeps anything you had typed after it. Nothing is sent until you press Enter.
 

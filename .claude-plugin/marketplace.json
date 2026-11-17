@@ -1,13 +1,13 @@
 {
-  "name": "pelayomendez-skills",
+  "name": "yatsude",
   "owner": {
     "name": "Pelayo Méndez",
     "url": "https://github.com/pelayomendez"
   },
-  "description": "Pelayo Méndez's agent instructions and skills, plus a flow map pane, as installable Claude Code plugins.",
+  "description": "yatsude (eight hands): a composable framework for AI-driven everyday work, plus a flow map pane, as Claude Code plugins.",
   "plugins": [
     {
-      "name": "pelayo-skills",
+      "name": "yatsude",
       "source": "./",
       "description": "More arms for your everyday work: coding agents work the daily loops (bug queue, MR reviews, backlog, the night shift) and stop for you on the calls. Small units, chained into flows, under a permission charter.",
       "category": "productivity",
