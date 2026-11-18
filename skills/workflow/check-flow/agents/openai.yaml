@@ -1,0 +1,3 @@
+interface:
+  display_name: "Check flow"
+  short_description: "Check a flow file: units exist and can be called, and every push, merge or post has a stop"

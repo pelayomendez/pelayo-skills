@@ -42,7 +42,9 @@ It is not a full factory, and not a "dark" one with nobody watching: a person st
 
 ## Write your own flow
 
-A flow is a skill file with a `## Units` list: the skills it uses, the steps in order, and where it stops for you. Put it in `~/.claude/skills/<name>/SKILL.md` and `/<name>` runs it; the flow-map pane lists it next to the shipped ones.
+Type `/new-flow` and describe a loop you run by hand. It maps each step to a skill you have, marks where the flow must stop for you (checking your charter), writes the file and checks it with `check-flow`. Steps no skill covers become a new small unit or a stop, never logic inside the flow.
+
+Or write it yourself: a flow is a skill file with a `## Units` list (the skills it uses), the steps in order, and where it stops for you. Put it in `~/.claude/skills/<name>/SKILL.md` and `/<name>` runs it; the flow-map pane lists it next to the shipped ones.
 
 ```markdown
 ---
@@ -111,6 +113,7 @@ Small units that each do one job, and flows that chain them. A unit works on its
 | [`/night-shift`](./skills/flows/night-shift/SKILL.md) | your decisions → charter → watch → each ticket: delegate → verify-claim → merge if granted → handoff | An unattended overnight run through worker, checks, MR and merge, ending in a morning report and a plan for the day. |
 | [`/support <config>`](./skills/flows/support/SKILL.md) | qualify → your OK → each bug: verify-claim → ticket-pick → delegate (fix, review) → ui-check → watch → merge on your OK or a charter grant → ui-check on the test environment → close | A bug queue worked from report to released, one bug at a time, with the status board updated at every step. |
 | [`/mr-review <config>`](./skills/flows/mr-review/SKILL.md) | list open MRs → review-change → verify-claim → you validate each MR → yours: fix and push on your word, merge on your word, check on the test environment, close · theirs: comments on your OK | Every open MR reviewed at its current head, and a decision card per MR. Nothing merged or posted without you. |
+| [`/new-flow`](./skills/authoring/new-flow/SKILL.md) | your loop, in your words → a skill per step → stops from your charter → the file → check-flow | Your own flow, written as one file and checked, ready to type. |
 
 ### Bring your own skills
 
@@ -150,6 +153,7 @@ A pane beside the chat that lists your flows (with their steps) and units, one l
 | [qualify](./skills/workflow/qualify/SKILL.md) | Researches each reported bug and labels it ready for an agent, or names the missing question. Never fixes. | Agent picks it up |
 | [ticket-pick](./skills/workflow/ticket-pick/SKILL.md) | Checks a ready ticket is still ready and free, then takes it into work: In Progress, assigned, sprint and points. | Agent picks it up |
 | [ui-check](./skills/workflow/ui-check/SKILL.md) | Checks a change in a controlled browser, locally or on a test environment, after making sure the port and the browser are free. | Agent picks it up |
+| [check-flow](./skills/workflow/check-flow/SKILL.md) | Checks one flow file before it runs: its units exist and can be called, and every push, merge or post has a stop or a charter check. Changes nothing. | Agent picks it up |
 | [tracker-move](./skills/workflow/tracker-move/SKILL.md) | Moves one item between the sections of a status board kept in a ticket's description, leaving the rest untouched. | Agent picks it up |
 | [handoff](./skills/workflow/handoff/SKILL.md) | Writes the one size-capped file a supervising session resumes from: state and owners, watches to re-arm, the charter scope in force. | Agent picks it up |
 | [reap-procs](./skills/maintenance/reap-procs/SKILL.md) | Finds what is eating the machine after agent sessions, says whose each process is, and stops only what nobody owns. Before a fan-out, says go or wait. | Agent picks it up |
@@ -202,6 +206,7 @@ This symlinks each file in `instructions/` into `~/.claude/` and appends an `@im
 ```
 instructions/            always-on instructions
 skills/flows/            flows you type: backlog, ambient-companion, night-shift, support, mr-review
+skills/authoring/        /new-flow: write your own flow from the skills you have
 skills/maintenance/      upkeep of the agent setup and the machine
 skills/workflow/         units for running agent work: permissions, backlogs, workers, watches, handoffs
 plugins/flow-map/        the flow map pane, a separate plugin
