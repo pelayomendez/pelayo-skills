@@ -1,6 +1,6 @@
 import { expect, test } from 'claude-code/testing'
 
-import { lineOf, parseGroups, parseSkill, promptFor, settingsOf, summaryOf, viewOf } from './catalog'
+import { lineOf, matches, parseGroups, parseSkill, promptFor, settingsOf, summaryOf, viewOf } from './catalog'
 
 const FLOW = `---
 name: backlog
@@ -161,4 +161,66 @@ test('the pane lists the flow and its chain, and a click fills the prompt', asyn
     await ui.unmount()
   }
   expect(filled).toEqual(['/backlog for ABC later', 'Use the prune-backlog skill: ', '/snapshot-backlog ', '/backlog ', 'Use the prune-backlog skill: ', '/snapshot-backlog '])
+})
+
+test('a flow counts its stops, outside code fences only', () => {
+  const text = `---
+name: f
+description: "F."
+---
+## Units
+
+- \`a\`
+
+## Steps
+
+1. **Check.** a.
+2. **Stop and ask.** Wait.
+**3. Stop: you decide.** Wait again.
+**Stop** when done is not a stop for you.
+
+\`\`\`
+**Stop and ask.** inside a fence
+\`\`\`
+`
+  expect(parseSkill(text, 'f')?.stops).toBe(2)
+  expect(parseSkill('---\nname: u\ndescription: U.\n---\n**Stop and ask.**\n', 'u')?.stops).toBeUndefined()
+})
+
+test('the unit filter matches the name or the summary', () => {
+  const unit = { name: 'verify-claim', summary: 'Checks a claim', description: '' }
+  expect(matches(unit, '')).toBe(true)
+  expect(matches(unit, 'VERIFY')).toBe(true)
+  expect(matches(unit, 'claim')).toBe(true)
+  expect(matches(unit, 'browser')).toBe(false)
+})
+
+test('the pane marks your own flows, opens edit and new flow in the prompt', async ($, on) => {
+  const filled: string[] = []
+  on('env.get', (_, e) => ({ value: e.name === 'HOME' ? '/home/me' : undefined }))
+  on('clock.now', () => ({ value: 1 }))
+  on('fs.list', (_, e) => {
+    const names = DIRS[e.path ?? '']
+    if (!names) throw new Error('ENOENT')
+    return { value: names.map(name => ({ name, kind: 'dir', size: 0, mtimeMs: 0, isLink: name !== 'backlog' ? true : false })) }
+  })
+  on('fs.exists', (_, e) => ({ value: e.path in FILES }))
+  on('fs.read', (_, e) => ({ value: FILES[e.path] ?? '' }))
+  on('prompt.read', () => ({ value: { text: '', cursor: 0 } }))
+  on('prompt.fill', (_, e) => {
+    filled.push(e.text)
+    return { isFilled: true }
+  })
+  on('command.register', () => ({ value: { command: 'flow-map' } }))
+  on('ui.open', () => ({ value: { isPlaced: true } }))
+  on('session.start', (_, e) => ({ cwd: e.cwd }))
+
+  await $.session.start({ cwd: '/', surface: 'terminal', isInteractive: true })
+  const ui = await $.ui.mount({ ...PANE, surface: 'terminal' })
+  expect(await ui.find({ type: 'Text', text: /yours/ })).toBeTruthy()
+  expect(await ui.find({ type: 'Text', text: /^yatsude$/ })).toBeTruthy()
+  await ui.press({ key: 'edit:backlog' })
+  await ui.press({ key: 'new-flow' })
+  expect(filled).toEqual(['/new-flow edit backlog ', '/new-flow '])
+  await ui.unmount()
 })

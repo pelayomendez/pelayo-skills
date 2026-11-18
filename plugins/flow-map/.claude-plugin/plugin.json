@@ -1,7 +1,7 @@
 {
   "name": "flow-map",
-  "version": "0.1.1",
-  "description": "A pane beside the chat with the flows and units your skills offer; click one to put it in the prompt.",
+  "version": "0.2.0",
+  "description": "The yatsude panel: your flows as chains with their stops, your units with a filter, and buttons to run, edit or start a new flow.",
   "license": "MIT",
   "keywords": [
     "skills",
@@ -56,7 +56,7 @@
     "openOnStart": {
       "type": "boolean",
       "title": "Open on start",
-      "description": "Open the pane when a session starts (it docks only on wide terminals). Otherwise use /flow-map.",
+      "description": "Open the panel when a session starts (it docks only on wide terminals). Otherwise use /flow-map.",
       "default": true
     }
   },

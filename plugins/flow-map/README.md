@@ -1,6 +1,6 @@
 # flow-map
 
-A pane beside the Claude Code chat that shows the flows and units your skills offer. Click one and it goes into the prompt (`/backlog `, or `Use the <unit> skill: ` for a skill with no slash command), so you finish the line and press Enter. Nothing runs from the pane.
+The yatsude panel: a pane beside the Claude Code chat that shows the flows and units your skills offer. Click one and it goes into the prompt (`/backlog `, or `Use the <unit> skill: ` for a skill with no slash command), so you finish the line and press Enter. Nothing runs from the pane.
 
 A **flow** is any skill whose `SKILL.md` has a `## Units` section listing other skills in backticks:
 
@@ -17,7 +17,15 @@ Throughout:
 - `charter`
 ```
 
-The pane draws each flow with its numbered steps, then an `also uses:` line for the units any step may call (listed under `Throughout:` in the flow). Without those two labels, every unit counts as a step in the order listed. Each skill shows its `summary:` line from the frontmatter, or else the first sentence of its description. A unit the flow lists but no folder holds shows as `name?`.
+The pane opens with the yatsude octopus (on a wide enough pane) and two buttons: **+ new flow** puts `/new-flow ` in the prompt, and **↻** reads the folders again.
+
+Each flow shows as a chain of its steps (`qualify → verify-claim → …`), then an `also uses:` line for the units any step may call (listed under `Throughout:` in the flow). Without those two labels, every unit counts as a step in the order listed. Next to the flow's name:
+
+- **⏸ N** in amber: how many places it stops for you, counted from steps marked `**Stop and ask**` or `**N. Stop: …**`.
+- **yours** in teal: the flow's folder is your own, not a link into a collection you installed.
+- **edit**: puts `/new-flow edit <flow> ` in the prompt.
+
+Below the flows, type in **filter units** to narrow the units by name or summary. Each skill shows its `summary:` line from the frontmatter, or else the first sentence of its description. A unit the flow lists but no folder holds shows as `name?`.
 
 ## Install
 

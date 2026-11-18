@@ -3,7 +3,7 @@ name: new-flow
 description: "Write a new flow with you: describe a loop you run, and it maps each step to an existing skill, marks where it must stop for you, writes the flow file and checks it. Steps no skill covers come back as skills to write, never as logic inside the flow."
 summary: "Writes a new flow with you"
 disable-model-invocation: true
-argument-hint: "[name] [what the loop does, in a sentence]"
+argument-hint: "[name] [what the loop does] | edit <flow>"
 ---
 
 # New flow
@@ -11,6 +11,8 @@ argument-hint: "[name] [what the loop does, in a sentence]"
 `/new-flow` turns a loop you already run by hand into a command. You describe it; this skill builds it from the skills you have and writes one file. It never runs the flow it writes.
 
 ## Steps
+
+With `edit <flow>`, read that flow first: show its steps as the step 2 table, ask what should change, and go through steps 2 to 7 for the changes only. Write it back after showing the difference. A flow that came with a collection (its folder is a link into it) is not edited in place: offer to save a copy under a new name.
 
 1. **Hear the loop.** Ask for the loop in the user's own words if the argument didn't give it: what starts it, the steps, how they know it's done. Ask one question at a time and stop asking once the steps are clear. Get the name too: short, lowercase, hyphens, not the name of a skill or command that already exists.
 2. **Map each step to a skill.** Read the skills this session can call: name, summary and description. For each step pick the one skill that does it. A step that needs two skills is two steps. Show the mapping as a table (step, skill, why), with the steps no skill covers marked `missing`.
