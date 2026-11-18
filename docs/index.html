@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>yatsude · more arms for your everyday work</title>
-  <meta name="description" content="More arms for your everyday work: coding agents work the daily loops (bug queue, MR reviews, backlog, the night shift) and stop for you on the calls. Small units, chained into flows, under a permission charter.">
+  <meta name="description" content="More arms for your everyday work: a composable framework of Claude Code skills that each do one job, flows that chain them into your daily loops, and your own flows in plain markdown.">
   <link rel="icon" href="icon.png">
   <meta property="og:title" content="yatsude">
   <meta property="og:description" content="More arms for your everyday work.">
@@ -47,14 +47,53 @@
     <p class="cta"><a class="primary" href="#install">Install</a><a href="https://github.com/pelayomendez/yatsude">GitHub</a></p>
   </header>
 
-  <p>Claude Code skills that work your bug queue, MR reviews and backlog, even overnight, and stop for you on every merge, post and call that's yours.</p>
+  <p>A composable framework for AI-driven everyday work. <strong>Skills</strong> each do one job. <strong>Flows</strong> chain them into the loops you run every day. And when your loop isn't here, you <strong>write your own flow</strong>: one markdown file, no code.</p>
   <p class="mute">Claude Code plugin · MIT · works with your tracker (Jira or similar) and forge (GitLab or GitHub)</p>
 
+  <h2>Skills → flows → your flows</h2>
+  <table>
+    <tr><td class="accent">Skills</td><td><strong>One job each.</strong> Check a claim with a fresh agent, review one MR, hand work to a worker, watch a pipeline, check a fix in a browser. They work alone too.</td></tr>
+    <tr><td class="accent">Flows</td><td><strong>A daily loop, as a command.</strong> A flow only sets the order of its skills, where it stops for you, and what happens when a step fails.</td></tr>
+    <tr><td class="accent">Your flows</td><td><strong>Your loop, your file.</strong> List the skills, write the steps, mark the stops. Drop it next to your skills and it's a command.</td></tr>
+  </table>
+
+  <h2>Flows that ship</h2>
+  <p>Start with these, use them as they are, or copy one as the base for yours.</p>
+  <table>
+    <tr><td class="accent">/support</td><td><strong>Bugs piling up in a queue.</strong> Takes each from report to released: qualify, confirm the cause with a fresh agent, fix and review with workers, check in a controlled browser, ship, check again on the test environment, close.</td></tr>
+    <tr><td class="accent">/mr-review</td><td><strong>MRs waiting for review, yours and your team's.</strong> Reviews each at its current head and stops for you on every one.</td></tr>
+    <tr><td class="accent">/backlog</td><td><strong>A backlog nobody trusts any more.</strong> Proposes what can close, with evidence, and ranks the rest by value, urgency and size (WSJF) inside the dependency graph.</td></tr>
+    <tr><td class="accent">/night-shift</td><td><strong>Tickets ready and a night ahead.</strong> One decision round before you leave, then queue → fix → verify → review → browser check → merge, and a morning report.</td></tr>
+    <tr><td class="accent">/ambient-companion</td><td><strong>A day of agents running while you do something else.</strong> Watches your work's event streams, delegates and checks, and brings you only the decisions.</td></tr>
+  </table>
+
+  <h2>Write your own flow</h2>
+  <p>A flow is a skill file with a <code>## Units</code> list. Put it in <code>~/.claude/skills/&lt;name&gt;/SKILL.md</code> and <code>/&lt;name&gt;</code> runs it.</p>
+<pre><span class="mute">---</span>
+name: <span class="accent">hotfix</span>
+description: "One urgent bug, report to MR."
+disable-model-invocation: true
+<span class="mute">---</span>
+
+<span class="accent">## Units</span>
+Steps, in order:
+- verify-claim
+- delegate
+- review-change
+- ui-check
+
+<span class="accent">## Steps</span>
+1. Confirm the cause with <span class="accent">verify-claim</span>.
+2. <span class="accent">delegate</span> the fix to a worker.
+3. <span class="accent">review-change</span> at the new head.
+4. <span class="accent">ui-check</span> it locally.
+5. <span class="amber">Stop:</span> show the MR, ask before merging.</pre>
+  <p>Every skill below is a building block. The flows that ship are worked examples: open <a href="https://github.com/pelayomendez/yatsude/blob/main/skills/flows/support/SKILL.md">/support</a> to see a full one, failures and all.</p>
+
   <h2>A run, start to finish</h2>
-  <p class="mute">Illustrative, shortened. Amber lines are where it stops for you.</p>
+  <p class="mute">/support, illustrative and shortened. Amber lines are where it stops for you.</p>
 <pre><span class="accent">&gt; /support ~/.claude/flows/shop.md</span>
 qualify   7 bugs read · 3 ready for an agent · 4 need an answer
-<span class="amber">ask</span>       BUG-118: which browser does the report mean?
 <span class="amber">ask</span>       3 ready, smallest first. Start with BUG-121?  › y
 verify    a fresh agent confirms: cart.ts:88 drops the coupon
 pick      BUG-121 → In Progress, assigned to you, on the board
@@ -62,63 +101,38 @@ fix       worker, test-first: 2 commits
 review    a fresh reviewer: ready · guard tests pass
 check     local browser check: 3/3 steps pass
 ship      MR !412 opened · pipeline success on 9f3c2e1
-<span class="amber">ask</span>       Merge !412 at 9f3c2e1? Your charter has no grant for this.  › y
+<span class="amber">ask</span>       Merge !412 at 9f3c2e1?  › y
 release   on the test environment · browser check: 3/3 pass
-close     BUG-121 → Done · board → Released · worktree removed
+close     BUG-121 → Done · board → Released
 next      BUG-124 …</pre>
 
-  <h2>Flows</h2>
-  <p>You type a flow. Each one chains small skills in order and stops for you where a decision is yours.</p>
+  <h2>Skills</h2>
+  <p>The building blocks. The agent also reaches for each on its own, inside a flow or outside one.</p>
   <table>
-    <tr><td class="accent">/support</td><td><strong>Bugs piling up in a queue.</strong> Takes each from report to released: qualify, confirm the cause with a fresh agent, fix and review with workers, check in a controlled browser, ship, check again on the test environment, close.</td></tr>
-    <tr><td class="accent">/mr-review</td><td><strong>MRs waiting for review, yours and your team's.</strong> Reviews each at its current head and stops for you on every one. Nothing is pushed, merged or posted without your word.</td></tr>
-    <tr><td class="accent">/backlog</td><td><strong>A backlog nobody trusts any more.</strong> Proposes what can close, with evidence, and ranks the rest by value, urgency and size (WSJF) inside the dependency graph.</td></tr>
-    <tr><td class="accent">/night-shift</td><td><strong>Tickets ready and a night ahead.</strong> One decision round before you leave, then queue → fix → verify → review → browser check → merge, and a morning report.</td></tr>
-    <tr><td class="accent">/ambient-companion</td><td><strong>A day of agents running while you do something else.</strong> Watches your work's event streams, delegates and checks, and brings you only the decisions.</td></tr>
-  </table>
-  <p>Need only one job (check a claim, review one MR, hand off)? Ask for it and the agent picks the skill.</p>
-
-  <h2>Where it stops for you</h2>
-  <p>Nothing is merged, pushed or posted under your name unless you said so, in the chat or in your charter: a plain-text file of what the agent may do alone, must ask first, or never does. With an empty charter, it asks every time.</p>
-  <table class="tiers">
-    <tr><td></td><td class="green">Alone</td><td class="amber">Asks first</td><td class="red">Never alone</td></tr>
-    <tr><td class="accent">/support</td><td>qualify, confirm the cause, fix, review, local browser check</td><td>the first bug; MR text, merge and release without a grant; after three review rounds</td><td>merge without a green pipeline and a passing review on the same commit</td></tr>
-    <tr><td class="accent">/mr-review</td><td>review each MR read-only, verify the findings</td><td>your call on every MR; each push, merge and comment</td><td>push to, approve or merge a teammate's MR</td></tr>
-    <tr><td class="accent">/backlog</td><td>read the backlog, propose closes, rank the rest</td><td>every close or change, by id</td><td>close by age alone; bulk changes</td></tr>
-    <tr><td class="accent">/night-shift</td><td>fix → verify → review → browser check → MR; merges you granted that night</td><td>one decision round before you leave; comments wait for the morning</td><td>merge without all three gates, or while the pipeline is pending</td></tr>
-    <tr><td class="accent">/ambient-companion</td><td>spawn and watch workers, verify, review</td><td>anything under your name, merges, releases, another team's system</td><td>force-push, install software, stop what it didn't start</td></tr>
+    <tr><td>verify-claim</td><td>A fresh agent checks another agent's claim, seeing only the claim and its evidence.</td></tr>
+    <tr><td>delegate<br>watch<br>handoff</td><td>Brief and launch a worker safely, watch a pipeline or MR until it settles, and leave a handoff another session can resume.</td></tr>
+    <tr><td>review-change<br>ui-check</td><td>Review one MR at its current head, read-only; check a fix in a controlled browser, never yours.</td></tr>
+    <tr><td>qualify<br>ticket-pick<br>tracker-move</td><td>Check a bug is ready for an agent, take a ready ticket into work, and move it on the status board.</td></tr>
+    <tr><td>snapshot-backlog<br>prune-backlog<br>order-backlog</td><td>Read a backlog once, propose what can close with evidence, rank the rest inside the dependency graph.</td></tr>
+    <tr><td>charter</td><td>Your permissions file: what the agent may do alone, must ask first, or never, in your own words. Every flow checks it before a merge or a post.</td></tr>
+    <tr><td>reap-procs<br>tidy</td><td>Find what is eating the machine after agent sessions; a weekly and monthly tune-up of your agent setup.</td></tr>
+    <tr><td>high-level-<br>communication</td><td>Always on. Report like a senior engineer to another: why, what changed, impact, trade-offs, risks, next steps.</td></tr>
   </table>
 
   <h2>Bring your own skills</h2>
-  <p>Some steps are slots: plug in the skill you already trust and the flow keeps its stops, reports and checks around it. Unset slots use ours.</p>
-  <table>
-    <tr><td class="accent">implement</td><td>Writes the fix or feature in a worker.</td></tr>
-    <tr><td class="accent">review</td><td>Reviews a change; the flow still verifies each finding.</td></tr>
-    <tr><td class="accent">browser-check</td><td>Checks the change in a controlled browser.</td></tr>
-  </table>
+  <p>Some steps are slots: plug in the skill you already trust and the flow keeps its stops and checks around it. Unset slots use ours.</p>
 <pre><span class="mute"># ~/.claude/slots.md</span>
 - implement: my-tdd-skill
-- review: my-code-review-skill</pre>
-
-  <h2>Skills</h2>
-  <p>Small one-job skills the agent reaches for on its own, inside a flow or outside one.</p>
-  <table>
-    <tr><td>charter</td><td>Your permissions file: what the agent may do alone, must ask first, or never, per scope, in your own words.</td></tr>
-    <tr><td>verify-claim</td><td>A fresh agent checks another agent's claim, seeing only the claim and its evidence.</td></tr>
-    <tr><td>delegate · watch · handoff</td><td>Brief and launch a worker safely, watch a pipeline or MR until it settles, and leave a handoff another session can resume.</td></tr>
-    <tr><td>qualify · ticket-pick · tracker-move</td><td>Check a bug is ready for an agent, take a ready ticket into work, and move it on the status board.</td></tr>
-    <tr><td>review-change · ui-check</td><td>Review one MR at its current head, read-only; check a fix in a controlled browser, never yours.</td></tr>
-    <tr><td>snapshot-backlog · prune-backlog · order-backlog</td><td>Read a backlog once, propose what can close with evidence, rank the rest inside the dependency graph.</td></tr>
-    <tr><td>reap-procs · tidy</td><td>Find what is eating the machine after agent sessions and stop only what nobody owns; a weekly and monthly tune-up of your agent setup.</td></tr>
-    <tr><td>high-level-communication</td><td>Always on. Report like a senior engineer to another: why, what changed, impact, trade-offs, risks, next steps.</td></tr>
-  </table>
+- review: my-code-review-skill
+- browser-check: my-smoke-skill</pre>
 
   <h2>Flow map</h2>
-  <p>An optional pane beside the chat with your flows, their steps in order, and your skills, each in one line. Click one to put it in the prompt; it never runs anything on its own.</p>
-<pre><span class="accent">support</span>    Takes bugs from report to released
-  1. qualify   2. verify-claim   3. ticket-pick
-  4. delegate  5. ui-check       6. watch
-  <span class="mute">also uses: charter · tracker-move · handoff</span></pre>
+  <p>An optional pane beside the chat with every flow in your skills folder, yours included, its steps in order, and your skills. Click one to put it in the prompt.</p>
+<pre><span class="accent">hotfix</span>     One urgent bug, report to MR
+  1. verify-claim   2. delegate
+  3. review-change  4. ui-check
+<span class="accent">support</span>    Takes bugs from report to released
+  1. qualify  2. verify-claim  3. ticket-pick …</pre>
 
   <h2 id="install">Install</h2>
 <pre>/plugin marketplace add pelayomendez/yatsude
@@ -128,9 +142,9 @@ next      BUG-124 …</pre>
   <p><strong>Needs:</strong> Claude Code; your tracker's CLI or MCP (for Jira, <code>acli</code>) and your forge's CLI (<code>glab</code> or <code>gh</code>) for the flows that touch tickets and MRs; a controlled-browser MCP (e.g. chrome-devtools) for browser checks. Details in the <a href="https://github.com/pelayomendez/yatsude#readme">README</a>.</p>
 
   <h2>FAQ</h2>
-  <p><strong>Does it push or merge without me?</strong> Only what your charter grants for that flow, never what the table above marks as never.<br>
-  <strong>GitHub or GitLab, Jira or something else?</strong> The flows name the step, not the tool; your flow config says which CLI or MCP to use.<br>
-  <strong>How do I start?</strong> <code>/backlog &lt;epic&gt;</code> only reads. Then copy the <a href="https://github.com/pelayomendez/yatsude/blob/main/examples/flow-config.md">example flow config</a> and try <code>/mr-review &lt;MR URL&gt;</code>.</p>
+  <p><strong>Does it push or merge without me?</strong> No. Merges, pushes and anything posted under your name wait for your word, unless your charter grants them.<br>
+  <strong>GitHub or GitLab, Jira or something else?</strong> Skills name the step, not the tool; your flow config says which CLI or MCP to use.<br>
+  <strong>How do I start?</strong> <code>/backlog &lt;epic&gt;</code> only reads. Then copy a shipped flow and make it yours.</p>
 
   <p class="mute">The name is Japanese: <em>yatsude</em> (八つ手), "eight hands".</p>
 

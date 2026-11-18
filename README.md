@@ -4,7 +4,7 @@
 
 More arms for your everyday work. [Landing page](https://pelayomendez.github.io/yatsude/).
 
-Claude Code skills that work your bug queue, MR reviews and backlog, even overnight, and stop for you on every merge, post and call that's yours. A composable framework for AI-driven everyday work: small skills, chained into flows, with slots for your own skills and a charter (a plain-text permissions file) for what needs you.
+A composable framework for AI-driven everyday work. **Skills** each do one job. **Flows** chain them into the loops you run every day: your bug queue, MR reviews, backlog, the night shift. And when your loop isn't here, you **write your own flow**: one markdown file, no code. Slots let you plug in your own skills, and a charter (a plain-text permissions file) says what needs you.
 
 The name is Japanese: *yatsude* (八つ手), "eight hands".
 
@@ -39,6 +39,37 @@ It is not a full factory, and not a "dark" one with nobody watching: a person st
 | tickets ready and a night ahead | `/night-shift` |
 | a day of agents running while you do something else | `/ambient-companion` |
 | one job only: check a claim, review one MR, hand off | nothing; ask for it and the agent picks the unit |
+
+## Write your own flow
+
+A flow is a skill file with a `## Units` list: the skills it uses, the steps in order, and where it stops for you. Put it in `~/.claude/skills/<name>/SKILL.md` and `/<name>` runs it; the flow-map pane lists it next to the shipped ones.
+
+```markdown
+---
+name: hotfix
+description: "One urgent bug, report to MR."
+disable-model-invocation: true
+---
+
+## Units
+
+Steps, in order:
+
+- `verify-claim`
+- `delegate`
+- `review-change`
+- `ui-check`
+
+## Steps
+
+1. Confirm the cause with `verify-claim`.
+2. `delegate` the fix to a worker.
+3. `review-change` at the new head.
+4. `ui-check` it locally.
+5. **Stop:** show the MR and ask before merging.
+```
+
+The shipped flows are worked examples: [support](./skills/flows/support/SKILL.md) shows a full one, with what to do when a step fails.
 
 ## Where it stops for you
 
