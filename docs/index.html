@@ -54,7 +54,7 @@
   <table>
     <tr><td class="accent">Skills</td><td><strong>One job each.</strong> Check a claim with a fresh agent, review one MR, hand work to a worker, watch a pipeline, check a fix in a browser. They work alone too.</td></tr>
     <tr><td class="accent">Flows</td><td><strong>A daily loop, as a command.</strong> A flow only sets the order of its skills, where it stops for you, and what happens when a step fails.</td></tr>
-    <tr><td class="accent">Your flows</td><td><strong>Your loop, your file.</strong> List the skills, write the steps, mark the stops. Drop it next to your skills and it's a command.</td></tr>
+    <tr><td class="accent">Your flows</td><td><strong>Your loop, your file.</strong> List the skills, write the steps, mark the stops. Or let <code>/new-flow</code> write it with you.</td></tr>
   </table>
 
   <h2>Flows that ship</h2>
@@ -68,10 +68,23 @@
   </table>
 
   <h2>Write your own flow</h2>
-  <p>A flow is a skill file with a <code>## Units</code> list. Put it in <code>~/.claude/skills/&lt;name&gt;/SKILL.md</code> and <code>/&lt;name&gt;</code> runs it.</p>
+  <p>Type <code>/new-flow</code> and describe a loop you run by hand. It builds the flow with you and writes the file.</p>
+<pre><span class="accent">&gt; /new-flow hotfix</span>
+<span class="amber">ask</span>    What starts it, and when is it done?
+map    confirm the cause  → verify-claim
+       fix it             → delegate (your implement slot)
+       review             → review-change
+       check in browser   → ui-check
+       open the MR        <span class="amber">missing</span> → new unit, or a stop?
+stops  merge: no grant in your charter → <span class="amber">stop and ask</span>
+write  ~/.claude/skills/hotfix/SKILL.md
+check  check-flow: ok · run it with /hotfix</pre>
+  <p>Every step maps to a skill you already have. A step nothing covers becomes a small new skill or a stop, never hidden logic. Every push, merge or post gets a stop unless your charter grants it. Then <strong>check-flow</strong> reads the file before it ever runs.</p>
+  <p>The file it writes is plain markdown you can edit by hand:</p>
 <pre><span class="mute">---</span>
 name: <span class="accent">hotfix</span>
 description: "One urgent bug, report to MR."
+summary: "One urgent bug, report to MR"
 disable-model-invocation: true
 <span class="mute">---</span>
 
@@ -114,6 +127,7 @@ next      BUG-124 …</pre>
     <tr><td>review-change<br>ui-check</td><td>Review one MR at its current head, read-only; check a fix in a controlled browser, never yours.</td></tr>
     <tr><td>qualify<br>ticket-pick<br>tracker-move</td><td>Check a bug is ready for an agent, take a ready ticket into work, and move it on the status board.</td></tr>
     <tr><td>snapshot-backlog<br>prune-backlog<br>order-backlog</td><td>Read a backlog once, propose what can close with evidence, rank the rest inside the dependency graph.</td></tr>
+    <tr><td>check-flow</td><td>Checks a flow file before it runs: its skills exist and can be called, and every push, merge or post has a stop. Changes nothing.</td></tr>
     <tr><td>charter</td><td>Your permissions file: what the agent may do alone, must ask first, or never, in your own words. Every flow checks it before a merge or a post.</td></tr>
     <tr><td>reap-procs<br>tidy</td><td>Find what is eating the machine after agent sessions; a weekly and monthly tune-up of your agent setup.</td></tr>
     <tr><td>high-level-<br>communication</td><td>Always on. Report like a senior engineer to another: why, what changed, impact, trade-offs, risks, next steps.</td></tr>
@@ -144,7 +158,7 @@ next      BUG-124 …</pre>
   <h2>FAQ</h2>
   <p><strong>Does it push or merge without me?</strong> No. Merges, pushes and anything posted under your name wait for your word, unless your charter grants them.<br>
   <strong>GitHub or GitLab, Jira or something else?</strong> Skills name the step, not the tool; your flow config says which CLI or MCP to use.<br>
-  <strong>How do I start?</strong> <code>/backlog &lt;epic&gt;</code> only reads. Then copy a shipped flow and make it yours.</p>
+  <strong>How do I start?</strong> <code>/backlog &lt;epic&gt;</code> only reads. Then <code>/new-flow</code> to turn one of your own loops into a command.</p>
 
   <p class="mute">The name is Japanese: <em>yatsude</em> (八つ手), "eight hands".</p>
 
