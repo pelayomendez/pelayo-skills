@@ -21,11 +21,11 @@ The pane opens with the yatsude octopus (on a wide enough pane) and two buttons:
 
 Each flow shows as a chain of its steps (`qualify → verify-claim → …`), then an `also uses:` line for the units any step may call (listed under `Throughout:` in the flow). Without those two labels, every unit counts as a step in the order listed. Next to the flow's name:
 
-- **⏸ N** in amber: how many places it stops for you, counted from steps marked `**Stop and ask**` or `**N. Stop: …**`.
+- **⏸ N stops** in amber: how many places it stops for you, counted from steps marked `**Stop and ask**` or `**N. Stop: …**`.
 - **yours** in teal: the flow's folder is your own, not a link into a collection you installed.
 - **edit**: puts `/new-flow edit <flow> ` in the prompt.
 
-Below the flows, type in **filter units** to narrow the units by name or summary. Each skill shows its `summary:` line from the frontmatter, or else the first sentence of its description. A unit the flow lists but no folder holds shows as `name?`.
+Below the flows, the units show compact, as names on a few lines. Type in **filter units** to narrow them by name or summary, and press **▸ details** for one line each with its `summary:` (or else the first sentence of its description). Hover a unit and it lights up in every flow that uses it. A unit the flow lists but no folder holds shows as `name?`.
 
 ## Install
 

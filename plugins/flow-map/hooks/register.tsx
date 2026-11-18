@@ -12,9 +12,9 @@ const VIOLET = '#9B6BDF'
 const AMBER = '#F2A541'
 const TEAL = '#2EC4B6'
 
-/** The mascot: a masked octopus with eight hands. Drawn when the pane has room. */
-const OCTOPUS = ['   .---.  ', '  /=====\\ ', ' ( o   o )', '  ) ~~~ ( ', ' //|/||\\\\ ']
-const ART_WIDTH = 11
+/** The mascot, manga style: a masked octopus with a deadpan stare and eight hands. Drawn when the pane has room. */
+const OCTOPUS = ['   ▄▀▀▀▀▀▄   ', '  █▓◉▓▓▓◉▓█≈ ', '   ▀▄ ‿ ▄▀   ', '  ╱╱╱│ │╲╲╲  ']
+const ART_WIDTH = 13
 
 // Change the tag when Catalog's fields change: it declines what an earlier version stored.
 const catalog = atom({ plugin: 'flow-map', key: 'catalog' } as const, { skills: [], scannedAt: 0, errors: [] }, {
@@ -22,6 +22,11 @@ const catalog = atom({ plugin: 'flow-map', key: 'catalog' } as const, { skills: 
 })
 /** What the person typed in the units filter. */
 const filter = atom({ plugin: 'flow-map', key: 'filter' } as const, '')
+/** Units drawn as one line each with their summary, instead of compact chips. */
+const isDetailed = atom({ plugin: 'flow-map', key: 'isDetailed' } as const, false)
+
+/** Hovering a unit lights it everywhere it appears: in every flow's chain and in the units list. */
+const lit = (name: string) => ({ scope: `unit:${name}`, color: VIOLET, bold: true })
 
 /** Every folder holding a SKILL.md under `dir`, up to DEPTH levels down; links are followed. */
 async function scanDir($: EngineInterface, dir: string, depth: number, found: Skill[], errors: string[]) {
@@ -96,6 +101,7 @@ export const register: Register = (on, options) => {
     const { Box, Text, Button, Input } = $.ui.resolve(e)
     const { skills, errors } = await read($, catalog)
     const typed = await read($, filter)
+    const detailed = await read($, isDetailed)
     const view = viewOf(skills, settings)
     const width = Math.max(12, e.props.bodyColumns)
     const fit = (text: string, room = width) => (text.length > room ? `${text.slice(0, room - 1)}…` : text)
@@ -148,7 +154,7 @@ export const register: Register = (on, options) => {
     const link = (name: string, key: string) => {
       const unit = byName.get(name)
       return unit ? (
-        <Button key={key} label={name} plain onPress={() => pick($, unit)} />
+        <Button key={key} label={name} plain hover={lit(name)} onPress={() => pick($, unit)} />
       ) : (
         <Text key={key} color="red">
           {`${name}?`}
@@ -181,7 +187,7 @@ export const register: Register = (on, options) => {
                 )}
                 {(flow.stops ?? 0) > 0 && (
                   <Text key={`flow:${flow.name}:stops`} color={AMBER}>
-                    {`  ⏸ ${flow.stops}`}
+                    {`  ⏸ ${flow.stops} ${flow.stops === 1 ? 'stop' : 'stops'}`}
                   </Text>
                 )}
                 <Text key={`flow:${flow.name}:gap`}>{'  '}</Text>
@@ -226,7 +232,7 @@ export const register: Register = (on, options) => {
           )
         })}
         {view.groups.length > 0 && (
-          <Box key="filter" flexDirection="column" marginBottom={1}>
+          <Box key="filter" flexDirection="row" marginBottom={1}>
             <Input
               key="unit-filter"
               placeholder="filter units"
@@ -235,17 +241,34 @@ export const register: Register = (on, options) => {
               onInput={value => void update($, filter, () => value)}
               onSubmit={value => void update($, filter, () => value)}
             />
+            <Text key="filter:gap">{'  '}</Text>
+            <Button
+              key="details"
+              label={detailed ? '▾ details' : '▸ details'}
+              plain
+              dimColor
+              onPress={() => void update($, isDetailed, now => !now)}
+            />
           </Box>
         )}
         {units.map(group => (
           <Box key={`group:${group.title}`} flexDirection="column" marginBottom={1}>
             <Text bold>{group.title}</Text>
-            {group.skills.map(unit => (
-              <Box key={`unit:${unit.name}`} flexDirection="row">
-                <Button key={`unit:${unit.name}`} label={unit.name} plain onPress={() => pick($, unit)} />
-                <Text dimColor>{fit(`  ${lineOf(unit)}`, Math.max(0, width - unit.name.length - 2))}</Text>
+            {detailed ? (
+              group.skills.map(unit => (
+                <Box key={`unit:${unit.name}`} flexDirection="row">
+                  <Button key={`unit:${unit.name}`} label={unit.name} plain hover={lit(unit.name)} onPress={() => pick($, unit)} />
+                  <Text dimColor>{fit(`  ${lineOf(unit)}`, Math.max(0, width - unit.name.length - 2))}</Text>
+                </Box>
+              ))
+            ) : (
+              <Box key={`group:${group.title}:chips`} flexDirection="row" flexWrap="wrap">
+                {group.skills.flatMap((unit, at) => [
+                  ...(at === 0 ? [] : [<Text key={`chip:${unit.name}:sep`} dimColor>{' · '}</Text>]),
+                  <Button key={`unit:${unit.name}`} label={unit.name} plain hover={lit(unit.name)} onPress={() => pick($, unit)} />,
+                ])}
               </Box>
-            ))}
+            )}
           </Box>
         ))}
         {typed.trim() !== '' && units.length === 0 && (
