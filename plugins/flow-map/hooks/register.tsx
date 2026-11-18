@@ -24,7 +24,7 @@ const ART_WIDTH = 17
 
 // Change the tag when Catalog's fields change: it declines what an earlier version stored.
 const catalog = atom({ plugin: 'flow-map', key: 'catalog' } as const, { skills: [], scannedAt: 0, errors: [] }, {
-  shape: 'catalog-4',
+  shape: 'catalog-5',
 })
 /** What the person typed in the units filter. */
 const filter = atom({ plugin: 'flow-map', key: 'filter' } as const, '')
@@ -213,6 +213,11 @@ export const register: Register = (on, options) => {
               {steps.length > 0 && (
                 <Box key={`flow:${flow.name}:chain`} flexDirection="row" flexWrap="wrap">
                   <Text key={`flow:${flow.name}:indent`}>{'  '}</Text>
+                  {(flow.stopsAfter ?? []).includes(-1) && (
+                    <Text key={`${flow.name}>start:stop`} color={AMBER}>
+                      {'⏸ '}
+                    </Text>
+                  )}
                   {steps.flatMap((name, at) => [
                     ...(at === 0
                       ? []
@@ -222,6 +227,13 @@ export const register: Register = (on, options) => {
                           </Text>,
                         ]),
                     link(name, `${flow.name}>${at}:${name}`),
+                    ...((flow.stopsAfter ?? []).includes(at)
+                      ? [
+                          <Text key={`${flow.name}>${at}:stop`} color={AMBER}>
+                            {' ⏸'}
+                          </Text>,
+                        ]
+                      : []),
                   ])}
                 </Box>
               )}
