@@ -17,7 +17,7 @@ Throughout:
 - `charter`
 ```
 
-The pane draws each flow with its numbered steps, then a `throughout:` line for the units any step may call. Without those two labels, every unit counts as a step in the order listed. Each skill shows its `summary:` line from the frontmatter, or else the first sentence of its description. A unit the flow lists but no folder holds shows as `name?`.
+The pane draws each flow with its numbered steps, then an `also uses:` line for the units any step may call (listed under `Throughout:` in the flow). Without those two labels, every unit counts as a step in the order listed. Each skill shows its `summary:` line from the frontmatter, or else the first sentence of its description. A unit the flow lists but no folder holds shows as `name?`.
 
 ## Install
 

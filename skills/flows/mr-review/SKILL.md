@@ -3,12 +3,14 @@ name: mr-review
 description: "Go through the open merge requests of your repos, yours and your teammates', review each at its current head, and stop for you on every one: yours to land (fix, pipeline, merge, check on the test environment, close), theirs to comment on. You validate each MR yourself; nothing is pushed, merged, moved or posted without your word."
 summary: "Reviews open MRs; you decide on each"
 disable-model-invocation: true
-argument-hint: "<config file> [!iid ...] [--mine | --theirs]"
+argument-hint: "<config file | MR URL> [!iid ...] [--mine | --theirs]"
 ---
 
 # MR review
 
 `/mr-review <config>` takes the open MRs of the configured repos and brings each one to the point where you decide: reviewed at its current head, with the evidence in front of you. You validate every MR yourself.
+
+`/mr-review <MR or PR URL>` does the same for that one change: it uses the config whose **Repos** lists the URL's repo (look in the folder where the user keeps flow configs); with none, it reviews with the defaults and asks before anything that needs the config (guard tests, landing your own MR).
 
 It is a flow: every step is a unit that also works on its own, and this file only sets the order and where it stops for you.
 
@@ -51,7 +53,7 @@ The same file as `/support`, plus a `## Review` section:
 
 ## Steps
 
-**1. List.** Read the open MRs of the configured repos from the forge (a plain read, e.g. `glab mr list` / `gh pr list` with JSON): head SHA, author, pipeline, linked ticket. Keep the ones named in the argument, or else every MR whose head differs from the ledger's, plus every MR whose head has no decision yet. Split them into yours and theirs.
+**1. List.** Read the open MRs of the configured repos from the forge (a plain read, e.g. `glab mr list` / `gh pr list` with JSON): head SHA, author, pipeline, linked ticket. Keep the ones named in the argument (an `!iid` or a URL), or else every MR whose head differs from the ledger's, plus every MR whose head has no decision yet. Split them into yours and theirs.
 
 **2. Review.** For each new head, `review-change`. Then pass to `verify-claim` each blocking finding ("<file:line> breaks <what>"), and a `ready` verdict as a claim of its own, each with what would refute it (the line is unreachable, a test covers it, the ticket asks for it). Record the head in the ledger, with no decision yet.
 

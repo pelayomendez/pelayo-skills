@@ -4,7 +4,9 @@
 
 More arms for your everyday work. [Landing page](https://pelayomendez.github.io/yatsude/).
 
-A composable framework for AI-driven everyday work: small skills, chained into flows, with slots for your own skills and a charter for what needs you. The name is Japanese: *yatsude* (八つ手), "eight hands".
+Claude Code skills that work your bug queue, MR reviews and backlog, even overnight, and stop for you on every merge, post and call that's yours. A composable framework for AI-driven everyday work: small skills, chained into flows, with slots for your own skills and a charter (a plain-text permissions file) for what needs you.
+
+The name is Japanese: *yatsude* (八つ手), "eight hands".
 
 I use these to automate code production. The coding agents are the machines; these skills run the line around them: what to build next, who may do what, launching work, checking it, watching it and handing it over. The point is to supervise from **on the loop** (change the system when a result is wrong) instead of **in the loop** (redo each result by hand).
 
@@ -25,7 +27,7 @@ A factory is the easiest way to see what is here:
 | the night shift and the day supervisor | `night-shift`, `ambient-companion` |
 | maintenance | `tidy`, `reap-procs` |
 
-It is not a full factory, and not a "dark" one with nobody watching: a person stays on the loop. The line grows one concept at a time, from what real sessions needed.
+It is not a full factory, and not a "dark" one with nobody watching: a person stays on the loop.
 
 ## Start here
 
@@ -92,14 +94,7 @@ Your skill answers in its own words. The unit around it (`delegate`, `review-cha
 
 ### Flow map
 
-A pane beside the chat that lists your flows (with their steps) and units, one line each. Click one and it goes into the prompt. It ships as a separate plugin, so the skills stay plain markdown:
-
-```
-/plugin marketplace add pelayomendez/yatsude
-/plugin install flow-map@yatsude
-```
-
-Details: [plugins/flow-map](./plugins/flow-map/README.md).
+A pane beside the chat that lists your flows (with their steps) and units, one line each. Click one and it goes into the prompt. It ships as a separate plugin, so the skills stay plain markdown; install it with the skills (see [Install](#install)). Details: [plugins/flow-map](./plugins/flow-map/README.md).
 
 ### Units
 
@@ -110,7 +105,7 @@ Details: [plugins/flow-map](./plugins/flow-map/README.md).
 | [review-change](./skills/workflow/review-change/SKILL.md) | Reviews one MR or PR at its head SHA, read-only, against its ticket and the repo's rules, with verified findings in one report. | Agent picks it up |
 | [snapshot-backlog](./skills/workflow/snapshot-backlog/SKILL.md) | Reads a backlog scope into one local file the other units work from. Read only. | Agent picks it up |
 | [prune-backlog](./skills/workflow/prune-backlog/SKILL.md) | Proposes which tickets can close, each with evidence, never by age alone. | Agent picks it up |
-| [order-backlog](./skills/workflow/order-backlog/SKILL.md) | Ranks tickets by WSJF inside the dependency graph and marks which are ready to start. | Agent picks it up |
+| [order-backlog](./skills/workflow/order-backlog/SKILL.md) | Ranks tickets by value, urgency and size (WSJF) inside the dependency graph and marks which are ready to start. | Agent picks it up |
 | [delegate](./skills/workflow/delegate/SKILL.md) | Writes a self-sufficient brief to a file and launches a worker in its own worktree, with the standing forbids in every brief. | Agent picks it up |
 | [watch](./skills/workflow/watch/SKILL.md) | Watches a pipeline, MR, deploy or package version for one exact revision against a baseline, and reports changes. Never starts work. | Agent picks it up |
 | [qualify](./skills/workflow/qualify/SKILL.md) | Researches each reported bug and labels it ready for an agent, or names the missing question. Never fixes. | Agent picks it up |
@@ -131,6 +126,8 @@ Units pass work through files with fixed names (for `/backlog`: `tickets.json`, 
 
 ## Install
 
+**Needs:** Claude Code. The flows that touch tickets and MRs use your tracker's CLI or MCP (for Jira, `acli`) and your forge's CLI (`glab` or `gh`); browser checks use a controlled-browser MCP (for example chrome-devtools), never your own browser. `/backlog` only reads, so it is the safest first run.
+
 Instructions and skills install separately, because one is always loaded and the other is loaded on demand.
 
 ### Skills
@@ -140,6 +137,7 @@ As a Claude Code plugin, a read-only bundle you subscribe to:
 ```
 /plugin marketplace add pelayomendez/yatsude
 /plugin install yatsude@yatsude
+/plugin install flow-map@yatsude   # optional pane
 ```
 
 The plugin also installs the one hook `tidy` needs: a session-start reminder that prints a line only when a pass is due (`TIDY_REMIND=0` silences it).

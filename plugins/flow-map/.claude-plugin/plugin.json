@@ -1,6 +1,6 @@
 {
   "name": "flow-map",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A pane beside the chat with the flows and units your skills offer; click one to put it in the prompt.",
   "license": "MIT",
   "keywords": [

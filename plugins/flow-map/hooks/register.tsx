@@ -139,7 +139,7 @@ export const register: Register = (on, options) => {
               ))}
               {throughout.length > 0 && (
                 <Box key={`flow:${flow.name}:throughout`} flexDirection="row" flexWrap="wrap">
-                  <Text dimColor>{steps.length > 0 ? '  throughout: ' : '  uses: '}</Text>
+                  <Text dimColor>{steps.length > 0 ? '  also uses: ' : '  uses: '}</Text>
                   {throughout.flatMap((name, at) => [
                     ...(at === 0 ? [] : [<Text key={`${flow.name}~${at}:sep`} dimColor>{' · '}</Text>]),
                     link(name, `${flow.name}~${at}:${name}`),
