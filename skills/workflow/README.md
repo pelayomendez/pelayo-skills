@@ -17,3 +17,4 @@ Units for running agent work: permissions, backlogs, workers, watches and handof
 - **[ticket-pick](./ticket-pick/SKILL.md)**: checks a ready ticket is still ready and free, then takes it into work: In Progress, assigned to you, with a sprint and points.
 - **[ui-check](./ui-check/SKILL.md)**: checks a change in a controlled browser, locally or on a test environment, after making sure the port, the browser and the test project are free.
 - **[tracker-move](./tracker-move/SKILL.md)**: moves one item between the sections of a status board kept in a ticket's description (an epic's Tracker), leaving the rest of the description untouched.
+- **[check-flow](./check-flow/SKILL.md)**: checks one flow file before it runs: the units it lists exist and can be called, the steps use only those units, and every push, merge, post or delete has a stop or a charter check. Changes nothing.

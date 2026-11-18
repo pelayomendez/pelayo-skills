@@ -1,7 +1,7 @@
 {
   "name": "yatsude",
-  "version": "0.16.2",
-  "description": "More arms for your everyday work: coding agents work the daily loops (bug queue, MR reviews, backlog, the night shift) and stop for you on the calls. Small units, chained into flows, under a permission charter.",
+  "version": "0.17.0",
+  "description": "yatsude: a composable framework for AI-driven everyday work. Skills that each do one job, flows that chain them into your daily loops, and /new-flow to write your own.",
   "author": {
     "name": "Pelayo Méndez",
     "url": "https://github.com/pelayomendez"
@@ -40,6 +40,8 @@
     "./skills/workflow/ui-check",
     "./skills/workflow/qualify",
     "./skills/workflow/verify-claim",
-    "./skills/workflow/watch"
+    "./skills/workflow/watch",
+    "./skills/authoring/new-flow",
+    "./skills/workflow/check-flow"
   ]
 }

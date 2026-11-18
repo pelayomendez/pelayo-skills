@@ -1,0 +1,5 @@
+interface:
+  display_name: "New flow"
+  short_description: "Write a new flow from a loop you describe, built from your skills, with its stops"
+policy:
+  allow_implicit_invocation: false
