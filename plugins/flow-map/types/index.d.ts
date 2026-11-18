@@ -13,6 +13,8 @@ export type Skill = {
   throughout?: string[]
   /** How many places the flow stops for you (`**Stop and ask**`, `**3. Stop:`). */
   stops?: number
+  /** Where the stops fall: indexes into `steps` a stop comes after (-1: before the first step). */
+  stopsAfter?: number[]
   /** True when the skill's folder is the user's own, not a link to a collection. */
   isOwn?: boolean
 }

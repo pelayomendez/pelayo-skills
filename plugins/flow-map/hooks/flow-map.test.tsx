@@ -224,3 +224,28 @@ test('the pane marks your own flows, opens edit and new flow in the prompt', asy
   expect(filled).toEqual(['/new-flow edit backlog ', '/new-flow '])
   await ui.unmount()
 })
+
+test('each stop sits after the last step named before it', () => {
+  const text = `---
+name: f
+description: "F."
+---
+## Units
+
+Steps, in order:
+
+- \`a\`
+- \`b\`
+- \`c\`
+
+## Steps
+
+1. **Stop and ask** before anything.
+2. Run \`a\`.
+3. **Stop: you choose.** Then \`b\`.
+4. \`c\`, then **Stop and ask**.
+`
+  const skill = parseSkill(text, 'f')
+  expect(skill?.stops).toBe(3)
+  expect(skill?.stopsAfter).toEqual([-1, 0, 2])
+})

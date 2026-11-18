@@ -19,7 +19,7 @@ Throughout:
 
 The pane opens with the yatsude octopus (on a wide enough pane) and two buttons: **+ new flow** puts `/new-flow ` in the prompt, and **↻** reads the folders again.
 
-Each flow shows as a chain of its steps (`qualify → verify-claim → …`), then an `also uses:` line for the units any step may call (listed under `Throughout:` in the flow). Without those two labels, every unit counts as a step in the order listed. Next to the flow's name:
+Each flow shows as a chain of its steps, with an amber ⏸ where it stops for you (`qualify ⏸ → verify-claim → …`; a stop goes after the last step the flow names before it), then an `also uses:` line for the units any step may call (listed under `Throughout:` in the flow). Without those two labels, every unit counts as a step in the order listed. Next to the flow's name:
 
 - **⏸ N stops** in amber: how many places it stops for you, counted from steps marked `**Stop and ask**` or `**N. Stop: …**`.
 - **yours** in teal: the flow's folder is your own, not a link into a collection you installed.

@@ -92,12 +92,7 @@ export const parseSkill = (text: string, folderName: string): Skill | undefined 
     if (/^\s*(```|~~~)/.test(line)) isFenced = !isFenced
     return !isFenced && /^##\s+Units\s*$/.test(line)
   })
-  let isInFence = false
-  let stops = 0
-  for (const line of lines.slice(body)) {
-    if (/^\s*(```|~~~)/.test(line)) isInFence = !isInFence
-    else if (!isInFence) stops += (line.match(/\*\*(?:\d+\.\s*)?Stop(?:\s+and\s+ask|:)/gi) ?? []).length
-  }
+  const STOP = /\*\*(?:\d+\.\s*)?Stop(?:\s+and\s+ask|:)/gi
   if (heading >= 0) {
     const steps: string[] = []
     const throughout: string[] = []
@@ -113,7 +108,33 @@ export const parseSkill = (text: string, folderName: string): Skill | undefined 
       skill.units = [...steps, ...throughout]
       skill.steps = steps
       skill.throughout = throughout
-      if (stops > 0) skill.stops = stops
+      // Each stop sits after the last step the text named before it (-1: before the first step).
+      let isInFence = false
+      let isInUnits = false
+      let last = -1
+      let stops = 0
+      const after = new Set<number>()
+      for (const line of lines.slice(body)) {
+        if (/^\s*(```|~~~)/.test(line)) isInFence = !isInFence
+        if (isInFence) continue
+        if (/^#{1,2}\s/.test(line)) isInUnits = /^##\s+Units\s*$/.test(line)
+        if (isInUnits) continue
+        const marks = line.match(STOP)?.length ?? 0
+        const firstMark = marks > 0 ? line.search(STOP) : -1
+        for (const named of line.matchAll(/`([^`]+)`/g)) {
+          const at = steps.indexOf(named[1]?.trim() ?? '')
+          // A step named after the stop marker on the same line comes after the stop.
+          if (at >= 0 && (firstMark < 0 || (named.index ?? 0) < firstMark)) last = at
+        }
+        if (marks > 0) {
+          stops += marks
+          after.add(last)
+        }
+      }
+      if (stops > 0) {
+        skill.stops = stops
+        skill.stopsAfter = [...after].sort((a, b) => a - b)
+      }
     }
   }
   return skill
