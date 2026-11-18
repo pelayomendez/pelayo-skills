@@ -191,11 +191,6 @@ export const register: Register = (on, options) => {
                     {'  yours'}
                   </Text>
                 )}
-                {(flow.stops ?? 0) > 0 && (
-                  <Text key={`flow:${flow.name}:stops`} color={AMBER}>
-                    {`  ⏸ ${flow.stops} ${flow.stops === 1 ? 'stop' : 'stops'}`}
-                  </Text>
-                )}
                 <Text key={`flow:${flow.name}:gap`}>{'  '}</Text>
                 <Button
                   key={`edit:${flow.name}`}
