@@ -21,6 +21,6 @@ export type Catalog = { skills: Skill[]; scannedAt: number; errors: string[] }
 
 declare module 'claude-code' {
   interface PluginState {
-    'flow-map': { catalog: Shaped<Catalog>; filter: string; isDetailed: boolean }
+    'flow-map': { catalog: Shaped<Catalog>; filter: string; isCompact: boolean }
   }
 }

@@ -140,18 +140,34 @@ next      BUG-124 …</pre>
 - review: my-code-review-skill
 - browser-check: my-smoke-skill</pre>
 
-  <h2>Flow map</h2>
-  <p>An optional pane beside the chat with every flow in your skills folder, yours included, its steps in order, and your skills. Click one to put it in the prompt.</p>
-<pre><span class="accent">hotfix</span>     One urgent bug, report to MR
-  1. verify-claim   2. delegate
-  3. review-change  4. ui-check
-<span class="accent">support</span>    Takes bugs from report to released
-  1. qualify  2. verify-claim  3. ticket-pick …</pre>
+  <h2>The yatsude panel</h2>
+  <p>An optional pane beside the chat: every flow in your skills folder, yours included, as a chain of its steps with its stops counted, and your units with a filter. Click a name to put it in the prompt; <strong>edit</strong> and <strong>+ new flow</strong> open <code>/new-flow</code>. Hover a unit and it lights up in every flow that uses it.</p>
+<pre><span style="display:inline-block;line-height:1.05;vertical-align:middle" class="accent">   ▄▄█████▄▄
+  ██▀▀▀▀▀▀▀██▄▄
+  █  ▐█ ▐█  █ ▀▀
+  ▀█░▄▄‿▄▄░█▀
+   ▟▛▟▛▐▌▜▙▜▙</span>    <span style="display:inline-block;vertical-align:middle"><strong class="accent">yatsude</strong>
+<span class="mute">eight hands for your work</span>
+<span class="accent">[+ new flow]</span>  ↻</span>
+
+<strong>Flows</strong>
+<strong>hotfix</strong>  <span class="teal">yours</span>  <span class="amber">⏸ 1 stop</span>  <span class="mute">edit</span>
+<span class="mute">  One urgent bug, report to MR</span>
+  verify-claim <span class="accent">→</span> delegate <span class="accent">→</span> review-change <span class="accent">→</span> ui-check
+<strong>support</strong>  <span class="amber">⏸ 2 stops</span>  <span class="mute">edit</span>
+<span class="mute">  Takes bugs from report to released</span>
+  qualify <span class="accent">→</span> verify-claim <span class="accent">→</span> ticket-pick <span class="accent">→</span> delegate …
+<span class="mute">  also uses:</span> charter · tracker-move · handoff
+
+<span class="mute">[ filter units ]</span>  <span class="mute">▾ compact</span>
+<strong>Units</strong>
+verify-claim   <span class="mute">Checks an agent's claim with a fresh agent</span>
+review-change  <span class="mute">Reviews one MR at its current head</span></pre>
 
   <h2 id="install">Install</h2>
 <pre>/plugin marketplace add pelayomendez/yatsude
 /plugin install yatsude@yatsude
-/plugin install flow-map@yatsude   <span class="mute"># optional pane</span></pre>
+/plugin install flow-map@yatsude   <span class="mute"># optional: the yatsude panel</span></pre>
   <p>Or <code>npx skills@latest add pelayomendez/yatsude</code> to copy them into a project. Install one way, not both.</p>
   <p><strong>Needs:</strong> Claude Code; your tracker's CLI or MCP (for Jira, <code>acli</code>) and your forge's CLI (<code>glab</code> or <code>gh</code>) for the flows that touch tickets and MRs; a controlled-browser MCP (e.g. chrome-devtools) for browser checks. Details in the <a href="https://github.com/pelayomendez/yatsude#readme">README</a>.</p>
 

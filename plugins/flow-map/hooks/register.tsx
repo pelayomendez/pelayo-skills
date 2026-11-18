@@ -12,9 +12,15 @@ const VIOLET = '#9B6BDF'
 const AMBER = '#F2A541'
 const TEAL = '#2EC4B6'
 
-/** The mascot, manga style: a masked octopus with a deadpan stare and eight hands. Drawn when the pane has room. */
-const OCTOPUS = ['   ▄▀▀▀▀▀▄   ', '  █▓◉▓▓▓◉▓█≈ ', '   ▀▄ ‿ ▄▀   ', '  ╱╱╱│ │╲╲╲  ']
-const ART_WIDTH = 13
+/** The mascot, block style: a masked ninja octopus, eyes open, blushing, with eight hands. Drawn when the pane has room. */
+const OCTOPUS = [
+  '   ▄▄█████▄▄     ',
+  '  ██▀▀▀▀▀▀▀██▄▄  ',
+  '  █  ▐█ ▐█  █ ▀▀ ',
+  '  ▀█░▄▄‿▄▄░█▀    ',
+  '   ▟▛▟▛▐▌▜▙▜▙    ',
+]
+const ART_WIDTH = 17
 
 // Change the tag when Catalog's fields change: it declines what an earlier version stored.
 const catalog = atom({ plugin: 'flow-map', key: 'catalog' } as const, { skills: [], scannedAt: 0, errors: [] }, {
@@ -22,8 +28,8 @@ const catalog = atom({ plugin: 'flow-map', key: 'catalog' } as const, { skills: 
 })
 /** What the person typed in the units filter. */
 const filter = atom({ plugin: 'flow-map', key: 'filter' } as const, '')
-/** Units drawn as one line each with their summary, instead of compact chips. */
-const isDetailed = atom({ plugin: 'flow-map', key: 'isDetailed' } as const, false)
+/** Units drawn as names only, instead of one line each with their summary. */
+const isCompact = atom({ plugin: 'flow-map', key: 'isCompact' } as const, false)
 
 /** Hovering a unit lights it everywhere it appears: in every flow's chain and in the units list. */
 const lit = (name: string) => ({ scope: `unit:${name}`, color: VIOLET, bold: true })
@@ -101,7 +107,7 @@ export const register: Register = (on, options) => {
     const { Box, Text, Button, Input } = $.ui.resolve(e)
     const { skills, errors } = await read($, catalog)
     const typed = await read($, filter)
-    const detailed = await read($, isDetailed)
+    const compact = await read($, isCompact)
     const view = viewOf(skills, settings)
     const width = Math.max(12, e.props.bodyColumns)
     const fit = (text: string, room = width) => (text.length > room ? `${text.slice(0, room - 1)}…` : text)
@@ -244,17 +250,17 @@ export const register: Register = (on, options) => {
             <Text key="filter:gap">{'  '}</Text>
             <Button
               key="details"
-              label={detailed ? '▾ details' : '▸ details'}
+              label={compact ? '▸ details' : '▾ compact'}
               plain
               dimColor
-              onPress={() => void update($, isDetailed, now => !now)}
+              onPress={() => void update($, isCompact, now => !now)}
             />
           </Box>
         )}
         {units.map(group => (
           <Box key={`group:${group.title}`} flexDirection="column" marginBottom={1}>
             <Text bold>{group.title}</Text>
-            {detailed ? (
+            {!compact ? (
               group.skills.map(unit => (
                 <Box key={`unit:${unit.name}`} flexDirection="row">
                   <Button key={`unit:${unit.name}`} label={unit.name} plain hover={lit(unit.name)} onPress={() => pick($, unit)} />

@@ -25,7 +25,7 @@ Each flow shows as a chain of its steps (`qualify → verify-claim → …`), th
 - **yours** in teal: the flow's folder is your own, not a link into a collection you installed.
 - **edit**: puts `/new-flow edit <flow> ` in the prompt.
 
-Below the flows, the units show compact, as names on a few lines. Type in **filter units** to narrow them by name or summary, and press **▸ details** for one line each with its `summary:` (or else the first sentence of its description). Hover a unit and it lights up in every flow that uses it. A unit the flow lists but no folder holds shows as `name?`.
+Below the flows, each unit shows on one line with its `summary:` (or else the first sentence of its description). Type in **filter units** to narrow them by name or summary, and press **▾ compact** to show names only. Hover a unit and it lights up in every flow that uses it. A unit the flow lists but no folder holds shows as `name?`.
 
 ## Install
 
