@@ -11,12 +11,16 @@ export type Skill = {
   steps?: string[]
   /** The units used at any step, listed after a `Throughout:` line. */
   throughout?: string[]
+  /** How many places the flow stops for you (`**Stop and ask**`, `**3. Stop:`). */
+  stops?: number
+  /** True when the skill's folder is the user's own, not a link to a collection. */
+  isOwn?: boolean
 }
 
 export type Catalog = { skills: Skill[]; scannedAt: number; errors: string[] }
 
 declare module 'claude-code' {
   interface PluginState {
-    'flow-map': { catalog: Shaped<Catalog> }
+    'flow-map': { catalog: Shaped<Catalog>; filter: string; isCompact: boolean }
   }
 }

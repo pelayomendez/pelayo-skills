@@ -92,6 +92,12 @@ export const parseSkill = (text: string, folderName: string): Skill | undefined 
     if (/^\s*(```|~~~)/.test(line)) isFenced = !isFenced
     return !isFenced && /^##\s+Units\s*$/.test(line)
   })
+  let isInFence = false
+  let stops = 0
+  for (const line of lines.slice(body)) {
+    if (/^\s*(```|~~~)/.test(line)) isInFence = !isInFence
+    else if (!isInFence) stops += (line.match(/\*\*(?:\d+\.\s*)?Stop(?:\s+and\s+ask|:)/gi) ?? []).length
+  }
   if (heading >= 0) {
     const steps: string[] = []
     const throughout: string[] = []
@@ -107,6 +113,7 @@ export const parseSkill = (text: string, folderName: string): Skill | undefined 
       skill.units = [...steps, ...throughout]
       skill.steps = steps
       skill.throughout = throughout
+      if (stops > 0) skill.stops = stops
     }
   }
   return skill
@@ -161,6 +168,12 @@ export const viewOf = (skills: Skill[], settings: Settings): View => {
   const rest = units.filter(one => !placed.has(one.name))
   if (rest.length > 0) groups.push({ title: settings.groups.length > 0 ? 'Other units' : 'Units', skills: rest })
   return { flows, groups, missing }
+}
+
+/** Matches a unit against the filter typed in the pane: name or summary, any case. */
+export const matches = (skill: { name: string; summary?: string; description: string }, filter: string) => {
+  const needle = filter.trim().toLowerCase()
+  return needle === '' || skill.name.toLowerCase().includes(needle) || lineOf(skill).toLowerCase().includes(needle)
 }
 
 /** What a click puts in the prompt. */
