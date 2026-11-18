@@ -12,6 +12,7 @@ A flow is only as safe as its weakest step. This unit reads one flow file and sa
 
 - **Flow**: the path to its `SKILL.md`.
 - **Available skills**: the skills this session can call. Take them from the session's own list of skills; when that list isn't visible, read the `SKILL.md` frontmatter in the user's skill folders (personal, project, and installed plugins).
+- **New skills** (optional): skill files written in this run that the session can't list until a reload. The caller names their paths; count them as available, reading their frontmatter for the invocation mode.
 
 ## Checks
 
@@ -20,10 +21,10 @@ A flow is only as safe as its weakest step. This unit reads one flow file and sa
    - exists among the available skills
    - is model-invoked: a skill only the user can start can't be reached from a flow
    - is not the flow itself
-3. **Steps.** Every unit named in the steps is in `## Units`, and every unit in `## Units` is used somewhere. A step that does real work without a unit (a script, a long procedure) is logic that belongs in a unit of its own: flag it.
+3. **Steps.** Every unit in `## Units` is used somewhere in the steps. A unit the steps name but `## Units` leaves out (often one reached through a slot) still runs, but tools that draw flows won't show it. A step that carries a long procedure of its own is logic that belongs in a unit. Plain reads and forge or tracker commands behind a stop are fine.
 4. **Stops.** Find each step that publishes under the user's name, pushes, merges, releases or deploys, deletes or stops something, installs software, or writes to another team's system. Each needs either a stop that waits for the user, or a check with `charter` in front of it. One without either is the most serious finding.
 5. **Failures.** The flow says what happens when a step fails or comes back unclear. A flow with no answer for that is a finding, not a blocker.
 
 ## Output
 
-`ok` or a list of findings, most serious first. Each one names the line, what goes wrong when the flow runs, and the fix in one sentence. Problems from checks 2 and 4 are `blocking`; the rest are `advice`.
+`ok` or a list of findings, most serious first. Each one names the line, what goes wrong when the flow runs, and the fix in one sentence. Problems from checks 2 and 4 are `blocking`; the rest are `advice`, and never a reason to rewrite a flow that works.

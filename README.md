@@ -50,6 +50,7 @@ Or write it yourself: a flow is a skill file with a `## Units` list (the skills 
 ---
 name: hotfix
 description: "One urgent bug, report to MR."
+summary: "One urgent bug, report to MR"
 disable-model-invocation: true
 ---
 
@@ -113,7 +114,6 @@ Small units that each do one job, and flows that chain them. A unit works on its
 | [`/night-shift`](./skills/flows/night-shift/SKILL.md) | your decisions → charter → watch → each ticket: delegate → verify-claim → merge if granted → handoff | An unattended overnight run through worker, checks, MR and merge, ending in a morning report and a plan for the day. |
 | [`/support <config>`](./skills/flows/support/SKILL.md) | qualify → your OK → each bug: verify-claim → ticket-pick → delegate (fix, review) → ui-check → watch → merge on your OK or a charter grant → ui-check on the test environment → close | A bug queue worked from report to released, one bug at a time, with the status board updated at every step. |
 | [`/mr-review <config>`](./skills/flows/mr-review/SKILL.md) | list open MRs → review-change → verify-claim → you validate each MR → yours: fix and push on your word, merge on your word, check on the test environment, close · theirs: comments on your OK | Every open MR reviewed at its current head, and a decision card per MR. Nothing merged or posted without you. |
-| [`/new-flow`](./skills/authoring/new-flow/SKILL.md) | your loop, in your words → a skill per step → stops from your charter → the file → check-flow | Your own flow, written as one file and checked, ready to type. |
 
 ### Bring your own skills
 
@@ -157,6 +157,7 @@ A pane beside the chat that lists your flows (with their steps) and units, one l
 | [tracker-move](./skills/workflow/tracker-move/SKILL.md) | Moves one item between the sections of a status board kept in a ticket's description, leaving the rest untouched. | Agent picks it up |
 | [handoff](./skills/workflow/handoff/SKILL.md) | Writes the one size-capped file a supervising session resumes from: state and owners, watches to re-arm, the charter scope in force. | Agent picks it up |
 | [reap-procs](./skills/maintenance/reap-procs/SKILL.md) | Finds what is eating the machine after agent sessions, says whose each process is, and stops only what nobody owns. Before a fan-out, says go or wait. | Agent picks it up |
+| [new-flow](./skills/authoring/new-flow/SKILL.md) | Writes your own flow with you: a skill per step, stops from your charter, the file, then `check-flow`. Missing steps become new units or stops. | You type `/new-flow` |
 | [tidy](./skills/maintenance/tidy/SKILL.md) | A weekly and monthly tune-up of your agent setup: retro, memory, steering files, skills, permissions, hooks. A session-start hook reminds you when a pass is due. | You type `/tidy` |
 
 ### How things start

@@ -18,10 +18,10 @@ argument-hint: "[name] [what the loop does, in a sentence]"
    - **A new unit**: one small skill that does only that job, model-invoked so the flow can call it. Write a short draft of it (frontmatter, input, steps, output) and show it before saving.
    - **A stop**: the flow pauses and the user does that step by hand.
    Never write the missing logic into the flow itself.
-4. **Mark the stops.** List every step that publishes under the user's name, pushes, merges, releases, deletes, installs or touches another team's system. Look each up with `charter`. Where the charter grants it, the flow says so and checks it at run time; where it doesn't, the flow stops and asks. Show the list and let the user add stops of their own.
+4. **Mark the stops.** List every step that publishes under the user's name, pushes, merges, releases or deploys, deletes or stops something, installs software, or writes to another team's system. Look each up with `charter`. Where the charter grants it, propose a charter check at run time instead of a stop; where it doesn't, the flow stops and asks. Show the list; the user confirms each charter check and may add stops of their own.
 5. **Decide what happens on failure.** For each step that can fail (a unit returns `blocked`, a check fails, a claim doesn't hold), agree with the user: retry once, skip and note it, or stop and ask. The default is stop and ask.
 6. **Write the file.** Ask where it goes: personal (`~/.claude/skills/<name>/`, every project) or this project (`.claude/skills/<name>/`). Write `SKILL.md` in the shape below. Don't overwrite a file that's already there.
-7. **Check it** with `check-flow`, and fix what it reports before handing it over. Then say how to run it (`/<name> …`). A new skill appears after a reload or a new session.
+7. **Check it** with `check-flow`, naming the units written in step 3 as new skills, and fix what it marks `blocking` before handing it over. Then say how to run it (`/<name> …`). New skills appear after a reload or a new session. A flow saved in the project folder shows in the flow-map pane only once that folder is added to the pane's sources in `/config`.
 
 ## The shape
 
@@ -64,4 +64,4 @@ Keep the steps short: a flow only sets order, stops and failures. The skills hol
 
 - **Nothing runs.** This skill writes files after you've seen them, and only those files.
 - **Use what exists.** Prefer an installed skill to a new unit, and a new unit to a stop.
-- **Stops are yours to remove,** never this skill's: each one it drops comes with a charter grant you already have.
+- **Stops are yours.** This skill never removes one on its own: it only proposes a charter check where your charter already grants the action, and you confirm each.
