@@ -20,7 +20,7 @@
     body { margin: 0; background: var(--ink); color: var(--cream); font: 17px/1.6 ui-sans-serif, system-ui, -apple-system, sans-serif; }
     main { max-width: 760px; margin: 0 auto; padding: 56px 24px 80px; }
     header { text-align: center; }
-    header img { width: 168px; height: 168px; }
+    header img { width: 200px; height: 200px; }
     h1 { font-size: 44px; margin: 12px 0 4px; letter-spacing: -0.5px; }
     .tag { color: var(--dim); font-size: 19px; margin: 0 auto; max-width: 560px; }
     h2 { color: var(--accent); font-size: 20px; margin: 44px 0 10px; }
@@ -40,69 +40,75 @@
 <body>
 <main>
   <header>
-    <img src="icon.png" alt="">
+    <img src="sticker.png" alt="yatsude mascot: a ninja octopus">
     <h1>yatsude</h1>
-    <p class="tag">Coding agents work the daily loops: the bug queue, MR reviews, the backlog, the night shift. You make the calls, from on the loop instead of in it.</p>
+    <p class="tag">More arms for your everyday work.</p>
     <p class="cta"><a class="primary" href="#install">Install</a><a href="https://github.com/pelayomendez/yatsude">GitHub</a></p>
   </header>
 
-  <p>A composable framework for AI-driven everyday work: small skills, chained into flows, with slots for your own skills and a charter for what needs you. The name is Japanese: <em>yatsude</em> (八つ手), "eight hands".</p>
+  <p>Claude Code skills that work your bug queue, MR reviews and backlog, even overnight, and stop for you on every merge, post and call that's yours.</p>
+  <p class="mute">Claude Code plugin · MIT · works with your tracker (Jira or similar) and forge (GitLab or GitHub)</p>
 
-  <h2>Start here</h2>
+  <h2>Flows</h2>
+  <p>You type a flow. Each one chains small skills in order and stops for you where a decision is yours.</p>
   <table>
-    <tr><td class="accent">/support</td><td>bugs piling up in a queue</td></tr>
-    <tr><td class="accent">/mr-review</td><td>MRs waiting for review, yours and your team's</td></tr>
-    <tr><td class="accent">/backlog</td><td>a backlog nobody trusts any more</td></tr>
-    <tr><td class="accent">/night-shift</td><td>tickets ready and a night ahead</td></tr>
-    <tr><td class="accent">/ambient-companion</td><td>a day of agents running while you do something else</td></tr>
-    <tr><td>a unit</td><td>one job only: check a claim, review one MR, hand off. Ask for it and the agent picks the unit.</td></tr>
+    <tr><td class="accent">/support</td><td><strong>Bugs piling up in a queue.</strong> Takes each from report to released: qualify, confirm the cause with a fresh agent, fix and review with workers, check in a controlled browser, ship, check again on the test environment, close.</td></tr>
+    <tr><td class="accent">/mr-review</td><td><strong>MRs waiting for review, yours and your team's.</strong> Reviews each at its current head and stops for you on every one. Nothing is pushed, merged or posted without your word.</td></tr>
+    <tr><td class="accent">/backlog</td><td><strong>A backlog nobody trusts any more.</strong> Proposes what can close, with evidence, and ranks the rest by value, urgency and size (WSJF) inside the dependency graph.</td></tr>
+    <tr><td class="accent">/night-shift</td><td><strong>Tickets ready and a night ahead.</strong> One decision round before you leave, then queue → fix → verify → review → browser check → merge, and a morning report.</td></tr>
+    <tr><td class="accent">/ambient-companion</td><td><strong>A day of agents running while you do something else.</strong> Watches your work's event streams, delegates and checks, and brings you only the decisions.</td></tr>
   </table>
+  <p>Need only one job (check a claim, review one MR, hand off)? Ask for it and the agent picks the skill.</p>
 
   <h2>Where it stops for you</h2>
-  <p>Every flow names the points where it waits for you. Beyond those, your charter decides: what isn't granted there is asked first, and a permission only counts when it comes from you.</p>
+  <p>Nothing is merged, pushed or posted under your name unless you said so, in the chat or in your charter: a plain-text file of what the agent may do alone, must ask first, or never does. Every flow also names the points where it waits for you.</p>
   <table>
     <tr><td class="accent">/support</td><td>Waits: before the first bug; the merge and anything posted under your name, unless your charter grants them; a release step beyond the merge; after three review rounds; a check that passed locally and fails on the test environment. Never alone: merge without a green pipeline and a passing review on the same commit.</td></tr>
     <tr><td class="accent">/mr-review</td><td>Waits: every MR, one card at a time; each push and merge on yours; each comment on theirs. Never alone: push to, approve or merge a teammate's MR.</td></tr>
     <tr><td class="accent">/backlog</td><td>Waits: every close or change, approved by id; value and deadlines it can't infer. Never alone: close a ticket by age alone; bulk changes.</td></tr>
     <tr><td class="accent">/night-shift</td><td>Waits: one decision round before you leave: merge tonight or not, and the product calls the queue depends on. Never alone: merge without that night's grant and all three gates on the commit (verify, review, browser smoke); post comments: they wait in the handoff for your OK.</td></tr>
     <tr><td class="accent">/ambient-companion</td><td>Waits: by default, editable in your charter: anything under your name, merges and releases, destructive cleanup, another team's system. Never alone: force-push, rewrite shared docs, install software, stop or delete what it didn't start, start work from a watch.</td></tr>
-
-  <h2>Flows</h2>
-  <p>You type a flow. Each one chains units in order and stops for you where a decision is yours.</p>
-  <table>
-    <tr><td class="accent">/support</td><td>Takes bugs from report to released: qualify, confirm the cause with a fresh agent, pick, fix and review with workers, check in a controlled browser, ship, check again on the test environment, close.</td></tr>
-    <tr><td class="accent">/mr-review</td><td>Reviews the open MRs, yours and your teammates', at their current head, and stops for you on each one. Nothing is pushed, merged or posted without your word.</td></tr>
-    <tr><td class="accent">/backlog</td><td>Snapshot, prune and order a backlog: closes only what a fresh agent confirmed and you approved, then ranks the rest by WSJF inside the dependency graph.</td></tr>
-    <tr><td class="accent">/ambient-companion</td><td>A day-long session that watches your work's event streams, delegates and checks, and brings you only the decisions.</td></tr>
-    <tr><td class="accent">/night-shift</td><td>An unattended overnight run: a decision round, then queue → delegate → verify → review → smoke → merge, and a morning report.</td></tr>
   </table>
 
-  <h2>Units</h2>
+  <h2>Bring your own skills</h2>
+  <p>Some steps are slots: plug in the skill you already trust and the flow keeps its stops, reports and checks around it. Unset slots use ours.</p>
+  <table>
+    <tr><td class="accent">implement</td><td>Writes the fix or feature in a worker.</td></tr>
+    <tr><td class="accent">review</td><td>Reviews a change; the flow still verifies each finding.</td></tr>
+    <tr><td class="accent">browser-check</td><td>Checks the change in a controlled browser.</td></tr>
+  </table>
+<pre><span class="mute"># ~/.claude/slots.md</span>
+- implement: my-tdd-skill
+- review: my-code-review-skill</pre>
+
+  <h2>Skills</h2>
   <p>Small one-job skills the agent reaches for on its own, inside a flow or outside one.</p>
   <table>
-    <tr><td class="accent">high-level-communication</td><td>Always on. Report like a senior engineer to another: why, what changed, impact, trade-offs, risks, next steps.</td></tr>
-    <tr><td>charter</td><td>One ledger of what the agent may do alone, must ask first, or never, per scope, in your own words.</td></tr>
+    <tr><td>charter</td><td>Your permissions file: what the agent may do alone, must ask first, or never, per scope, in your own words.</td></tr>
     <tr><td>verify-claim</td><td>A fresh agent checks another agent's claim, seeing only the claim and its evidence.</td></tr>
     <tr><td>delegate · watch · handoff</td><td>Brief and launch a worker safely, watch a pipeline or MR until it settles, and leave a handoff another session can resume.</td></tr>
     <tr><td>qualify · ticket-pick · tracker-move</td><td>Check a bug is ready for an agent, take a ready ticket into work, and move it on the status board.</td></tr>
     <tr><td>review-change · ui-check</td><td>Review one MR at its current head, read-only; check a fix in a controlled browser, never yours.</td></tr>
-    <tr><td>snapshot-backlog · prune-backlog · order-backlog</td><td>Read a backlog once, propose what can close with evidence, rank the rest by WSJF inside the dependency graph.</td></tr>
-    <tr><td>reap-procs</td><td>Finds what is eating the machine after agent sessions, says whose each process is, and stops only what nobody owns.</td></tr>
-    <tr><td>tidy</td><td>You type it. A weekly and monthly tune-up of your agent setup: retro, memory pruning, steering files, skills, hooks.</td></tr>
+    <tr><td>snapshot-backlog · prune-backlog · order-backlog</td><td>Read a backlog once, propose what can close with evidence, rank the rest inside the dependency graph.</td></tr>
+    <tr><td>reap-procs · tidy</td><td>Find what is eating the machine after agent sessions and stop only what nobody owns; a weekly and monthly tune-up of your agent setup.</td></tr>
+    <tr><td>high-level-communication</td><td>Always on. Report like a senior engineer to another: why, what changed, impact, trade-offs, risks, next steps.</td></tr>
   </table>
 
   <h2>Flow map</h2>
-  <p>An optional pane beside the chat with your flows, their steps in order, and your units, each in one line. Click one to put it in the prompt; it never runs anything on its own. The skills stay plain markdown, so it reads any folder of them.</p>
+  <p>An optional pane beside the chat with your flows, their steps in order, and your skills, each in one line. Click one to put it in the prompt; it never runs anything on its own.</p>
 <pre><span class="accent">support</span>    Takes bugs from report to released
   1. qualify   2. verify-claim   3. ticket-pick
   4. delegate  5. ui-check       6. watch
-  <span class="mute">throughout: charter · tracker-move · handoff</span></pre>
+  <span class="mute">also uses: charter · tracker-move · handoff</span></pre>
 
   <h2 id="install">Install</h2>
 <pre>/plugin marketplace add pelayomendez/yatsude
 /plugin install yatsude@yatsude
 /plugin install flow-map@yatsude   <span class="mute"># optional pane</span></pre>
-  <p>Or <code>npx skills@latest add pelayomendez/yatsude</code> to copy them into a project. Install one way, not both. The always-on instruction installs with a script; details in the <a href="https://github.com/pelayomendez/yatsude#readme">README</a>.</p>
+  <p>Or <code>npx skills@latest add pelayomendez/yatsude</code> to copy them into a project. Install one way, not both.</p>
+  <p><strong>Needs:</strong> Claude Code; your tracker's CLI or MCP (for Jira, <code>acli</code>) and your forge's CLI (<code>glab</code> or <code>gh</code>) for the flows that touch tickets and MRs; a controlled-browser MCP (e.g. chrome-devtools) for browser checks. Details in the <a href="https://github.com/pelayomendez/yatsude#readme">README</a>.</p>
+
+  <p class="mute">The name is Japanese: <em>yatsude</em> (八つ手), "eight hands".</p>
 
   <footer>MIT · by <a href="https://github.com/pelayomendez">Pelayo Méndez</a></footer>
 </main>
