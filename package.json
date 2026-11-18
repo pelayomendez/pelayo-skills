@@ -1,6 +1,6 @@
 {
   "name": "yatsude",
-  "version": "0.16.1",
+  "version": "0.16.2",
   "private": true,
   "description": "yatsude: a composable framework for AI-driven everyday work",
   "repository": {

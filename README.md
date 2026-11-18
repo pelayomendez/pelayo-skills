@@ -42,15 +42,23 @@ It is not a full factory, and not a "dark" one with nobody watching: a person st
 
 ## Where it stops for you
 
-Every flow names the points where it waits for you. Beyond those, your [charter](./skills/workflow/charter/SKILL.md) decides: what isn't granted there is asked first, and a permission only counts when it comes from you.
+Nothing is merged, pushed or posted under your name unless you said so, in the chat or in your [charter](./skills/workflow/charter/SKILL.md): a plain-text file of what the agent may do alone, must ask first, or never does. A permission only counts when it comes from you.
 
-| Flow | Waits for you | Never does alone |
-| --- | --- | --- |
-| `/support` | before the first bug; the merge and anything posted under your name, unless your charter grants them; a release step beyond the merge; after three review rounds; a check that passed locally and fails on the test environment | merge without a green pipeline and a passing review on the same commit |
-| `/mr-review` | every MR, one card at a time; each push and merge on yours; each comment on theirs | push to, approve or merge a teammate's MR |
-| `/backlog` | every close or change, approved by id; value and deadlines it can't infer | close a ticket by age alone; bulk changes |
-| `/night-shift` | one decision round before you leave: merge tonight or not, and the product calls the queue depends on | merge without that night's grant and all three gates on the commit (verify, review, browser smoke); post comments: they wait in the handoff for your OK |
-| `/ambient-companion` | by default, editable in your charter: anything under your name, merges and releases, destructive cleanup, another team's system | force-push, rewrite shared docs, install software, stop or delete what it didn't start, start work from a watch |
+| Flow | Does alone | Asks you first | Never does alone |
+| --- | --- | --- | --- |
+| `/support` | qualify, confirm the cause, pick, fix, review, local browser check | the first bug; the MR text, merge and release unless your charter grants them; after three review rounds; a check that passes locally and fails on the test environment | merge without a green pipeline and a passing review on the same commit; touch others' tickets |
+| `/mr-review` | list the MRs, review each read-only, verify the findings | your call on every MR; each push and merge on yours; each comment on theirs | push to, approve or merge a teammate's MR |
+| `/backlog` | read the backlog, propose what can close, rank the rest | every close or change, by id; value and deadlines it can't infer | close a ticket by age alone; bulk changes |
+| `/night-shift` | worker → verify → review → browser check → MR, and merges you granted that night | one decision round before you leave; comments wait in the handoff | merge without all three gates on the commit, or while the pipeline is pending |
+| `/ambient-companion` | spawn and watch workers, verify, review, keep the tracker consistent | anything under your name, merges and releases, destructive cleanup, another team's system | force-push, rewrite shared docs, install software, stop what it didn't start |
+
+## Your first run
+
+1. **Install** the plugin (see [Install](#install)), then open a new session.
+2. **Start read-only:** `/backlog <epic, label or query>`. It reads your tracker, proposes what can close with evidence, ranks the rest, and changes nothing until you approve ids.
+3. **Write a flow config** for `/support` and `/mr-review`: copy [examples/flow-config.md](./examples/flow-config.md) to `~/.claude/flows/<name>.md` and fill what you know. The flow asks once for anything missing and writes it back.
+4. **Review one MR:** `/mr-review <MR or PR URL>`. Nothing is posted; you get a report and decide.
+5. **Fix one bug:** `/support ~/.claude/flows/<name>.md <KEY>`. It stops before the first bug, and again wherever the table above says.
 
 ## What's inside
 
@@ -166,9 +174,24 @@ skills/flows/            flows you type: backlog, ambient-companion, night-shift
 skills/maintenance/      upkeep of the agent setup and the machine
 skills/workflow/         units for running agent work: permissions, backlogs, workers, watches, handoffs
 plugins/flow-map/        the flow map pane, a separate plugin
+examples/                a flow config to copy for /support and /mr-review
 ```
 
 Each bucket has its own README.
+
+## Troubleshooting
+
+- **"Unknown command" for a flow**: open a new session; skills load when a session starts. If you installed with skills.sh, check the skill's folder is in `~/.claude/skills` or the project's `.claude/skills`.
+- **Every skill listed twice**: it was installed both as a plugin and with skills.sh. Keep one.
+- **A flow stops asking for a CLI**: the tracker or forge CLI isn't installed or logged in (`acli`, `glab`, `gh`). The flow never installs software; install it yourself, then rerun.
+- **Browser checks are skipped**: no controlled-browser MCP is configured, or another session holds it. The report says the check didn't run; it never falls back to your own browser.
+
+## FAQ
+
+- **Does it push or merge without me?** Only what your charter grants for that flow, and never against the "never" column above. With an empty charter it asks every time.
+- **GitHub or GitLab? Jira or something else?** The flows name the step, not the tool: your config says which CLI or MCP to use. Examples use `acli`, `glab` and `gh`.
+- **Other agents than Claude Code?** Written and tested on Claude Code. The skills are plain markdown and the instructions install for other agents (`AGENT_HOME`), but the flows rely on Claude Code's subagents and hooks.
+- **Can I use my own review or TDD skill?** Yes: see [Bring your own skills](#bring-your-own-skills).
 
 ## Working on this repo
 

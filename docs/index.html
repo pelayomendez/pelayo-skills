@@ -30,6 +30,7 @@
     table { border-collapse: collapse; width: 100%; }
     td { padding: 8px 10px; border-top: 1px solid #2c2c3c; vertical-align: top; }
     td:first-child { white-space: nowrap; font-weight: 600; }
+    .tiers td { font-size: 15px; width: 29%; } .tiers td:first-child { width: auto; } .tiers tr:first-child td { font-weight: 700; border-top: none; }
     a { color: var(--accent); }
     .cta { text-align: center; margin-top: 28px; }
     .cta a { display: inline-block; margin: 0 6px; padding: 10px 18px; border-radius: 999px; border: 1px solid var(--accent); text-decoration: none; }
@@ -49,6 +50,23 @@
   <p>Claude Code skills that work your bug queue, MR reviews and backlog, even overnight, and stop for you on every merge, post and call that's yours.</p>
   <p class="mute">Claude Code plugin · MIT · works with your tracker (Jira or similar) and forge (GitLab or GitHub)</p>
 
+  <h2>A run, start to finish</h2>
+  <p class="mute">Illustrative, shortened. Amber lines are where it stops for you.</p>
+<pre><span class="accent">&gt; /support ~/.claude/flows/shop.md</span>
+qualify   7 bugs read · 3 ready for an agent · 4 need an answer
+<span class="amber">ask</span>       BUG-118: which browser does the report mean?
+<span class="amber">ask</span>       3 ready, smallest first. Start with BUG-121?  › y
+verify    a fresh agent confirms: cart.ts:88 drops the coupon
+pick      BUG-121 → In Progress, assigned to you, on the board
+fix       worker, test-first: 2 commits
+review    a fresh reviewer: ready · guard tests pass
+check     local browser check: 3/3 steps pass
+ship      MR !412 opened · pipeline success on 9f3c2e1
+<span class="amber">ask</span>       Merge !412 at 9f3c2e1? Your charter has no grant for this.  › y
+release   on the test environment · browser check: 3/3 pass
+close     BUG-121 → Done · board → Released · worktree removed
+next      BUG-124 …</pre>
+
   <h2>Flows</h2>
   <p>You type a flow. Each one chains small skills in order and stops for you where a decision is yours.</p>
   <table>
@@ -61,13 +79,14 @@
   <p>Need only one job (check a claim, review one MR, hand off)? Ask for it and the agent picks the skill.</p>
 
   <h2>Where it stops for you</h2>
-  <p>Nothing is merged, pushed or posted under your name unless you said so, in the chat or in your charter: a plain-text file of what the agent may do alone, must ask first, or never does. Every flow also names the points where it waits for you.</p>
-  <table>
-    <tr><td class="accent">/support</td><td>Waits: before the first bug; the merge and anything posted under your name, unless your charter grants them; a release step beyond the merge; after three review rounds; a check that passed locally and fails on the test environment. Never alone: merge without a green pipeline and a passing review on the same commit.</td></tr>
-    <tr><td class="accent">/mr-review</td><td>Waits: every MR, one card at a time; each push and merge on yours; each comment on theirs. Never alone: push to, approve or merge a teammate's MR.</td></tr>
-    <tr><td class="accent">/backlog</td><td>Waits: every close or change, approved by id; value and deadlines it can't infer. Never alone: close a ticket by age alone; bulk changes.</td></tr>
-    <tr><td class="accent">/night-shift</td><td>Waits: one decision round before you leave: merge tonight or not, and the product calls the queue depends on. Never alone: merge without that night's grant and all three gates on the commit (verify, review, browser smoke); post comments: they wait in the handoff for your OK.</td></tr>
-    <tr><td class="accent">/ambient-companion</td><td>Waits: by default, editable in your charter: anything under your name, merges and releases, destructive cleanup, another team's system. Never alone: force-push, rewrite shared docs, install software, stop or delete what it didn't start, start work from a watch.</td></tr>
+  <p>Nothing is merged, pushed or posted under your name unless you said so, in the chat or in your charter: a plain-text file of what the agent may do alone, must ask first, or never does. With an empty charter, it asks every time.</p>
+  <table class="tiers">
+    <tr><td></td><td class="green">Alone</td><td class="amber">Asks first</td><td class="red">Never alone</td></tr>
+    <tr><td class="accent">/support</td><td>qualify, confirm the cause, fix, review, local browser check</td><td>the first bug; MR text, merge and release without a grant; after three review rounds</td><td>merge without a green pipeline and a passing review on the same commit</td></tr>
+    <tr><td class="accent">/mr-review</td><td>review each MR read-only, verify the findings</td><td>your call on every MR; each push, merge and comment</td><td>push to, approve or merge a teammate's MR</td></tr>
+    <tr><td class="accent">/backlog</td><td>read the backlog, propose closes, rank the rest</td><td>every close or change, by id</td><td>close by age alone; bulk changes</td></tr>
+    <tr><td class="accent">/night-shift</td><td>fix → verify → review → browser check → MR; merges you granted that night</td><td>one decision round before you leave; comments wait for the morning</td><td>merge without all three gates, or while the pipeline is pending</td></tr>
+    <tr><td class="accent">/ambient-companion</td><td>spawn and watch workers, verify, review</td><td>anything under your name, merges, releases, another team's system</td><td>force-push, install software, stop what it didn't start</td></tr>
   </table>
 
   <h2>Bring your own skills</h2>
@@ -107,6 +126,11 @@
 /plugin install flow-map@yatsude   <span class="mute"># optional pane</span></pre>
   <p>Or <code>npx skills@latest add pelayomendez/yatsude</code> to copy them into a project. Install one way, not both.</p>
   <p><strong>Needs:</strong> Claude Code; your tracker's CLI or MCP (for Jira, <code>acli</code>) and your forge's CLI (<code>glab</code> or <code>gh</code>) for the flows that touch tickets and MRs; a controlled-browser MCP (e.g. chrome-devtools) for browser checks. Details in the <a href="https://github.com/pelayomendez/yatsude#readme">README</a>.</p>
+
+  <h2>FAQ</h2>
+  <p><strong>Does it push or merge without me?</strong> Only what your charter grants for that flow, never what the table above marks as never.<br>
+  <strong>GitHub or GitLab, Jira or something else?</strong> The flows name the step, not the tool; your flow config says which CLI or MCP to use.<br>
+  <strong>How do I start?</strong> <code>/backlog &lt;epic&gt;</code> only reads. Then copy the <a href="https://github.com/pelayomendez/yatsude/blob/main/examples/flow-config.md">example flow config</a> and try <code>/mr-review &lt;MR URL&gt;</code>.</p>
 
   <p class="mute">The name is Japanese: <em>yatsude</em> (八つ手), "eight hands".</p>
 
