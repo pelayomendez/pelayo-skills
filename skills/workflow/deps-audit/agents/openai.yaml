@@ -1,0 +1,3 @@
+interface:
+  display_name: "Dependency audit"
+  short_description: "List the dependencies one repo could drop, swap, dedupe or update, with evidence; changes nothing"
