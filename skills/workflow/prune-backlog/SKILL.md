@@ -14,7 +14,7 @@ A snapshot from the `snapshot-backlog` skill: `tickets.json` in the newest run f
 
 ## Signals, strongest first
 
-1. **Already done.** A merged MR or commit references the key, or the code already does what the ticket asks. Look for:
+1. **Already done.** A merged MR or commit references the key, or the code already does what the ticket asks. Look for: If the run folder has a `code.json` from `code-check`, start from its **done in code** tickets: their evidence is already gathered.
    - `git log --all --oneline --grep '<KEY>'` in each relevant repo
    - merged MRs or PRs that mention the key (`glab mr list --merged --search '<KEY>'`, `gh pr list --state merged --search '<KEY>'`)
    - a direct read of the code the ticket describes

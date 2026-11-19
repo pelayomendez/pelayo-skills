@@ -1,0 +1,3 @@
+interface:
+  display_name: "Code check"
+  short_description: "Check the code side of tickets: MRs, releases, deploys, stale MRs and MRs with no ticket; read only"

@@ -15,6 +15,7 @@ argument-hint: "<config file> [KEY ...] [--qualify-only]"
 Steps, in order:
 
 - `qualify`
+- `code-check`
 - `verify-claim`
 - `ticket-pick`
 - `delegate`
@@ -53,7 +54,7 @@ One file per installation, named in the argument. Ask once for anything missing 
 
 ## Steps
 
-**1. Qualify.** Run `qualify` over the intake (or only the keys given). Then ask the **needs you** questions one at a time. With `--qualify-only`, stop here and report.
+**1. Qualify.** Run `qualify` over the intake (or only the keys given). Then ask the **needs you** questions one at a time. Then run `code-check` on the ready bugs: drop from this run any bug that is done in code (say where it is deployed) or has an open MR by someone else, and list them for the user. With `--qualify-only`, stop here and report.
 
 **2. Stop and ask.** Show the ready bugs in the order you would take them, smallest and clearest first. Take the first one on the user's OK; the next ones follow without asking unless something below says stop.
 
