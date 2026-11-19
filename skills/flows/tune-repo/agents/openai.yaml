@@ -1,0 +1,5 @@
+interface:
+  display_name: "Tune repo"
+  short_description: "Flow: audit one repo overnight (tests, architecture, dependencies, bundle, retro) into one ranked report"
+policy:
+  allow_implicit_invocation: false

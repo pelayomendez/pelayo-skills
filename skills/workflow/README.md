@@ -18,3 +18,5 @@ Units for running agent work: permissions, backlogs, workers, watches and handof
 - **[ui-check](./ui-check/SKILL.md)**: checks a change in a controlled browser, locally or on a test environment, after making sure the port, the browser and the test project are free.
 - **[tracker-move](./tracker-move/SKILL.md)**: moves one item between the sections of a status board kept in a ticket's description (an epic's Tracker), leaving the rest of the description untouched.
 - **[check-flow](./check-flow/SKILL.md)**: checks one flow file before it runs: the units it lists exist and can be called, the steps use only those units, and every push, merge, post or delete has a stop or a charter check. Changes nothing.
+- **[deps-audit](./deps-audit/SKILL.md)**: lists the dependencies one repo could drop, swap, dedupe or update, each with evidence. Tools only inside a throwaway worktree; changes nothing.
+- **[bundle-audit](./bundle-audit/SKILL.md)**: builds one web app and measures what it ships, tracing each heavy piece to the import that brings it in. Changes nothing.
