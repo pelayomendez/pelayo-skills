@@ -24,6 +24,8 @@ Each flow shows as a chain of its steps, with an amber ⏸ where it stops for yo
 - **yours** in teal: the flow's folder is your own, not a link into a collection you installed.
 - **edit**: puts `/new-flow edit <flow> ` in the prompt.
 
+A flow with a `## Slots` list gets a `slots:` line: each slot and the skill that fills it (`tests=test-review ✦ · deps=deps-audit`). A teal ✦ marks your own skill, plugged in through your slots file (`~/.claude/slots.md`); the rest show the flow's default, dimmed, or `default` when the flow names no unit for it. Click one to put it in the prompt. A flow's own config can plug a different skill for a run; the panel shows only your slots file.
+
 Below the flows, each unit shows on one line with its `summary:` (or else the first sentence of its description). Type in **filter units** to narrow them by name or summary, and press **▾ compact** to show names only. Hover a unit and it lights up in every flow that uses it. A unit the flow lists but no folder holds shows as `name?`.
 
 ## Install
@@ -53,6 +55,7 @@ All in `/config`, under flow-map:
 | Hide | Names to leave out | empty |
 | Order | Names that come first, in order; the rest alphabetically | empty |
 | Unit groups | `Backlog: snapshot-backlog, prune-backlog; Workers: delegate, watch` | empty |
+| Slots file | Where your plugged-in skills are named, one line per slot (`- review: my-review-skill`) | `~/.claude/slots.md` |
 | Open on start | Open the pane when a session starts | on |
 
 Requires Claude Code 2.1.287 or newer (plugin hooks modules).

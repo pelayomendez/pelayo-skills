@@ -15,11 +15,14 @@ export type Skill = {
   stops?: number
   /** Where the stops fall: indexes into `steps` a stop comes after (-1: before the first step). */
   stopsAfter?: number[]
+  /** The flow's `## Slots`: each slot and the unit that fills it by default, if the flow names one. */
+  slots?: { name: string; fallback?: string }[]
   /** True when the skill's folder is the user's own, not a link to a collection. */
   isOwn?: boolean
 }
 
-export type Catalog = { skills: Skill[]; scannedAt: number; errors: string[] }
+/** `plugged`: the user's slots file, slot name → the skill they plugged in. */
+export type Catalog = { skills: Skill[]; plugged: Record<string, string>; scannedAt: number; errors: string[] }
 
 declare module 'claude-code' {
   interface PluginState {

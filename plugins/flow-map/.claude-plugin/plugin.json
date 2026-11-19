@@ -1,7 +1,7 @@
 {
   "name": "flow-map",
-  "version": "0.2.2",
-  "description": "The yatsude panel: your flows as chains with their stops, your units with a filter, and buttons to run, edit or start a new flow.",
+  "version": "0.3.0",
+  "description": "The yatsude panel: your flows as chains with their stops and the skills plugged into their slots, your units with a filter, and buttons to run, edit or start a new flow.",
   "license": "MIT",
   "keywords": [
     "skills",
@@ -52,6 +52,12 @@
       "title": "Unit groups",
       "description": "Group the units: 'Backlog: snapshot-backlog, prune-backlog; Workers: delegate, watch'. Ungrouped units go under Units.",
       "default": ""
+    },
+    "slotsFile": {
+      "type": "string",
+      "title": "Slots file",
+      "description": "The file that names your own skill for each slot (one line per slot: '- review: my-review-skill'); ~/ is your home.",
+      "default": "~/.claude/slots.md"
     },
     "openOnStart": {
       "type": "boolean",
