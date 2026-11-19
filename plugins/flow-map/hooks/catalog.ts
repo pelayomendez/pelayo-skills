@@ -137,14 +137,22 @@ export const parseSkill = (text: string, folderName: string): Skill | undefined 
       }
     }
   }
-  const slots = parseFlowSlots(lines.slice(body))
-  if (skill.units && slots.length > 0) skill.slots = slots
+  if (skill.units) {
+    const units = skill.units
+    // Each slot runs inside a step: the unit its line names ("through `review-change`"), else `delegate`.
+    const slots = parseFlowSlots(lines.slice(body)).map(({ name, named }) => {
+      const via = named.find(one => units.includes(one)) ?? (units.includes('delegate') ? 'delegate' : undefined)
+      const fallback = named.find(one => one !== via)
+      return { name, ...(via ? { via } : {}), ...(fallback ? { fallback } : {}) }
+    })
+    if (slots.length > 0) skill.slots = slots
+  }
   return skill
 }
 
-/** A flow's `## Slots` list: `- \`tests\`: default, the method in …` or `- \`deps\`: default, \`deps-audit\``. */
+/** A flow's `## Slots` list: each slot and the skills its line names (`- \`review\`: step 2, through \`review-change\``). */
 export const parseFlowSlots = (lines: string[]) => {
-  const slots: { name: string; fallback?: string }[] = []
+  const slots: { name: string; named: string[] }[] = []
   let isFenced = false
   let isIn = false
   for (const line of lines) {
@@ -157,8 +165,8 @@ export const parseFlowSlots = (lines: string[]) => {
     if (!isIn) continue
     const match = /^\s*[-*]\s+`([^`]+)`\s*:?\s*(.*)$/.exec(line)
     if (match?.[1] === undefined) continue
-    const fallback = /`([^`]+)`/.exec(match[2] ?? '')?.[1]?.trim()
-    slots.push(fallback ? { name: match[1].trim(), fallback } : { name: match[1].trim() })
+    const named = [...(match[2] ?? '').matchAll(/`([^`]+)`/g)].map(one => (one[1] ?? '').trim()).filter(Boolean)
+    slots.push({ name: match[1].trim(), named })
   }
   return slots
 }

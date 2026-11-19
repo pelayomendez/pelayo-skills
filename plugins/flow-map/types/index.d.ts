@@ -15,8 +15,8 @@ export type Skill = {
   stops?: number
   /** Where the stops fall: indexes into `steps` a stop comes after (-1: before the first step). */
   stopsAfter?: number[]
-  /** The flow's `## Slots`: each slot and the unit that fills it by default, if the flow names one. */
-  slots?: { name: string; fallback?: string }[]
+  /** The flow's `## Slots`: each slot, the step it runs inside (`via`), and its default unit if the flow names one. */
+  slots?: { name: string; via?: string; fallback?: string }[]
   /** True when the skill's folder is the user's own, not a link to a collection. */
   isOwn?: boolean
 }

@@ -250,7 +250,7 @@ Steps, in order:
   expect(skill?.stopsAfter).toEqual([-1, 0, 2])
 })
 
-test('a flow lists its slots with the unit that fills each by default', () => {
+test('each slot runs inside the step its line names, else delegate', () => {
   const text = `---
 name: tune
 description: Tune.
@@ -258,17 +258,23 @@ description: Tune.
 ## Units
 
 - \`delegate\`
+- \`review-change\`
 
 ## Slots
 
 - \`tests\`: default, the method in areas
 - \`deps\`: default, \`deps-audit\`
+- \`review\`: step 2, through \`review-change\`
 
 ## Steps
 - \`not-a-slot\`: no
 `
   const skill = parseSkill(text, 'tune')
-  expect(skill?.slots).toEqual([{ name: 'tests' }, { name: 'deps', fallback: 'deps-audit' }])
+  expect(skill?.slots).toEqual([
+    { name: 'tests', via: 'delegate' },
+    { name: 'deps', via: 'delegate', fallback: 'deps-audit' },
+    { name: 'review', via: 'review-change' },
+  ])
 })
 
 test('the slots file names the user skill per slot, and it wins over the default', () => {
@@ -279,7 +285,7 @@ test('the slots file names the user skill per slot, and it wins over the default
   expect(fillOf({ name: 'retro' }, plugged)).toEqual({ skill: undefined, isPlugged: false })
 })
 
-test('the pane shows each slot with your skill marked, and a click puts it in the prompt', async ($, on) => {
+test('your plugged skill shows beside the step that runs it, and a click puts it in the prompt', async ($, on) => {
   const filled: string[] = []
   const files: Record<string, string> = {
     '/home/me/.claude/skills/tune/SKILL.md': `---
@@ -289,6 +295,7 @@ disable-model-invocation: true
 ---
 ## Units
 
+- \`delegate\`
 - \`deps-audit\`
 
 ## Slots
@@ -296,6 +303,7 @@ disable-model-invocation: true
 - \`tests\`: default, the method in areas
 - \`deps\`: default, \`deps-audit\`
 `,
+    '/home/me/.claude/skills/delegate/SKILL.md': UNIT('delegate'),
     '/home/me/.claude/skills/deps-audit/SKILL.md': UNIT('deps-audit'),
     '/home/me/.claude/slots.md': '- tests: coding-skills:test-review\n',
   }
@@ -303,7 +311,7 @@ disable-model-invocation: true
   on('clock.now', () => ({ value: 1 }))
   on('fs.list', (_, e) => {
     if (e.path !== '/home/me/.claude/skills') throw new Error('ENOENT')
-    return { value: ['tune', 'deps-audit'].map(name => ({ name, kind: 'dir', size: 0, mtimeMs: 0, isLink: true })) }
+    return { value: ['tune', 'delegate', 'deps-audit'].map(name => ({ name, kind: 'dir', size: 0, mtimeMs: 0, isLink: true })) }
   })
   on('fs.exists', (_, e) => ({ value: e.path in files }))
   on('fs.read', (_, e) => {
@@ -322,8 +330,10 @@ disable-model-invocation: true
   await $.session.start({ cwd: '/', surface: 'terminal', isInteractive: true })
   const ui = await $.ui.mount({ ...PANE, surface: 'terminal' })
   expect(await ui.find({ type: 'Text', text: /✦/ })).toBeTruthy()
+  expect(await ui.find({ type: 'Button', key: 'tune#tests:fill' })).toBeTruthy()
+  // A slot on its default shows nothing beside the step.
+  expect(await ui.find({ type: 'Button', key: 'tune#deps:fill' })).toBeFalsy()
   await ui.press({ key: 'tune#tests:fill' })
-  await ui.press({ key: 'tune#deps:fill' })
-  expect(filled).toEqual(['Use the coding-skills:test-review skill: ', '/deps-audit '])
+  expect(filled).toEqual(['Use the coding-skills:test-review skill: '])
   await ui.unmount()
 })

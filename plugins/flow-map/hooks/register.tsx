@@ -187,6 +187,38 @@ export const register: Register = (on, options) => {
           const steps = flow.steps ?? []
           const throughout = flow.throughout ?? []
           const slots = flow.slots ?? []
+          /** Your skills plugged into the slots that run inside step `name`, as `(code-review ✦)`. */
+          const pluggedAt = (name: string, key: string) => {
+            const mine = slots
+              .filter(slot => slot.via === name)
+              .map(slot => ({ slot, fill: fillOf(slot, plugged ?? {}) }))
+              .filter(one => one.fill.isPlugged && one.fill.skill !== undefined)
+            if (mine.length === 0) return []
+            return [
+              <Text key={`${key}:open`} color={TEAL}>
+                {' ('}
+              </Text>,
+              ...mine.flatMap(({ slot, fill }, at) => {
+                const skill = fill.skill ?? ''
+                const short = skill.includes(':') ? skill.slice(skill.indexOf(':') + 1) : skill
+                return [
+                  ...(at === 0 ? [] : [<Text key={`${key}:${slot.name}:sep`} color={TEAL}>{', '}</Text>]),
+                  <Button
+                    key={`${flow.name}#${slot.name}:fill`}
+                    label={short}
+                    plain
+                    onPress={() => pick($, byName.get(skill) ?? { name: skill, isSlash: false })}
+                  />,
+                  <Text key={`${key}:${slot.name}:mark`} color={TEAL}>
+                    {' ✦'}
+                  </Text>,
+                ]
+              }),
+              <Text key={`${key}:close`} color={TEAL}>
+                {')'}
+              </Text>,
+            ]
+          }
           return (
             <Box key={`flow:${flow.name}`} flexDirection="column" marginBottom={1}>
               <Box key={`flow:${flow.name}:head`} flexDirection="row" flexWrap="wrap">
@@ -227,6 +259,7 @@ export const register: Register = (on, options) => {
                           </Text>,
                         ]),
                     link(name, `${flow.name}>${at}:${name}`),
+                    ...pluggedAt(name, `${flow.name}>${at}:slots`),
                     ...((flow.stopsAfter ?? []).includes(at)
                       ? [
                           <Text key={`${flow.name}>${at}:stop`} color={AMBER}>
@@ -237,49 +270,13 @@ export const register: Register = (on, options) => {
                   ])}
                 </Box>
               )}
-              {slots.length > 0 && (
-                <Box key={`flow:${flow.name}:slots`} flexDirection="row" flexWrap="wrap">
-                  <Text dimColor>{'  slots: '}</Text>
-                  {slots.flatMap((slot, at) => {
-                    const { skill, isPlugged } = fillOf(slot, plugged ?? {})
-                    const key = `${flow.name}#${slot.name}`
-                    const unit = skill === undefined ? undefined : byName.get(skill)
-                    return [
-                      ...(at === 0 ? [] : [<Text key={`${key}:sep`} dimColor>{' · '}</Text>]),
-                      <Text key={`${key}:name`} dimColor>{`${slot.name}=`}</Text>,
-                      skill === undefined ? (
-                        <Text key={`${key}:fill`} dimColor>
-                          default
-                        </Text>
-                      ) : isPlugged ? (
-                        <Button
-                          key={`${key}:fill`}
-                          label={skill}
-                          plain
-                          onPress={() => pick($, unit ?? { name: skill, isSlash: false })}
-                        />
-                      ) : unit ? (
-                        <Button key={`${key}:fill`} label={skill} plain dimColor hover={lit(skill)} onPress={() => pick($, unit)} />
-                      ) : (
-                        <Text key={`${key}:fill`} color="red">{`${skill}?`}</Text>
-                      ),
-                      ...(isPlugged
-                        ? [
-                            <Text key={`${key}:mine`} color={TEAL}>
-                              {' ✦'}
-                            </Text>,
-                          ]
-                        : []),
-                    ]
-                  })}
-                </Box>
-              )}
               {throughout.length > 0 && (
                 <Box key={`flow:${flow.name}:throughout`} flexDirection="row" flexWrap="wrap">
                   <Text dimColor>{steps.length > 0 ? '  also uses: ' : '  uses: '}</Text>
                   {throughout.flatMap((name, at) => [
                     ...(at === 0 ? [] : [<Text key={`${flow.name}~${at}:sep`} dimColor>{' · '}</Text>]),
                     link(name, `${flow.name}~${at}:${name}`),
+                    ...pluggedAt(name, `${flow.name}~${at}:slots`),
                   ])}
                 </Box>
               )}
@@ -333,7 +330,7 @@ export const register: Register = (on, options) => {
         )}
         {view.flows.some(flow => (flow.slots ?? []).some(slot => fillOf(slot, plugged ?? {}).isPlugged)) && (
           <Text key="plugged" dimColor>
-            {fit('✦ = your own skill in that slot (from your slots file)')}
+            {fit('(name ✦) = your own skill, plugged into that step (slots file)')}
           </Text>
         )}
         {[...view.missing].some(([, isMissing]) => isMissing) && (
