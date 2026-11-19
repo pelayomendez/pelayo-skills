@@ -49,7 +49,7 @@ The skill in a slot answers in its own words. The caller turns the answer into t
 One shared contract, used by `/tune-repo`; each slot audits one area of one repo at one SHA. Full text and the default methods: [tune-repo's areas](../../../flows/tune-repo/references/areas.md).
 
 - **Gets**: the repo and SHA, a throwaway worktree, the repo's own rules, the load limits, the area file to write.
-- **Gives back**: the area file: what ran, the area's baseline numbers, every finding ranked with an id, evidence, value, effort and a suggested action. Last line `WORKER_EXIT 0`, or `failed <reason>`.
+- **Gives back**: the area file: what ran, the area's baseline numbers, every finding ranked with an id, evidence, value, effort and a suggested action. The last line of the worker's log is `WORKER_EXIT 0`, or `failed <reason>`.
 - **Never**: commit, push, open an MR or PR, comment, write to the tracker, install anything globally, change anything outside the worktree.
 
 ### tests

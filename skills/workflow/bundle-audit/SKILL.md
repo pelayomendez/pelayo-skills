@@ -20,7 +20,7 @@ Users download what the build emits, not what the source looks like. This unit b
 
 1. **Read the repo's own setup**: the bundler (Rsbuild/Rspack, Vite, webpack, Next…), its chunking config, any size budget or size script already there (size-limit, a CI job, a stats script). A budget or script the repo has is run first, and reported on if it is broken.
 2. **Install and build** in the worktree the way the repo does. With no app to build (a library, a backend), say the area doesn't apply and stop.
-3. **Measure**, with the tool that fits the bundler. A tool the repo lacks may be fetched **inside the worktree only** (`npx`, or a dev dependency or build plugin added there and never committed); never a global install. Write down every tool fetched and its version.
+3. **Measure**, with the tool that fits the bundler. A tool the repo lacks may be fetched **inside the worktree only, and only when the caller allows it** (otherwise list it as not run) (`npx`, or a dev dependency or build plugin added there and never committed); never a global install. Write down every tool fetched and its version.
    - Rsbuild or Rspack: Rsdoctor (`RSDOCTOR=true` with `@rsdoctor/rspack-plugin`, then its analysis), following the official `rsdoctor-analysis` skill if it is installed.
    - Others: the bundler's stats file and an analyzer (`webpack-bundle-analyzer`, `rollup-plugin-visualizer`, `source-map-explorer`).
 4. **Findings to look for**: total and initial (first-load) size, raw and gzip; the largest chunks and the largest modules inside them; packages bundled twice or at two versions; similar packages doing the same job; heavy modules in the initial chunk that could load later; barrel imports pulling in whole libraries; code marked with side effects that blocks tree shaking.
@@ -31,7 +31,7 @@ Users download what the build emits, not what the source looks like. This unit b
 
 - Header: repo, commit, build command, tools run with versions, tools fetched into the worktree, anything that didn't run and why.
 - Baseline numbers: total and initial size (raw and gzip), chunk count, the five largest chunks, duplicate packages.
-- Findings, each with an id (`B1`, `B2`…), the evidence (sizes, the chunk, the importing file and line), value and effort (S, M or L), and the suggested action (lazy-load, replace, dedupe, fix the import, or a size budget that keeps it from coming back).
+- Findings, each with an id (`B1`, `B2`…), the evidence (sizes, the chunk, the importing file and line), value (high, medium or low), effort (S, M or L), and the suggested action (lazy-load, replace, dedupe, fix the import, or a size budget that keeps it from coming back).
 
 ## Never
 

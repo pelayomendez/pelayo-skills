@@ -1,6 +1,6 @@
 # Flow config: <your app> bugs
 
-Used by `/support <this file>`, `/mr-review <this file>` and `/tune-repo` (which finds the config that lists its repo). Keep it outside the repo (for example `~/.claude/flows/<name>.md`): it is yours, not the project's. Fill what you know; the flow asks once for anything missing and writes the answer here.
+Used by `/support <this file>`, `/mr-review <this file>` and `/tune-repo` (which finds the config that lists its repo). Keep it outside the repo (for example `~/.claude/flows/<name>.md`): it is yours, not the project's. Fill what you know; the flow asks once for anything missing and writes the answer here (`/tune-repo` runs unattended and never asks: it stops if no config lists the repo).
 
 ## Tracker
 - Intake: the epic, label or saved query whose open bugs `/support` works (e.g. epic `BUG-100`, or label `support`).
