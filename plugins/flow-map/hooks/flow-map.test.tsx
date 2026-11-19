@@ -330,7 +330,8 @@ disable-model-invocation: true
   await $.session.start({ cwd: '/', surface: 'terminal', isInteractive: true })
   const ui = await $.ui.mount({ ...PANE, surface: 'terminal' })
   expect(await ui.find({ type: 'Text', text: /✦/ })).toBeTruthy()
-  expect(await ui.find({ type: 'Text', text: / ✦1/ })).toBeTruthy()
+  expect(await ui.find({ type: 'Text', text: /^ ✦1$/ })).toBeTruthy()
+  expect(await ui.find({ type: 'Text', text: /^✦1 $/ })).toBeTruthy()
   expect(await ui.find({ type: 'Text', text: /tests slot, in delegate/ })).toBeTruthy()
   // A slot on its default is not plugged in.
   expect(await ui.find({ type: 'Button', key: 'plugged:deps:skill' })).toBeFalsy()

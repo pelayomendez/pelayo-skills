@@ -183,6 +183,8 @@ export const register: Register = (on, options) => {
         ],
       }))
       .filter(one => one.via.length > 0)
+    /** Slot name → its number in the Plugged in legend, which the steps' ✦ marks repeat. */
+    const numberOf = new Map(pluggedIn.map((one, at) => [one.slot, at + 1]))
     const units = view.groups
       .map(group => ({ ...group, skills: group.skills.filter(one => matches(one, typed)) }))
       .filter(group => group.skills.length > 0)
@@ -199,14 +201,18 @@ export const register: Register = (on, options) => {
           const steps = flow.steps ?? []
           const throughout = flow.throughout ?? []
           const slots = flow.slots ?? []
-          /** How many of your skills are plugged into slots that run inside step `name`: drawn as ✦N. */
+          /** The legend numbers of your skills plugged into slots that run inside step `name`: drawn as ✦1 or ✦2,3. */
           const pluggedAt = (name: string, key: string) => {
-            const count = slots.filter(slot => slot.via === name && fillOf(slot, plugged ?? {}).isPlugged).length
-            return count === 0
+            const numbers = slots
+              .filter(slot => slot.via === name)
+              .map(slot => numberOf.get(slot.name))
+              .filter((one): one is number => one !== undefined)
+              .sort((a, b) => a - b)
+            return numbers.length === 0
               ? []
               : [
                   <Text key={`${key}:plugged`} color={TEAL}>
-                    {` ✦${count}`}
+                    {` ✦${numbers.join(',')}`}
                   </Text>,
                 ]
           }
@@ -322,7 +328,7 @@ export const register: Register = (on, options) => {
             {pluggedIn.map(({ slot, skill, via }) => (
               <Box key={`plugged:${slot}`} flexDirection="row" flexWrap="wrap">
                 <Text key={`plugged:${slot}:mark`} color={TEAL}>
-                  {'✦ '}
+                  {`✦${numberOf.get(slot) ?? ''} `}
                 </Text>
                 <Button
                   key={`plugged:${slot}:skill`}
