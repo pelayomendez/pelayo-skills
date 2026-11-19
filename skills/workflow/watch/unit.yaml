@@ -1,0 +1,5 @@
+schema: yatsude/unit@1
+name: watch
+effects:
+- spawn
+- write-files

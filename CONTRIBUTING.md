@@ -22,6 +22,7 @@ Installed by `./scripts/install-instructions.sh`, which symlinks it into `~/.cla
 3. Decide invocation. Default to model-invoked; the test is _could the model usefully reach for this autonomously?_ A unit that a flow calls must be model-invoked.
 4. Add `agents/openai.yaml` beside the `SKILL.md` with `interface.display_name` and `interface.short_description`. For a user-invoked skill also add `policy.allow_implicit_invocation: false`.
 5. Register the skill path in `.claude-plugin/plugin.json` under `skills` — a skill absent from that array will not load as a plugin.
+   For a model-invoked skill (a unit), add `unit.yaml` beside it: `schema: yatsude/unit@1`, its `name`, and its `effects` from [schemas/effects.schema.json](./schemas/effects.schema.json) (what it does beyond reading: `write-files`, `spawn`, `push`, `post`, `tracker-write`…). Flows' safety checks are built from these, so declare every effect, even the rare one.
 6. Add it to the bucket `README.md` and the top-level `README.md`.
 7. Run `npm run check`.
 
@@ -30,10 +31,13 @@ Installed by `./scripts/install-instructions.sh`, which symlinks it into `~/.cla
 1. Build or find the units first. A flow holds no logic of its own.
 2. Create `skills/flows/<name>/SKILL.md`, user-invoked, with a `## Units` list of the skills it calls.
    Split it in two: under `Steps, in order:` the units that run one after another, under `Throughout:` the ones any step may call (like `charter`). Tools that draw flows read the order from there.
-3. Write the steps as calls to those units, plus where it stops for the user.
-4. Steps 4 and 5 of *Adding a skill* apply: `agents/openai.yaml` with `policy.allow_implicit_invocation: false`, and registration in `.claude-plugin/plugin.json`.
-5. Add it to `skills/flows/README.md` and to the **Flows** table in the top-level `README.md`.
-6. Run `npm run check`.
+3. Write the steps as calls to those units, plus where it stops for the user (`**Stop and ask**` or `**N. Stop:**`).
+4. Add `flow.yaml` beside it, valid against [schemas/flow.schema.json](./schemas/flow.schema.json): the units and slots as the text lists them, the effects of the flow's own steps, one entry per stop with the risky effects it `guards`, and the risky effects left to the user's charter under `permissions.charter`. `npm run check` fails when a risky effect has neither a stop nor a charter permission, or when the manifest and the text disagree.
+5. Steps 4 and 5 of *Adding a skill* apply: `agents/openai.yaml` with `policy.allow_implicit_invocation: false`, and registration in `.claude-plugin/plugin.json`.
+6. Add it to `skills/flows/README.md` and to the **Flows** table in the top-level `README.md`.
+7. Run `npm run check`.
+
+A flow from outside this repo goes in `community/flows/` with `trust: experimental`: see [community/README.md](./community/README.md).
 
 ## Adding a slot
 
@@ -42,6 +46,10 @@ A slot is a job a flow hands to a worker where users may bring their own skill. 
 1. Write its contract in `skills/workflow/delegate/references/slots.md`: what the skill gets, the facts it must give back, its nevers, and the default.
 2. The unit that wraps it (like `review-change` for `review`) turns the skill's answer into its own output. A plugged-in skill never has to learn our formats.
 3. List it under `Slots` in each flow that uses it. `npm run check` fails on a slot with no contract.
+
+## Running the check
+
+`npm run check` (or `./scripts/check.sh`) needs Python 3 with `pyyaml` and `jsonschema`. CI runs the same script on every pull request, plus a secret scan.
 
 ## Rules that bite
 

@@ -137,6 +137,16 @@ Name your skill in a slots file, `~/.claude/slots.md`, or per flow in its config
 
 Your skill answers in its own words. The unit around it (`delegate`, `review-change`, `ui-check`) gives it what it needs, checks what comes back, writes the report and keeps every stop and every never of the flow. Your skill doesn't need to know our formats. If it isn't installed, the default runs and the report says so. The contracts are in [delegate's slots reference](./skills/workflow/delegate/references/slots.md).
 
+### Flow manifests and community flows
+
+Each flow has a `flow.yaml` beside its `SKILL.md`, and each unit a `unit.yaml`. `SKILL.md` stays the text the agent follows; the manifests are what tools and CI check, against the JSON Schemas in [`schemas/`](./schemas/):
+
+- **Units declare their effects**: what they do beyond reading (`push`, `post`, `tracker-write`, `install`…).
+- **Flows declare their stops**, and which risky effects each one guards; the rest are left to your charter.
+- **CI works out every effect a flow can have**, its own plus its units', and fails if a risky one has neither a stop nor a charter permission, or if the manifest and the text disagree.
+
+Flows from outside this repo go in [`community/flows/`](./community/README.md), by pull request, labelled `experimental` until reviewed. An experimental flow can't lean on your charter: every risky effect waits on a stop.
+
 ### Flow map
 
 A pane beside the chat that lists your flows (with their steps) and units, one line each. Click one and it goes into the prompt. It ships as a separate plugin, so the skills stay plain markdown; install it with the skills (see [Install](#install)). Details: [plugins/flow-map](./plugins/flow-map/README.md).
@@ -217,6 +227,8 @@ skills/authoring/        /new-flow: write your own flow from the skills you have
 skills/maintenance/      upkeep of the agent setup and the machine
 skills/workflow/         units for running agent work: permissions, backlogs, workers, watches, handoffs
 plugins/flow-map/        the flow map pane, a separate plugin
+schemas/                 JSON Schemas for flow.yaml, unit.yaml and effects
+community/flows/         flows contributed from outside, by pull request
 examples/                a flow config to copy for /support and /mr-review
 ```
 

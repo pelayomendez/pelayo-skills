@@ -1,0 +1,41 @@
+schema: yatsude/flow@1
+name: night-shift
+version: 1.0.0
+summary: Works tickets while you are away
+trust: core
+requires:
+  yatsude: '>=0.21'
+  config: []
+units:
+  steps:
+  - order-backlog
+  - reap-procs
+  - delegate
+  - review-change
+  - ui-check
+  - verify-claim
+  throughout:
+  - charter
+  - watch
+  - handoff
+slots:
+- name: implement
+  via: delegate
+- name: review
+  via: review-change
+- name: browser-check
+  via: ui-check
+effects:
+- push
+- open-mr
+- merge
+- tracker-write
+stops: []
+permissions:
+  charter:
+  - push
+  - open-mr
+  - merge
+  - tracker-write
+  - kill
+on_failure: true

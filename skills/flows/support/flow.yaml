@@ -1,0 +1,63 @@
+schema: yatsude/flow@1
+name: support
+version: 1.0.0
+summary: Takes bugs from report to released
+trust: core
+requires:
+  yatsude: '>=0.21'
+  config:
+  - Tracker
+  - Board
+  - Repo
+  - Load limits
+  - App
+  - Release
+  - <tasks>
+units:
+  steps:
+  - qualify
+  - code-check
+  - verify-claim
+  - ticket-pick
+  - delegate
+  - ui-check
+  - watch
+  throughout:
+  - charter
+  - tracker-move
+  - handoff
+slots:
+- name: implement
+  via: delegate
+- name: review
+  via: review-change
+- name: browser-check
+  via: ui-check
+effects:
+- push
+- open-mr
+- merge
+- post
+- release
+- tracker-write
+stops:
+- id: pick-bugs
+  after: code-check
+  guards:
+  - tracker-write
+  asks: which ready bug to take first
+- id: merge
+  after: ui-check
+  guards:
+  - merge
+  - release
+  asks: merge this MR at this head
+permissions:
+  charter:
+  - push
+  - open-mr
+  - merge
+  - post
+  - release
+  - tracker-write
+on_failure: true

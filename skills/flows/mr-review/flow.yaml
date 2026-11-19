@@ -1,0 +1,50 @@
+schema: yatsude/flow@1
+name: mr-review
+version: 1.0.0
+summary: Reviews open MRs; you decide on each
+trust: core
+requires:
+  yatsude: '>=0.21'
+  config:
+  - Review
+  - Repos
+  - Guard tests
+  - Load limits
+  - <tasks>
+units:
+  steps:
+  - review-change
+  - verify-claim
+  - delegate
+  - ui-check
+  throughout:
+  - charter
+  - watch
+  - tracker-move
+  - handoff
+slots:
+- name: review
+  via: review-change
+- name: implement
+  via: delegate
+- name: browser-check
+  via: ui-check
+effects:
+- push
+- merge
+- post
+- release
+- tracker-write
+stops:
+- id: validate
+  after: verify-claim
+  guards:
+  - push
+  - merge
+  - post
+  - release
+  - tracker-write
+  asks: fix, merge, comment or leave, per MR and head
+permissions:
+  charter: []
+on_failure: true

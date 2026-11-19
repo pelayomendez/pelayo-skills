@@ -1,0 +1,48 @@
+schema: yatsude/flow@1
+name: tune-repo
+version: 1.0.0
+summary: Audits a repo overnight into one report
+trust: core
+requires:
+  yatsude: '>=0.21'
+  config:
+  - Repo
+  - Load limits
+  - Slots
+  - Tune
+  - <tasks>
+units:
+  steps:
+  - charter
+  - reap-procs
+  - delegate
+  - verify-claim
+  - handoff
+  throughout:
+  - deps-audit
+  - bundle-audit
+slots:
+- name: tests
+  via: delegate
+- name: architecture
+  via: delegate
+- name: deps
+  via: delegate
+  default: deps-audit
+- name: bundle
+  via: delegate
+  default: bundle-audit
+- name: retro
+  via: delegate
+effects:
+- install
+stops:
+- id: morning
+  after: handoff
+  guards: []
+  asks: ticket, worker or leave, per finding
+permissions:
+  charter:
+  - install
+  - kill
+on_failure: true
