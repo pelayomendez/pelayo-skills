@@ -10,11 +10,11 @@ Closing everything older than N months cleans the list blindly: the important ti
 
 ## Input
 
-A snapshot from the `snapshot-backlog` skill: `tickets.json` in the newest run folder for the scope. If there isn't one, run that skill first.
+A snapshot from the `snapshot-backlog` skill: `tickets.json` in the newest run folder for the scope. If there isn't one, run that skill first. Optionally `code.json` from `code-check` in the same folder.
 
 ## Signals, strongest first
 
-1. **Already done.** A merged MR or commit references the key, or the code already does what the ticket asks. Look for:
+1. **Already done.** A merged MR or commit references the key, or the code already does what the ticket asks. If the run folder has a `code.json` from `code-check`, start from its **done in code** tickets: their evidence is already gathered. A ticket **waiting on a deploy** is proposed as "close once deployed", not closed. Otherwise look for:
    - `git log --all --oneline --grep '<KEY>'` in each relevant repo
    - merged MRs or PRs that mention the key (`glab mr list --merged --search '<KEY>'`, `gh pr list --state merged --search '<KEY>'`)
    - a direct read of the code the ticket describes

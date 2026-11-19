@@ -1,6 +1,6 @@
 {
   "name": "yatsude",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "description": "yatsude: a composable framework for AI-driven everyday work. Skills that each do one job, flows that chain them into your daily loops, and /new-flow to write your own.",
   "author": {
     "name": "Pelayo Méndez",
@@ -36,6 +36,7 @@
     "./skills/workflow/prune-backlog",
     "./skills/workflow/review-change",
     "./skills/workflow/snapshot-backlog",
+    "./skills/workflow/code-check",
     "./skills/workflow/ticket-pick",
     "./skills/workflow/tracker-move",
     "./skills/workflow/ui-check",

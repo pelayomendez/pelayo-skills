@@ -15,6 +15,7 @@ argument-hint: "<config file> [KEY ...] [--qualify-only]"
 Steps, in order:
 
 - `qualify`
+- `code-check`
 - `verify-claim`
 - `ticket-pick`
 - `delegate`
@@ -49,11 +50,12 @@ One file per installation, named in the argument. Ask once for anything missing 
 - **Load limits**: how tests may run locally (for example one test command at a time, no full type check), and how many agents may work in the repo at once.
 - **App**: start command, port, the URL to open first, the test project, and what the check may do there.
 - **Release**: how a merge reaches the test environment (for example: merge to main deploys; or a tag), and its URL.
+- **Environments** (optional): where `code-check` reads each environment's deployed version (a deploy manifest, a release tag, a version endpoint).
 - **`<tasks>`**: where run folders and the handoff live.
 
 ## Steps
 
-**1. Qualify.** Run `qualify` over the intake (or only the keys given). Then ask the **needs you** questions one at a time. With `--qualify-only`, stop here and report.
+**1. Qualify.** Run `qualify` over the intake (or only the keys given). Then ask the **needs you** questions one at a time. Then run `code-check` on the ready bugs, writing `code.json` into `<tasks>/`: drop from this run any bug that is done in code or waiting on a deploy (say where it is deployed), or has an open MR by someone else, and list them for the user. With `--qualify-only`, stop here (after the code check) and report.
 
 **2. Stop and ask.** Show the ready bugs in the order you would take them, smallest and clearest first. Take the first one on the user's OK; the next ones follow without asking unless something below says stop.
 

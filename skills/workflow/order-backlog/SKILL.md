@@ -11,7 +11,7 @@ Turns a snapshot into a **queue**: a ranked list where no ticket comes before on
 ## Input
 
 - A snapshot from the `snapshot-backlog` skill: `tickets.json` in the newest run folder for the scope. If there isn't one, run that skill first.
-- Optionally: keys to leave out (tickets approved for closing), and the user's answers from an earlier round (value, deadlines, inferred dependencies confirmed or rejected).
+- Optionally: `code.json` from `code-check` in the same folder; keys to leave out (tickets approved for closing), and the user's answers from an earlier round (value, deadlines, inferred dependencies confirmed or rejected).
 
 ## 1. Map dependencies
 
@@ -19,6 +19,9 @@ Turns a snapshot into a **queue**: a ranked list where no ticket comes before on
 - **Hierarchy is not a dependency.** Children block their parent epic, never the other way round. Leave epics out of the queue and rank their children.
 - **Inferred**, always marked as such: a ticket that names another key; a frontend ticket that needs an endpoint or field another ticket adds; two tickets touching the same module; the order an epic or an approved design gives. An inferred dependency changes the order only once the user confirms it.
 - A blocker whose status in the snapshot is done no longer blocks.
+- **Bundles**: tickets that must ship together (the two sides of one contract, one fix split across repos). A bundle is ranked as one row, with the bundle's members named in it.
+- **Code state**, when the run folder has a `code.json` from `code-check`: a ticket **in review** is not ready (someone is on it); a **stale MR** is a finding of its own; a ticket **done in code** or **waiting on a deploy** is left out and named in the open questions; one MR that covers several tickets (`shared_mrs`) makes them a bundle.
+- **Gaps**: work the scope needs that no ticket covers (a ticket needs an endpoint nobody has a ticket for; a deploy or migration nothing tracks; an open MR with no ticket in `code.json`). For each, name the existing ticket it should fold into, the one touching the same code or goal. Propose a new ticket only when nothing fits, and create nothing.
 - Tickets in a cycle, or blocked by a ticket that was cancelled or no longer exists, stay out of the queue until the user settles them.
 
 ## 2. Score
@@ -48,7 +51,9 @@ Write `queue.md` next to the snapshot:
 
 1. **Queue**: rank · ticket · value · urgency · unblocks · size (each marked *tracker*, *asked* or *guessed*) · blocked by · reason (one line) · ready (no open blockers, clear enough to start).
 2. **Inferred dependencies to confirm.**
-3. **Open questions**: value and deadlines still to ask, cycles, missing estimates on top tickets, anything only the user can settle.
+3. **Critical path**: the longest chain of blockers to the scope's goal (an epic's done, a release), ticket by ticket. Work on it moves the end date; work off it doesn't.
+4. **Gaps**: each piece of untracked work, and the ticket it should fold into (or a proposed new one, when nothing fits).
+5. **Open questions**: value and deadlines still to ask, cycles, missing estimates on top tickets, anything only the user can settle.
 
 Any answer can move the order, so run the skill again with the answers before the queue is used.
 

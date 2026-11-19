@@ -15,6 +15,7 @@ argument-hint: "<scope: project, epic, label or query> [--prune-only | --order-o
 Steps, in order:
 
 - `snapshot-backlog`
+- `code-check`
 - `prune-backlog`
 - `verify-claim`
 - `order-backlog`
@@ -28,25 +29,26 @@ All of them write into one run folder, `backlog-<scope-slug>-<YYYY-MM-DD>/`, so 
 ## Flow
 
 1. **Snapshot.** Run `snapshot-backlog` on the scope.
-2. **Prune.** Run `prune-backlog`, which writes `prune.md`.
-3. **Check the proposals.** Pass every proposal to `verify-claim` as claim, evidence and would-refute-it. Then:
+2. **Code.** Run `code-check` on the snapshot, which writes `code.json`: what is done in code, in review, stale, or waiting on a deploy. Pruning and ordering read it.
+3. **Prune.** Run `prune-backlog`, which writes `prune.md`.
+4. **Check the proposals.** Pass every proposal to `verify-claim` as claim, evidence and would-refute-it. Then:
    - **holds**: keep it
    - **partial**: narrow it to the part that held
    - **fails** or **unclear**: move it to open questions
    - **unchecked** (no fresh subagent available): keep it, marked unchecked, so the user knows nobody else looked
 
    Then check each remaining action with the `charter` skill and drop anything it marks never. Write the verdicts into `prune.md`.
-4. **Stop and ask.** Show the checked proposals and wait for the user to approve by id ("close 2, 5; narrow 7"). Approving nothing is a valid answer.
-5. **Apply** only the approved ids, one visible command per change (below), then re-read the ticket to confirm it. No bulk transitions, no query-wide updates. Note in `prune.md` what was applied and what was left.
-6. **Order.** Run `order-backlog` on what is still open, excluding the tickets just closed. It writes `queue.md`, with its questions for the user at the end.
-7. **Stop and ask** those questions in one round: value, missing deadlines, the inferred dependencies. Then run `order-backlog` again with the answers.
-8. **Report.** Write `report.md` with three parts: what was closed or narrowed, the top ready rows of the queue, and the open questions. Show its summary.
+5. **Stop and ask.** Show the checked proposals and wait for the user to approve by id ("close 2, 5; narrow 7"). Approving nothing is a valid answer.
+6. **Apply** only the approved ids, one visible command per change (below), then re-read the ticket to confirm it. No bulk transitions, no query-wide updates. Note in `prune.md` what was applied and what was left.
+7. **Order.** Run `order-backlog` on what is still open, excluding the tickets just closed. It writes `queue.md`, with its questions for the user at the end.
+8. **Stop and ask** those questions in one round: value, missing deadlines, the inferred dependencies. Then run `order-backlog` again with the answers.
+9. **Report.** Write `report.md` with four parts: what was closed or narrowed, the top ready rows of the queue with the critical path, the open MRs with no ticket from `code.json`, and the open questions. Show its summary.
 
-`--prune-only` runs steps 1–5 and reports what was applied and what is still open. `--order-only` skips steps 2–5.
+`--prune-only` runs steps 1–6 and reports what was applied and what is still open. `--order-only` skips steps 3–6.
 
 ## Tracker writes
 
-Used only in step 5, and only for approved ids:
+Used only in step 6, and only for approved ids:
 
 | Action | Jira (`acli jira workitem …`) | GitLab (`glab issue …`) | GitHub (`gh issue …`) |
 |---|---|---|---|
@@ -55,4 +57,4 @@ Used only in step 5, and only for approved ids:
 | merge into | `link create --type Duplicate`, then close | `close N` with a note naming the other | `close N --reason duplicate` |
 | comment | `comment create --key K --body …` | `note N -m …` | `comment N --body …` |
 
-Check `--help` before the first write, and match the link direction recorded in the snapshot, because some CLIs invert `--in` and `--out`. A comment goes out exactly as the user approved it in step 4: it is posted under their name.
+Check `--help` before the first write, and match the link direction recorded in the snapshot, because some CLIs invert `--in` and `--out`. A comment goes out exactly as the user approved it in step 5: it is posted under their name.
