@@ -134,7 +134,7 @@ export const register: Register = (on, options) => {
             yatsude
           </Text>
           <Text key="tag" dimColor>
-            {fit('eight hands for your work', width - (hasArt ? ART_WIDTH + 2 : 0))}
+            {fit('More arms for your everyday work.', width - (hasArt ? ART_WIDTH + 2 : 0))}
           </Text>
           <Box key="actions" flexDirection="row" marginTop={1}>
             <Button key="new-flow" label="+ new flow" onPress={() => fill($, '/new-flow ')} />
