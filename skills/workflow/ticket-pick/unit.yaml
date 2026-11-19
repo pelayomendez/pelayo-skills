@@ -1,0 +1,4 @@
+schema: yatsude/unit@1
+name: ticket-pick
+effects:
+- tracker-write

@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/pelayomendez/yatsude/main/schemas/flow.schema.json",
+  "title": "yatsude flow manifest (flow.yaml)",
+  "description": "Sits next to a flow's SKILL.md. SKILL.md stays the text the agent follows; flow.yaml is what tools and CI check: the units, the slots, what the flow may do, and where it stops for a person.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "name",
+    "version",
+    "summary",
+    "trust",
+    "units",
+    "effects",
+    "stops",
+    "permissions",
+    "on_failure"
+  ],
+  "properties": {
+    "schema": {
+      "const": "yatsude/flow@1"
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Same as the folder and the SKILL.md name."
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "The flow's own version. Bump it when its steps, stops or effects change."
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "trust": {
+      "enum": [
+        "core",
+        "reviewed",
+        "experimental"
+      ],
+      "description": "core: shipped and maintained here. reviewed: a community flow a maintainer reviewed. experimental: a community flow that may not lean on the charter; every risky effect needs a stop."
+    },
+    "requires": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "yatsude": {
+          "type": "string",
+          "description": "The yatsude versions it works with, as a semver range (e.g. \">=0.21\")."
+        },
+        "config": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The flow config sections it reads (e.g. Repo, Load limits, <tasks>)."
+        }
+      }
+    },
+    "units": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "steps"
+      ],
+      "properties": {
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "description": "Units that run as steps, in order. Must match the body's `Steps, in order:` list."
+        },
+        "throughout": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Units any step may call. Must match the body's `Throughout:` list."
+        }
+      }
+    },
+    "slots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "A slot with a contract in delegate's references/slots.md."
+          },
+          "via": {
+            "type": "string",
+            "description": "The unit the slot runs inside (review-change, ui-check, delegate)."
+          },
+          "default": {
+            "type": "string",
+            "description": "The unit that fills it when the user plugs nothing in, if there is one."
+          }
+        }
+      }
+    },
+    "effects": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "effects.schema.json"
+      },
+      "description": "What the flow's own steps do, beyond what its units declare (e.g. the flow pushes and merges itself)."
+    },
+    "stops": {
+      "type": "array",
+      "description": "Where the flow waits for a person. One per Stop marker in the body (**Stop and ask** or **N. Stop:**).",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "after",
+          "guards"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "after": {
+            "type": "string",
+            "description": "The step unit it comes after, or \"start\"."
+          },
+          "guards": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "effects.schema.json"
+            },
+            "description": "The risky effects that wait on this stop."
+          },
+          "asks": {
+            "type": "string",
+            "description": "What the person decides here, in one line."
+          }
+        }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "charter"
+      ],
+      "properties": {
+        "charter": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "effects.schema.json"
+          },
+          "description": "Risky effects the flow may take without a stop when the user's charter grants them; with no grant it asks first. Empty for experimental flows."
+        }
+      }
+    },
+    "on_failure": {
+      "type": "boolean",
+      "description": "True when the body has a `## When a step fails` section."
+    }
+  }
+}

@@ -1,0 +1,7 @@
+schema: yatsude/unit@1
+name: qualify
+effects:
+- tracker-write
+- post
+- browser
+- write-files

@@ -24,6 +24,7 @@ A flow is only as safe as its weakest step. This unit reads one flow file and sa
 3. **Steps.** Every unit in `## Units` is used somewhere in the steps. A unit the steps name but `## Units` leaves out (often one reached through a slot) still runs, but tools that draw flows won't show it. A step that carries a long procedure of its own is logic that belongs in a unit. Plain reads and forge or tracker commands behind a stop are fine.
 4. **Stops.** Find each step that publishes under the user's name, pushes, merges, releases or deploys, deletes or stops something, installs software, or writes to another team's system. Each needs either a stop that waits for the user, or a check with `charter` in front of it. One without either is the most serious finding.
 5. **Failures.** The flow says what happens when a step fails or comes back unclear. A flow with no answer for that is a finding, not a blocker.
+6. **Manifest**, when the flow has a `flow.yaml` beside it (the shape is the flow schema, `schemas/flow.schema.json` in yatsude): its units, order, slots and stops match the text, and every risky effect, the flow's own plus each unit's from its `unit.yaml`, is in a stop's `guards` or in `permissions.charter`. Where the repo has a check script (`npm run check` in yatsude), run it: it does this check exactly. A flow with no `flow.yaml` is advice, not a blocker, outside a repo that requires one.
 
 ## Output
 

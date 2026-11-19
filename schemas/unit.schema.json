@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/pelayomendez/yatsude/main/schemas/unit.schema.json",
+  "title": "yatsude unit manifest (unit.yaml)",
+  "description": "Sits next to a unit's SKILL.md. Declares what the unit does beyond reading, so a flow's checks can work out every effect the flow may have.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "name", "effects"],
+  "properties": {
+    "schema": { "const": "yatsude/unit@1" },
+    "name": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "effects": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "effects.schema.json" }
+    }
+  }
+}

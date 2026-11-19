@@ -1,0 +1,38 @@
+schema: yatsude/flow@1
+name: ambient-companion
+version: 1.0.0
+summary: Watches your work during the day
+trust: core
+requires:
+  yatsude: '>=0.21'
+  config: []
+units:
+  steps:
+  - watch
+  - delegate
+  - verify-claim
+  - handoff
+  throughout:
+  - charter
+  - order-backlog
+  - reap-procs
+effects:
+- push
+- open-mr
+- merge
+- post
+- release
+- tracker-write
+- delete
+stops: []
+permissions:
+  charter:
+  - push
+  - open-mr
+  - merge
+  - post
+  - release
+  - tracker-write
+  - delete
+  - kill
+on_failure: true

@@ -1,0 +1,36 @@
+schema: yatsude/flow@1
+name: backlog
+version: 1.0.0
+summary: Cleans and orders a backlog
+trust: core
+requires:
+  yatsude: '>=0.21'
+  config: []
+units:
+  steps:
+  - snapshot-backlog
+  - code-check
+  - prune-backlog
+  - verify-claim
+  - order-backlog
+  throughout:
+  - charter
+effects:
+- tracker-write
+- post
+- delete
+stops:
+- id: approve-prune
+  after: verify-claim
+  guards:
+  - tracker-write
+  - post
+  - delete
+  asks: which checked proposals to apply, by id
+- id: answer-questions
+  after: order-backlog
+  guards: []
+  asks: value, deadlines and inferred dependencies
+permissions:
+  charter: []
+on_failure: false
