@@ -285,7 +285,7 @@ test('the slots file names the user skill per slot, and it wins over the default
   expect(fillOf({ name: 'retro' }, plugged)).toEqual({ skill: undefined, isPlugged: false })
 })
 
-test('your plugged skill shows beside the step that runs it, and a click puts it in the prompt', async ($, on) => {
+test('a step counts the skills plugged into it, the legend names them, and a click puts one in the prompt', async ($, on) => {
   const filled: string[] = []
   const files: Record<string, string> = {
     '/home/me/.claude/skills/tune/SKILL.md': `---
@@ -330,10 +330,11 @@ disable-model-invocation: true
   await $.session.start({ cwd: '/', surface: 'terminal', isInteractive: true })
   const ui = await $.ui.mount({ ...PANE, surface: 'terminal' })
   expect(await ui.find({ type: 'Text', text: /✦/ })).toBeTruthy()
-  expect(await ui.find({ type: 'Button', key: 'tune#tests:fill' })).toBeTruthy()
-  // A slot on its default shows nothing beside the step.
-  expect(await ui.find({ type: 'Button', key: 'tune#deps:fill' })).toBeFalsy()
-  await ui.press({ key: 'tune#tests:fill' })
+  expect(await ui.find({ type: 'Text', text: / ✦1/ })).toBeTruthy()
+  expect(await ui.find({ type: 'Text', text: /tests slot, in delegate/ })).toBeTruthy()
+  // A slot on its default is not plugged in.
+  expect(await ui.find({ type: 'Button', key: 'plugged:deps:skill' })).toBeFalsy()
+  await ui.press({ key: 'plugged:tests:skill' })
   expect(filled).toEqual(['Use the coding-skills:test-review skill: '])
   await ui.unmount()
 })

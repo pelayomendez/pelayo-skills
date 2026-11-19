@@ -171,6 +171,18 @@ export const register: Register = (on, options) => {
         </Text>
       )
     }
+    /** Each slot you plugged a skill into, with the steps that run it across the shown flows. */
+    const pluggedIn = Object.entries(plugged ?? {})
+      .map(([slot, skill]) => ({
+        slot,
+        skill,
+        via: [
+          ...new Set(
+            view.flows.flatMap(flow => (flow.slots ?? []).filter(one => one.name === slot && one.via).map(one => one.via ?? '')),
+          ),
+        ],
+      }))
+      .filter(one => one.via.length > 0)
     const units = view.groups
       .map(group => ({ ...group, skills: group.skills.filter(one => matches(one, typed)) }))
       .filter(group => group.skills.length > 0)
@@ -187,37 +199,16 @@ export const register: Register = (on, options) => {
           const steps = flow.steps ?? []
           const throughout = flow.throughout ?? []
           const slots = flow.slots ?? []
-          /** Your skills plugged into the slots that run inside step `name`, as `(code-review ✦)`. */
+          /** How many of your skills are plugged into slots that run inside step `name`: drawn as ✦N. */
           const pluggedAt = (name: string, key: string) => {
-            const mine = slots
-              .filter(slot => slot.via === name)
-              .map(slot => ({ slot, fill: fillOf(slot, plugged ?? {}) }))
-              .filter(one => one.fill.isPlugged && one.fill.skill !== undefined)
-            if (mine.length === 0) return []
-            return [
-              <Text key={`${key}:open`} color={TEAL}>
-                {' ('}
-              </Text>,
-              ...mine.flatMap(({ slot, fill }, at) => {
-                const skill = fill.skill ?? ''
-                const short = skill.includes(':') ? skill.slice(skill.indexOf(':') + 1) : skill
-                return [
-                  ...(at === 0 ? [] : [<Text key={`${key}:${slot.name}:sep`} color={TEAL}>{', '}</Text>]),
-                  <Button
-                    key={`${flow.name}#${slot.name}:fill`}
-                    label={short}
-                    plain
-                    onPress={() => pick($, byName.get(skill) ?? { name: skill, isSlash: false })}
-                  />,
-                  <Text key={`${key}:${slot.name}:mark`} color={TEAL}>
-                    {' ✦'}
+            const count = slots.filter(slot => slot.via === name && fillOf(slot, plugged ?? {}).isPlugged).length
+            return count === 0
+              ? []
+              : [
+                  <Text key={`${key}:plugged`} color={TEAL}>
+                    {` ✦${count}`}
                   </Text>,
                 ]
-              }),
-              <Text key={`${key}:close`} color={TEAL}>
-                {')'}
-              </Text>,
-            ]
           }
           return (
             <Box key={`flow:${flow.name}`} flexDirection="column" marginBottom={1}>
@@ -323,14 +314,32 @@ export const register: Register = (on, options) => {
             )}
           </Box>
         ))}
+        {pluggedIn.length > 0 && (
+          <Box key="plugged-in" flexDirection="column" marginBottom={1}>
+            <Text key="plugged-in:title" bold>
+              Plugged in
+            </Text>
+            {pluggedIn.map(({ slot, skill, via }) => (
+              <Box key={`plugged:${slot}`} flexDirection="row" flexWrap="wrap">
+                <Text key={`plugged:${slot}:mark`} color={TEAL}>
+                  {'✦ '}
+                </Text>
+                <Button
+                  key={`plugged:${slot}:skill`}
+                  label={skill}
+                  plain
+                  onPress={() => pick($, byName.get(skill) ?? { name: skill, isSlash: false })}
+                />
+                <Text key={`plugged:${slot}:where`} dimColor>
+                  {fit(`  ${slot} slot, in ${via.join(', ')}`, Math.max(0, width - skill.length - 2))}
+                </Text>
+              </Box>
+            ))}
+          </Box>
+        )}
         {typed.trim() !== '' && units.length === 0 && (
           <Text key="no-match" dimColor>
             {fit(`No unit matches "${typed.trim()}".`)}
-          </Text>
-        )}
-        {view.flows.some(flow => (flow.slots ?? []).some(slot => fillOf(slot, plugged ?? {}).isPlugged)) && (
-          <Text key="plugged" dimColor>
-            {fit('(name ✦) = your own skill, plugged into that step (slots file)')}
           </Text>
         )}
         {[...view.missing].some(([, isMissing]) => isMissing) && (
