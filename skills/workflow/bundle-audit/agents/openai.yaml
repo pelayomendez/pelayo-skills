@@ -1,0 +1,3 @@
+interface:
+  display_name: "Bundle audit"
+  short_description: "Build one web app and measure what it ships, tracing each heavy piece to its import; changes nothing"

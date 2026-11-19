@@ -1,6 +1,6 @@
 # Flow config: <your app> bugs
 
-Used by `/support <this file>` and `/mr-review <this file>`. Keep it outside the repo (for example `~/.claude/flows/<name>.md`): it is yours, not the project's. Fill what you know; the flow asks once for anything missing and writes the answer here.
+Used by `/support <this file>`, `/mr-review <this file>` and `/tune-repo` (which finds the config that lists its repo). Keep it outside the repo (for example `~/.claude/flows/<name>.md`): it is yours, not the project's. Fill what you know; the flow asks once for anything missing and writes the answer here.
 
 ## Tracker
 - Intake: the epic, label or saved query whose open bugs `/support` works (e.g. epic `BUG-100`, or label `support`).
@@ -20,7 +20,7 @@ Used by `/support <this file>` and `/mr-review <this file>`. Keep it outside the
 - Push and MR: `glab mr create` or `gh pr create`. Merge pinned to the SHA (`--sha <sha>` / `--match-head-commit <sha>`).
 
 ## Slots
-- Optional: `- implement: <your skill>`, `- review: <your skill>`, `- browser-check: <your skill>`. Unset slots use `~/.claude/slots.md`, then the defaults.
+- Optional: `- implement: <your skill>`, `- review: <your skill>`, `- browser-check: <your skill>`, and for `/tune-repo` `- tests:`, `- architecture:`, `- deps:`, `- bundle:`, `- retro:`. Unset slots use `~/.claude/slots.md`, then the defaults.
 
 ## Guard tests
 - Tests every review must run (architecture or ratchet tests), e.g. `npm test -- src/architecture.test.ts`.
@@ -45,3 +45,7 @@ Used by `/support <this file>` and `/mr-review <this file>`. Keep it outside the
 - Mine: your username on the forge. Your MRs are "yours"; everyone else's are "theirs".
 - Skip: drafts.
 - Comments: the style for review comments, e.g. one or two plain sentences, optional ones prefixed `Nit:`.
+
+## Tune (for /tune-repo)
+- Build: the production build the bundle audit runs, e.g. `npm run build`.
+- Rules: the files that hold the repo's own design rules, e.g. `CODING_STANDARDS.md`, `docs/adr/`, `.dependency-cruiser.cjs`, the boundary rules in `eslint.config.mjs`, ratchet tests.

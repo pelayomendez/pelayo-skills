@@ -114,22 +114,25 @@ Small units that each do one job, and flows that chain them. A unit works on its
 | [`/night-shift`](./skills/flows/night-shift/SKILL.md) | your decisions → charter → watch → each ticket: delegate → verify-claim → merge if granted → handoff | An unattended overnight run through worker, checks, MR and merge, ending in a morning report and a plan for the day. |
 | [`/support <config>`](./skills/flows/support/SKILL.md) | qualify → your OK → each bug: verify-claim → ticket-pick → delegate (fix, review) → ui-check → watch → merge on your OK or a charter grant → ui-check on the test environment → close | A bug queue worked from report to released, one bug at a time, with the status board updated at every step. |
 | [`/mr-review <config>`](./skills/flows/mr-review/SKILL.md) | list open MRs → review-change → verify-claim → you validate each MR → yours: fix and push on your word, merge on your word, check on the test environment, close · theirs: comments on your OK | Every open MR reviewed at its current head, and a decision card per MR. Nothing merged or posted without you. |
+| [`/tune-repo <repo> [areas]`](./skills/flows/tune-repo/SKILL.md) | reap-procs → one worker per area (tests, architecture, deps, bundle, retro) through delegate → verify-claim on the top findings → morning handoff | One ranked report on a repo's tests, architecture, dependencies, bundle and recent agent sessions, audited overnight. Changes no code; you grill it and decide each item. |
 
 ### Bring your own skills
 
-The flows are the line; the skills that do the heavy jobs on it can be yours. A flow hands three jobs to workers, and each is a **slot** you can fill with a skill you already trust:
+The flows are the line; the skills that do the heavy jobs on it can be yours. A flow hands jobs to workers, and each is a **slot** you can fill with a skill you already trust:
 
 | Slot | The job | Default | Used by |
 | --- | --- | --- | --- |
 | `implement` | write the fix or the feature in its own worktree, and commit | a test-first fix | `/support`, `/mr-review`, `/night-shift` |
 | `review` | review one change at one commit: findings with file and line, and a verdict | `review-change`'s spec and standards review | `/support`, `/mr-review`, `/night-shift` |
 | `browser-check` | run a written check in a controlled browser | `ui-check` | `/support`, `/mr-review`, `/night-shift` |
+| `tests`, `architecture`, `deps`, `bundle`, `retro` | audit one area of a repo into one ranked file | the methods in [tune-repo's areas](./skills/flows/tune-repo/references/areas.md); `deps-audit`, `bundle-audit` | `/tune-repo` |
 
 Name your skill in a slots file, `~/.claude/slots.md`, or per flow in its config under `## Slots`, one line per slot (`agent:<name>` for a subagent type):
 
 ```
 - implement: coding-skills:tdd
 - review: coding-skills:code-review
+- tests: coding-skills:test-review
 ```
 
 Your skill answers in its own words. The unit around it (`delegate`, `review-change`, `ui-check`) gives it what it needs, checks what comes back, writes the report and keeps every stop and every never of the flow. Your skill doesn't need to know our formats. If it isn't installed, the default runs and the report says so. The contracts are in [delegate's slots reference](./skills/workflow/delegate/references/slots.md).
@@ -153,6 +156,8 @@ A pane beside the chat that lists your flows (with their steps) and units, one l
 | [qualify](./skills/workflow/qualify/SKILL.md) | Researches each reported bug and labels it ready for an agent, or names the missing question. Never fixes. | Agent picks it up |
 | [ticket-pick](./skills/workflow/ticket-pick/SKILL.md) | Checks a ready ticket is still ready and free, then takes it into work: In Progress, assigned, sprint and points. | Agent picks it up |
 | [ui-check](./skills/workflow/ui-check/SKILL.md) | Checks a change in a controlled browser, locally or on a test environment, after making sure the port and the browser are free. | Agent picks it up |
+| [deps-audit](./skills/workflow/deps-audit/SKILL.md) | Lists the dependencies a repo could drop, swap, dedupe or update, each with evidence. Tools only inside a throwaway worktree; changes nothing. | Agent picks it up |
+| [bundle-audit](./skills/workflow/bundle-audit/SKILL.md) | Builds a web app and measures what it ships, tracing each heavy piece to the import that brings it in. Changes nothing. | Agent picks it up |
 | [check-flow](./skills/workflow/check-flow/SKILL.md) | Checks one flow file before it runs: its units exist and can be called, and every push, merge or post has a stop or a charter check. Changes nothing. | Agent picks it up |
 | [tracker-move](./skills/workflow/tracker-move/SKILL.md) | Moves one item between the sections of a status board kept in a ticket's description, leaving the rest untouched. | Agent picks it up |
 | [handoff](./skills/workflow/handoff/SKILL.md) | Writes the one size-capped file a supervising session resumes from: state and owners, watches to re-arm, the charter scope in force. | Agent picks it up |
@@ -206,7 +211,7 @@ This symlinks each file in `instructions/` into `~/.claude/` and appends an `@im
 
 ```
 instructions/            always-on instructions
-skills/flows/            flows you type: backlog, ambient-companion, night-shift, support, mr-review
+skills/flows/            flows you type: backlog, ambient-companion, night-shift, support, mr-review, tune-repo
 skills/authoring/        /new-flow: write your own flow from the skills you have
 skills/maintenance/      upkeep of the agent setup and the machine
 skills/workflow/         units for running agent work: permissions, backlogs, workers, watches, handoffs

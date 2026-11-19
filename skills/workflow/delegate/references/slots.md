@@ -1,6 +1,6 @@
 # Slots
 
-A slot is a job a flow needs done by a worker, where the skill that does it can be yours. The flow names the slot; `delegate` fills it. Three slots exist, and a new one is added only when a flow needs it.
+A slot is a job a flow needs done by a worker, where the skill that does it can be yours. The flow names the slot; `delegate` fills it. Three slots serve every flow that works tickets (`implement`, `review`, `browser-check`); `/tune-repo` adds five audit slots (`tests`, `architecture`, `deps`, `bundle`, `retro`) with one shared contract. A new slot is added only when a flow needs it.
 
 ## Which skill fills a slot
 
@@ -44,8 +44,38 @@ The skill in a slot answers in its own words. The caller turns the answer into t
 - **Never**: use the user's own browser, touch anything outside the test project, print tokens, leave pages open.
 - **Default**: `ui-check`'s own run.
 
+### The audit slots: tests, architecture, deps, bundle, retro
+
+One shared contract, used by `/tune-repo`; each slot audits one area of one repo at one SHA. Full text and the default methods: [tune-repo's areas](../../../flows/tune-repo/references/areas.md).
+
+- **Gets**: the repo and SHA, a throwaway worktree, the repo's own rules, the load limits, the area file to write.
+- **Gives back**: the area file: what ran, the area's baseline numbers, every finding ranked with an id, evidence, value, effort and a suggested action. Last line `WORKER_EXIT 0`, or `failed <reason>`.
+- **Never**: commit, push, open an MR or PR, comment, write to the tracker, install anything globally, change anything outside the worktree.
+
+### tests
+
+The audit contract above. **Default**: the tests method in tune-repo's areas.
+
+### architecture
+
+The audit contract above. **Default**: the architecture method in tune-repo's areas.
+
+### deps
+
+The audit contract above. **Default**: `deps-audit`.
+
+### bundle
+
+The audit contract above. **Default**: `bundle-audit`.
+
+### retro
+
+The audit contract above. **Default**: the retro method in tune-repo's areas.
+
 ## How delegate fills a slot
 
 - **`implement`**: resolve the skill as above, then write the brief as usual and add, in **Goal**: "Do this job with the `<skill>` skill" (or launch the named subagent type), and in **Done when**: the slot's *gives back*. The slot's nevers go into the standing forbids, word for word.
 - **`review` and `browser-check`**: launch the wrapping unit (`review-change`, `ui-check`), never the user's skill directly. The unit resolves the slot itself and runs the skill inside its own steps, so the report, the guard tests, the checked findings and the browser rules stay in place.
+- **Audit slots** (`tests`, `architecture`, `deps`, `bundle`, `retro`): as `implement`, with the contract in [tune-repo's areas](../../../flows/tune-repo/references/areas.md) instead.
+- **A skill the user types** (one that can't be picked up by the agent, like a `retro` command): the brief names its `SKILL.md` file and tells the worker to read it and follow it, instead of calling it.
 - The record line names the slot: `slot review=<skill>` (or `=default`, or `=default (<skill> not installed)`).
