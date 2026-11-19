@@ -57,4 +57,4 @@ Write `queue.md` next to the snapshot:
 
 Any answer can move the order, so run the skill again with the answers before the queue is used.
 
-Whoever works the queue (a person, `night-shift`, `ambient-companion`) takes the top **ready** row. A row becomes ready as its blockers close, so after finishing one, take the next row that is now unblocked, not only the rows that were ready when the queue was written. Scores go stale: run it again when the queue runs low or the plan changes.
+Whoever works the queue (a person, `night-shift`) takes the top **ready** row. A row becomes ready as its blockers close, so after finishing one, take the next row that is now unblocked, not only the rows that were ready when the queue was written. Scores go stale: run it again when the queue runs low or the plan changes.

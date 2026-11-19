@@ -24,7 +24,7 @@ A factory is the easiest way to see what is here:
 | status board | `tracker-move` |
 | permits and safety rules | `charter` |
 | shift handover | `handoff` |
-| the night shift and the day supervisor | `night-shift`, `ambient-companion` |
+| the night shift | `night-shift` |
 | maintenance | `tidy`, `reap-procs` |
 
 It is not a full factory, and not a "dark" one with nobody watching: a person stays on the loop.
@@ -37,7 +37,6 @@ It is not a full factory, and not a "dark" one with nobody watching: a person st
 | MRs waiting for review, yours and your team's | `/mr-review <config>` |
 | a backlog nobody trusts any more | `/backlog <scope>` |
 | tickets ready and a night ahead | `/night-shift` |
-| a day of agents running while you do something else | `/ambient-companion` |
 | one job only: check a claim, review one MR, hand off | nothing; ask for it and the agent picks the unit |
 
 ## Write your own flow
@@ -84,7 +83,6 @@ Nothing is merged, pushed or posted under your name unless you said so, in the c
 | `/mr-review` | list the MRs, review each read-only, verify the findings | your call on every MR; each push and merge on yours; each comment on theirs | push to, approve or merge a teammate's MR |
 | `/backlog` | read the backlog, propose what can close, rank the rest | every close or change, by id; value and deadlines it can't infer | close a ticket by age alone; bulk changes |
 | `/night-shift` | worker → verify → review → browser check → MR, and merges you granted that night | one decision round before you leave; comments wait in the handoff | merge without all three gates on the commit, or while the pipeline is pending |
-| `/ambient-companion` | spawn and watch workers, verify, review, keep the tracker consistent | anything under your name, merges and releases, destructive cleanup, another team's system | force-push, rewrite shared docs, install software, stop what it didn't start |
 
 ## Your first run
 
@@ -110,7 +108,6 @@ Small units that each do one job, and flows that chain them. A unit works on its
 | Flow | Chains | What you get |
 | --- | --- | --- |
 | [`/backlog <scope>`](./skills/flows/backlog/SKILL.md) | snapshot-backlog → code-check → prune-backlog → verify-claim → your OK → order-backlog | A cleaner backlog, closed only on checked evidence, and a ranked queue with one reason per ticket. |
-| [`/ambient-companion`](./skills/flows/ambient-companion/SKILL.md) | charter → verify-claim on what's in flight → watch → each tick: delegate → verify-claim → handoff | A day-long companion that watches your work's event streams, keeps workers moving, and brings you only the decisions. |
 | [`/night-shift`](./skills/flows/night-shift/SKILL.md) | your decisions → charter → watch → each ticket: delegate → verify-claim → merge if granted → handoff | An unattended overnight run through worker, checks, MR and merge, ending in a morning report and a plan for the day. |
 | [`/support <config>`](./skills/flows/support/SKILL.md) | qualify → code-check → your OK → each bug: verify-claim → ticket-pick → delegate (fix, review) → ui-check → watch → merge on your OK or a charter grant → ui-check on the test environment → close | A bug queue worked from report to released, one bug at a time, with the status board updated at every step. |
 | [`/mr-review <config>`](./skills/flows/mr-review/SKILL.md) | list open MRs → review-change → verify-claim → you validate each MR → yours: fix and push on your word, merge on your word, check on the test environment, close · theirs: comments on your OK | Every open MR reviewed at its current head, and a decision card per MR. Nothing merged or posted without you. |
@@ -223,7 +220,7 @@ This symlinks each file in `instructions/` into `~/.claude/` and appends an `@im
 
 ```
 instructions/            always-on instructions
-skills/flows/            flows you type: backlog, ambient-companion, night-shift, support, mr-review, tune-repo
+skills/flows/            flows you type: backlog, night-shift, support, mr-review, tune-repo
 skills/authoring/        /new-flow: write your own flow from the skills you have
 skills/maintenance/      upkeep of the agent setup and the machine
 skills/workflow/         units for running agent work: permissions, backlogs, workers, watches, handoffs
