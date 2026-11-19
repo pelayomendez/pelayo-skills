@@ -2,7 +2,7 @@ import { atom, read, update } from 'claude-code'
 import type { EngineInterface, Register } from 'claude-code'
 
 import type { Catalog, Skill } from '../types'
-import { expandHome, lineOf, list, matches, parseSkill, promptFor, settingsOf, viewOf } from './catalog'
+import { expandHome, fillOf, lineOf, list, matches, parseSkill, parseSlotsFile, promptFor, settingsOf, viewOf } from './catalog'
 
 const PANE = 'flow-map'
 const TITLE = 'yatsude'
@@ -23,8 +23,8 @@ const OCTOPUS = [
 const ART_WIDTH = 17
 
 // Change the tag when Catalog's fields change: it declines what an earlier version stored.
-const catalog = atom({ plugin: 'flow-map', key: 'catalog' } as const, { skills: [], scannedAt: 0, errors: [] }, {
-  shape: 'catalog-5',
+const catalog = atom({ plugin: 'flow-map', key: 'catalog' } as const, { skills: [], plugged: {}, scannedAt: 0, errors: [] }, {
+  shape: 'catalog-6',
 })
 /** What the person typed in the units filter. */
 const filter = atom({ plugin: 'flow-map', key: 'filter' } as const, '')
@@ -59,13 +59,16 @@ async function scanDir($: EngineInterface, dir: string, depth: number, found: Sk
 }
 
 /** Reads every source folder into the catalog atom; returns how many skills it found. */
-async function scan($: EngineInterface, sources: string[]) {
+async function scan($: EngineInterface, sources: string[], slotsFile: string) {
   const home = await $.env.get('HOME')
   const skills: Skill[] = []
   const errors: string[] = []
   for (const source of sources) await scanDir($, expandHome(source, home), 0, skills, errors)
+  // No slots file is fine: every slot then shows its default.
+  const slotsText = await $.fs.read(expandHome(slotsFile, home)).catch(() => undefined)
+  const plugged = typeof slotsText === 'string' ? parseSlotsFile(slotsText) : {}
   const scannedAt = await $.clock.now()
-  await update($, catalog, () => ({ skills, scannedAt, errors }) satisfies Catalog)
+  await update($, catalog, () => ({ skills, plugged, scannedAt, errors }) satisfies Catalog)
   return { count: skills.length, errors }
 }
 
@@ -82,6 +85,7 @@ export const register: Register = (on, options) => {
   const settings = settingsOf(options)
   const listed = list(options.sources)
   const sources = listed.length > 0 ? listed : ['~/.claude/skills']
+  const slotsFile = String(options.slotsFile ?? '').trim() || '~/.claude/slots.md'
 
   on('session.start', async ($, e, next) => {
     const result = await next(e)
@@ -90,13 +94,13 @@ export const register: Register = (on, options) => {
       description: 'Open the yatsude panel: your flows and units; click one to put it in the prompt',
       argumentHint: '[reload]',
     })
-    await scan($, sources).catch(() => undefined)
+    await scan($, sources, slotsFile).catch(() => undefined)
     if (options.openOnStart !== false) void $.ui.open({ id: PANE, title: TITLE }).catch(() => undefined)
     return result
   })
 
   on('command.run', { command: 'flow-map' }, async ($, e) => {
-    const { count, errors } = await scan($, sources)
+    const { count, errors } = await scan($, sources, slotsFile)
     const isReload = String(e.args ?? '').trim() === 'reload'
     if (!isReload) await $.ui.open({ id: PANE, title: TITLE, focus: true }).catch(() => undefined)
     const problems = errors.length > 0 ? ` ${errors.length} problem(s): ${errors.slice(0, 3).join('; ')}.` : ''
@@ -105,7 +109,7 @@ export const register: Register = (on, options) => {
 
   on('ui.render', { component: 'Pane', requestId: PANE }, async ($, e) => {
     const { Box, Text, Button, Input } = $.ui.resolve(e)
-    const { skills, errors } = await read($, catalog)
+    const { skills, plugged, errors } = await read($, catalog)
     const typed = await read($, filter)
     const compact = await read($, isCompact)
     const view = viewOf(skills, settings)
@@ -135,7 +139,7 @@ export const register: Register = (on, options) => {
           <Box key="actions" flexDirection="row" marginTop={1}>
             <Button key="new-flow" label="+ new flow" onPress={() => fill($, '/new-flow ')} />
             <Text key="actions:sep"> </Text>
-            <Button key="reload" label="↻" plain onPress={() => void scan($, sources)} />
+            <Button key="reload" label="↻" plain onPress={() => void scan($, sources, slotsFile)} />
           </Box>
         </Box>
       </Box>
@@ -167,6 +171,20 @@ export const register: Register = (on, options) => {
         </Text>
       )
     }
+    /** Each slot you plugged a skill into, with the steps that run it across the shown flows. */
+    const pluggedIn = Object.entries(plugged ?? {})
+      .map(([slot, skill]) => ({
+        slot,
+        skill,
+        via: [
+          ...new Set(
+            view.flows.flatMap(flow => (flow.slots ?? []).filter(one => one.name === slot && one.via).map(one => one.via ?? '')),
+          ),
+        ],
+      }))
+      .filter(one => one.via.length > 0)
+    /** Slot name → its number in the Plugged in legend, which the steps' ✦ marks repeat. */
+    const numberOf = new Map(pluggedIn.map((one, at) => [one.slot, at + 1]))
     const units = view.groups
       .map(group => ({ ...group, skills: group.skills.filter(one => matches(one, typed)) }))
       .filter(group => group.skills.length > 0)
@@ -182,6 +200,22 @@ export const register: Register = (on, options) => {
         {view.flows.map(flow => {
           const steps = flow.steps ?? []
           const throughout = flow.throughout ?? []
+          const slots = flow.slots ?? []
+          /** The legend numbers of your skills plugged into slots that run inside step `name`: drawn as ✦1 or ✦2,3. */
+          const pluggedAt = (name: string, key: string) => {
+            const numbers = slots
+              .filter(slot => slot.via === name)
+              .map(slot => numberOf.get(slot.name))
+              .filter((one): one is number => one !== undefined)
+              .sort((a, b) => a - b)
+            return numbers.length === 0
+              ? []
+              : [
+                  <Text key={`${key}:plugged`} color={TEAL}>
+                    {` ✦${numbers.join(',')}`}
+                  </Text>,
+                ]
+          }
           return (
             <Box key={`flow:${flow.name}`} flexDirection="column" marginBottom={1}>
               <Box key={`flow:${flow.name}:head`} flexDirection="row" flexWrap="wrap">
@@ -189,11 +223,6 @@ export const register: Register = (on, options) => {
                 {flow.isOwn === true && (
                   <Text key={`flow:${flow.name}:own`} color={TEAL}>
                     {'  yours'}
-                  </Text>
-                )}
-                {(flow.stops ?? 0) > 0 && (
-                  <Text key={`flow:${flow.name}:stops`} color={AMBER}>
-                    {`  ⏸ ${flow.stops} ${flow.stops === 1 ? 'stop' : 'stops'}`}
                   </Text>
                 )}
                 <Text key={`flow:${flow.name}:gap`}>{'  '}</Text>
@@ -227,6 +256,7 @@ export const register: Register = (on, options) => {
                           </Text>,
                         ]),
                     link(name, `${flow.name}>${at}:${name}`),
+                    ...pluggedAt(name, `${flow.name}>${at}:slots`),
                     ...((flow.stopsAfter ?? []).includes(at)
                       ? [
                           <Text key={`${flow.name}>${at}:stop`} color={AMBER}>
@@ -243,6 +273,7 @@ export const register: Register = (on, options) => {
                   {throughout.flatMap((name, at) => [
                     ...(at === 0 ? [] : [<Text key={`${flow.name}~${at}:sep`} dimColor>{' · '}</Text>]),
                     link(name, `${flow.name}~${at}:${name}`),
+                    ...pluggedAt(name, `${flow.name}~${at}:slots`),
                   ])}
                 </Box>
               )}
@@ -289,6 +320,29 @@ export const register: Register = (on, options) => {
             )}
           </Box>
         ))}
+        {pluggedIn.length > 0 && (
+          <Box key="plugged-in" flexDirection="column" marginBottom={1}>
+            <Text key="plugged-in:title" bold>
+              Plugged in
+            </Text>
+            {pluggedIn.map(({ slot, skill, via }) => (
+              <Box key={`plugged:${slot}`} flexDirection="row" flexWrap="wrap">
+                <Text key={`plugged:${slot}:mark`} color={TEAL}>
+                  {`✦${numberOf.get(slot) ?? ''} `}
+                </Text>
+                <Button
+                  key={`plugged:${slot}:skill`}
+                  label={skill}
+                  plain
+                  onPress={() => pick($, byName.get(skill) ?? { name: skill, isSlash: false })}
+                />
+                <Text key={`plugged:${slot}:where`} dimColor>
+                  {fit(`  ${slot} slot, in ${via.join(', ')}`, Math.max(0, width - skill.length - 2))}
+                </Text>
+              </Box>
+            ))}
+          </Box>
+        )}
         {typed.trim() !== '' && units.length === 0 && (
           <Text key="no-match" dimColor>
             {fit(`No unit matches "${typed.trim()}".`)}

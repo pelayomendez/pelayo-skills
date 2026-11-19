@@ -1,6 +1,6 @@
 import { expect, test } from 'claude-code/testing'
 
-import { lineOf, matches, parseGroups, parseSkill, promptFor, settingsOf, summaryOf, viewOf } from './catalog'
+import { fillOf, lineOf, matches, parseGroups, parseSkill, parseSlotsFile, promptFor, settingsOf, summaryOf, viewOf } from './catalog'
 
 const FLOW = `---
 name: backlog
@@ -248,4 +248,94 @@ Steps, in order:
   const skill = parseSkill(text, 'f')
   expect(skill?.stops).toBe(3)
   expect(skill?.stopsAfter).toEqual([-1, 0, 2])
+})
+
+test('each slot runs inside the step its line names, else delegate', () => {
+  const text = `---
+name: tune
+description: Tune.
+---
+## Units
+
+- \`delegate\`
+- \`review-change\`
+
+## Slots
+
+- \`tests\`: default, the method in areas
+- \`deps\`: default, \`deps-audit\`
+- \`review\`: step 2, through \`review-change\`
+
+## Steps
+- \`not-a-slot\`: no
+`
+  const skill = parseSkill(text, 'tune')
+  expect(skill?.slots).toEqual([
+    { name: 'tests', via: 'delegate' },
+    { name: 'deps', via: 'delegate', fallback: 'deps-audit' },
+    { name: 'review', via: 'review-change' },
+  ])
+})
+
+test('the slots file names the user skill per slot, and it wins over the default', () => {
+  const plugged = parseSlotsFile('# Slots\n\n- implement: coding-skills:tdd\n- tests: `test-review`\nnot a line\n')
+  expect(plugged).toEqual({ implement: 'coding-skills:tdd', tests: 'test-review' })
+  expect(fillOf({ name: 'tests', fallback: 'x' }, plugged)).toEqual({ skill: 'test-review', isPlugged: true })
+  expect(fillOf({ name: 'deps', fallback: 'deps-audit' }, plugged)).toEqual({ skill: 'deps-audit', isPlugged: false })
+  expect(fillOf({ name: 'retro' }, plugged)).toEqual({ skill: undefined, isPlugged: false })
+})
+
+test('a step counts the skills plugged into it, the legend names them, and a click puts one in the prompt', async ($, on) => {
+  const filled: string[] = []
+  const files: Record<string, string> = {
+    '/home/me/.claude/skills/tune/SKILL.md': `---
+name: tune
+description: Tune.
+disable-model-invocation: true
+---
+## Units
+
+- \`delegate\`
+- \`deps-audit\`
+
+## Slots
+
+- \`tests\`: default, the method in areas
+- \`deps\`: default, \`deps-audit\`
+`,
+    '/home/me/.claude/skills/delegate/SKILL.md': UNIT('delegate'),
+    '/home/me/.claude/skills/deps-audit/SKILL.md': UNIT('deps-audit'),
+    '/home/me/.claude/slots.md': '- tests: coding-skills:test-review\n',
+  }
+  on('env.get', (_, e) => ({ value: e.name === 'HOME' ? '/home/me' : undefined }))
+  on('clock.now', () => ({ value: 1 }))
+  on('fs.list', (_, e) => {
+    if (e.path !== '/home/me/.claude/skills') throw new Error('ENOENT')
+    return { value: ['tune', 'delegate', 'deps-audit'].map(name => ({ name, kind: 'dir', size: 0, mtimeMs: 0, isLink: true })) }
+  })
+  on('fs.exists', (_, e) => ({ value: e.path in files }))
+  on('fs.read', (_, e) => {
+    if (!(e.path in files)) throw new Error('ENOENT')
+    return { value: files[e.path] ?? "" }
+  })
+  on('prompt.read', () => ({ value: { text: '', cursor: 0 } }))
+  on('prompt.fill', (_, e) => {
+    filled.push(e.text)
+    return { isFilled: true }
+  })
+  on('command.register', () => ({ value: { command: 'flow-map' } }))
+  on('ui.open', () => ({ value: { isPlaced: true } }))
+  on('session.start', (_, e) => ({ cwd: e.cwd }))
+
+  await $.session.start({ cwd: '/', surface: 'terminal', isInteractive: true })
+  const ui = await $.ui.mount({ ...PANE, surface: 'terminal' })
+  expect(await ui.find({ type: 'Text', text: /✦/ })).toBeTruthy()
+  expect(await ui.find({ type: 'Text', text: /^ ✦1$/ })).toBeTruthy()
+  expect(await ui.find({ type: 'Text', text: /^✦1 $/ })).toBeTruthy()
+  expect(await ui.find({ type: 'Text', text: /tests slot, in delegate/ })).toBeTruthy()
+  // A slot on its default is not plugged in.
+  expect(await ui.find({ type: 'Button', key: 'plugged:deps:skill' })).toBeFalsy()
+  await ui.press({ key: 'plugged:tests:skill' })
+  expect(filled).toEqual(['Use the coding-skills:test-review skill: '])
+  await ui.unmount()
 })

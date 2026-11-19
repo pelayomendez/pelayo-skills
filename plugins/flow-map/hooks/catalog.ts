@@ -137,7 +137,57 @@ export const parseSkill = (text: string, folderName: string): Skill | undefined 
       }
     }
   }
+  if (skill.units) {
+    const units = skill.units
+    // Each slot runs inside a step: the unit its line names ("through `review-change`"), else `delegate`.
+    const slots = parseFlowSlots(lines.slice(body)).map(({ name, named }) => {
+      const via = named.find(one => units.includes(one)) ?? (units.includes('delegate') ? 'delegate' : undefined)
+      const fallback = named.find(one => one !== via)
+      return { name, ...(via ? { via } : {}), ...(fallback ? { fallback } : {}) }
+    })
+    if (slots.length > 0) skill.slots = slots
+  }
   return skill
+}
+
+/** A flow's `## Slots` list: each slot and the skills its line names (`- \`review\`: step 2, through \`review-change\``). */
+export const parseFlowSlots = (lines: string[]) => {
+  const slots: { name: string; named: string[] }[] = []
+  let isFenced = false
+  let isIn = false
+  for (const line of lines) {
+    if (/^\s*(```|~~~)/.test(line)) isFenced = !isFenced
+    if (isFenced) continue
+    if (/^#{1,2}\s/.test(line)) {
+      isIn = /^##\s+Slots\s*$/.test(line)
+      continue
+    }
+    if (!isIn) continue
+    const match = /^\s*[-*]\s+`([^`]+)`\s*:?\s*(.*)$/.exec(line)
+    if (match?.[1] === undefined) continue
+    const named = [...(match[2] ?? '').matchAll(/`([^`]+)`/g)].map(one => (one[1] ?? '').trim()).filter(Boolean)
+    slots.push({ name: match[1].trim(), named })
+  }
+  return slots
+}
+
+/** The user's slots file: `- review: coding-skills:code-review` → { review: 'coding-skills:code-review' }. */
+export const parseSlotsFile = (text: string): Record<string, string> => {
+  const plugged: Record<string, string> = {}
+  let isFenced = false
+  for (const line of text.split(/\r?\n/)) {
+    if (/^\s*(```|~~~)/.test(line)) isFenced = !isFenced
+    if (isFenced) continue
+    const match = /^\s*[-*]\s+`?([a-z0-9-]+)`?\s*:\s*`?([^`\s]+)`?\s*$/i.exec(line)
+    if (match?.[1] !== undefined && match[2] !== undefined) plugged[match[1]] = match[2]
+  }
+  return plugged
+}
+
+/** What fills one slot: the user's skill when the slots file names one, else the flow's default. */
+export const fillOf = (slot: { name: string; fallback?: string }, plugged: Record<string, string>) => {
+  const mine = plugged[slot.name]
+  return mine ? { skill: mine, isPlugged: true } : { skill: slot.fallback, isPlugged: false }
 }
 
 /** The skill's `summary:` line, or else the first sentence of its description. */

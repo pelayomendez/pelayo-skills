@@ -141,7 +141,7 @@ next      BUG-124 …</pre>
 - browser-check: my-smoke-skill</pre>
 
   <h2>The yatsude panel</h2>
-  <p>An optional pane beside the chat: every flow in your skills folder, yours included, as a chain of its steps with its stops counted, and your units with a filter. Click a name to put it in the prompt; <strong>edit</strong> and <strong>+ new flow</strong> open <code>/new-flow</code>. Hover a unit and it lights up in every flow that uses it.</p>
+  <p>An optional pane beside the chat: every flow in your skills folder, yours included, as a chain of its steps with a ⏸ where it stops for you, and your units with a filter. Click a name to put it in the prompt; <strong>edit</strong> and <strong>+ new flow</strong> open <code>/new-flow</code>. Hover a unit and it lights up in every flow that uses it.</p>
 <pre><span style="display:inline-block;line-height:1.05;vertical-align:middle" class="accent">   ▄▄█████▄▄
   ██▀▀▀▀▀▀▀██▄▄
   █  ▐█ ▐█  █ ▀▀
@@ -151,10 +151,10 @@ next      BUG-124 …</pre>
 <span class="accent">[+ new flow]</span>  ↻</span>
 
 <strong>Flows</strong>
-<strong>hotfix</strong>  <span class="teal">yours</span>  <span class="amber">⏸ 1 stop</span>  <span class="mute">edit</span>
+<strong>hotfix</strong>  <span class="teal">yours</span>  <span class="mute">edit</span>
 <span class="mute">  One urgent bug, report to MR</span>
   verify-claim <span class="accent">→</span> delegate <span class="accent">→</span> review-change <span class="accent">→</span> ui-check <span class="amber">⏸</span>
-<strong>support</strong>  <span class="amber">⏸ 2 stops</span>  <span class="mute">edit</span>
+<strong>support</strong>  <span class="mute">edit</span>
 <span class="mute">  Takes bugs from report to released</span>
   qualify <span class="amber">⏸</span> <span class="accent">→</span> verify-claim <span class="accent">→</span> ticket-pick <span class="accent">→</span> delegate …
 <span class="mute">  also uses:</span> charter · tracker-move · handoff
