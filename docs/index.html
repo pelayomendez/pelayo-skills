@@ -39,6 +39,132 @@
   </style>
 </head>
 <body>
+<canvas id="yz-grid" aria-hidden="true"></canvas>
+<button id="yz-motion" type="button" aria-pressed="false">❚❚ pause motion</button>
+<style>
+  body { background: #0d0b16; }
+  /* The scene lives behind the header only and fades out under it; the text below sits on plain ink. */
+  #yz-grid { position: absolute; top: 0; left: 0; width: 100%; height: 760px; z-index: 0; pointer-events: none; display: block; -webkit-mask-image: linear-gradient(#000 72%, transparent); mask-image: linear-gradient(#000 72%, transparent); }
+  header { padding: 40px 0 70px; }
+  header img { position: relative; }
+  #yz-grid.fallback { background:
+      linear-gradient(#0d0b16 0, #2a1240 58%, transparent 58%),
+      repeating-linear-gradient(90deg, rgba(155,107,223,.45) 0 1px, transparent 1px 64px),
+      repeating-linear-gradient(0deg, rgba(155,107,223,.45) 0 1px, transparent 1px 32px), #0d0b16; }
+  main { position: relative; z-index: 1; max-width: 860px; }
+  header h1 { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; text-transform: uppercase; letter-spacing: 6px; text-shadow: 0 0 12px rgba(155,107,223,.9), 0 0 2px #fff; }
+  header .tag { color: #FFF4E0; text-shadow: 0 0 6px #0d0b16, 0 0 14px #0d0b16; }
+  header a:not(.primary), header .button:not(.primary) { background: rgba(13,11,22,.85); color: #FFF4E0; }
+  .panel { position: relative; margin-top: 40px; padding: 6px 26px 26px; background: #161324; border: 1px solid rgba(155,107,223,.35); border-radius: 3px; }
+  .panel::before, .panel::after { content: ""; position: absolute; width: 18px; height: 18px; border: 2px solid var(--accent); }
+  .panel::before { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
+  .panel::after { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
+  .label { font: 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 3px; text-transform: uppercase; color: #2EC4B6; margin: 18px 0 0; }
+  .panel h2 { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .5px; text-shadow: 0 0 8px rgba(155,107,223,.6); }
+  .carts { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+  .cart { display: flex; flex-direction: column; gap: 4px; padding: 10px 12px; background: rgba(13,11,22,.9); border: 1px solid #3a2f55; border-left: 3px solid var(--accent); border-radius: 3px; }
+  .cart b { font: 600 14px/1.3 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--accent); }
+  .cart span { font-size: 15px; line-height: 1.4; }
+  .cart em { font-style: normal; display: flex; flex-wrap: wrap; gap: 4px; }
+  .cart i { font: 11px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; font-style: normal; padding: 0 6px; border: 1px solid #3a2f55; border-radius: 2px; color: #a9a6b8; }
+  .cart i.risky { color: #F2A541; border-color: rgba(242,165,65,.5); }
+  .flows { display: flex; flex-direction: column; gap: 12px; }
+  .flow { padding: 10px 14px; background: rgba(13,11,22,.9); border: 1px solid #3a2f55; border-radius: 3px; }
+  .flow b { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--accent); }
+  .flow code { font-size: 13.5px; line-height: 1.9; white-space: normal; }
+  .panel pre { background: rgba(10,9,18,.92); }
+  #yz-motion { position: fixed; right: 14px; bottom: 14px; z-index: 2; font: 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 1px; color: #FFF4E0; background: rgba(22,19,36,.9); border: 1px solid var(--accent); border-radius: 3px; padding: 8px 10px; cursor: pointer; }
+  #yz-motion:focus-visible { outline: 2px solid #2EC4B6; outline-offset: 2px; }
+</style>
+<script>
+(() => {
+  const grid = document.getElementById('yz-grid')
+  const button = document.getElementById('yz-motion')
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)')
+  let paused = reduce.matches
+  let t0 = performance.now(), frozen = 0
+  const dpr = () => Math.min(devicePixelRatio || 1, 1.5)
+
+  // The sky, the sun and the infinite grid: one fragment shader on a full-screen triangle.
+  const gl = grid.getContext('webgl2', { antialias: false, alpha: false })
+  let draw = () => {}
+  if (!gl) grid.classList.add('fallback')
+  else {
+    const vs = `#version 300 es
+      in vec2 p; void main() { gl_Position = vec4(p, 0.0, 1.0); }`
+    const fs = `#version 300 es
+      precision highp float;
+      uniform vec2 r; uniform float t; uniform float hz; out vec4 o;
+      void main() {
+        vec2 uv = gl_FragCoord.xy / r;
+        vec3 ink = vec3(0.051, 0.043, 0.086), vio = vec3(0.608, 0.420, 0.875), pink = vec3(0.95, 0.45, 0.75);
+        vec3 c;
+        if (uv.y > hz) {
+          float h = (uv.y - hz) / (1.0 - hz);
+          c = mix(vec3(0.17, 0.07, 0.25), ink, pow(h, 0.55));
+          vec2 q = vec2((uv.x - 0.5) * r.x / r.y, uv.y - hz - 0.2);
+          float d = length(q);
+          float sun = smoothstep(0.36, 0.355, d);
+          if (q.y < 0.08) { float k = fract(q.y * 16.0 + t * 0.12); sun *= step(0.15 + (0.08 - q.y) * 2.2, k); }
+          c = mix(c, mix(pink, vio, clamp(0.5 - q.y * 3.0, 0.0, 1.0)), sun * 0.9);
+          c += vio * 0.30 * exp(-max(d - 0.35, 0.0) * 6.0);
+        } else {
+          float y = hz - uv.y;
+          float z = 0.32 / max(y, 0.0008);
+          vec2 g = vec2((uv.x - 0.5) * z * 2.4, z + t * 0.55);
+          vec2 w = fwidth(g) * 1.2;
+          vec2 l = abs(fract(g - 0.5) - 0.5) / max(w, vec2(1e-4));
+          float line = 1.0 - min(min(l.x, l.y), 1.0);
+          c = mix(vec3(0.12, 0.05, 0.18), ink, clamp(y / hz * 1.6, 0.0, 1.0));
+          c += vio * line * exp(-z * 0.09) * 1.25;
+          c += vio * 0.35 * exp(-y * 28.0);
+        }
+        o = vec4(c, 1.0);
+      }`
+    const sh = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s }
+    const prog = gl.createProgram()
+    gl.attachShader(prog, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(prog, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(prog)
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) grid.classList.add('fallback')
+    else {
+      gl.useProgram(prog)
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer())
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
+      const at = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(at); gl.vertexAttribPointer(at, 2, gl.FLOAT, false, 0, 0)
+      const ur = gl.getUniformLocation(prog, 'r'), ut = gl.getUniformLocation(prog, 't'), uh = gl.getUniformLocation(prog, 'hz')
+      draw = time => { gl.viewport(0, 0, grid.width, grid.height); gl.uniform2f(ur, grid.width, grid.height); gl.uniform1f(ut, time); gl.uniform1f(uh, 0.22); gl.drawArrays(gl.TRIANGLES, 0, 3) }
+    }
+  }
+
+  function size() {
+    const header = document.querySelector('header')
+    if (header) { const h = Math.round(header.getBoundingClientRect().bottom + scrollY + 60); grid.style.height = h + 'px' }
+    grid.width = Math.round(grid.clientWidth * dpr()); grid.height = Math.round(grid.clientHeight * dpr())
+    frame(performance.now(), true)
+  }
+  function frame(now, still) {
+    const time = paused ? frozen : (now - t0) / 1000
+    draw(time)
+  }
+  function loop(now) {
+    if (!paused && !document.hidden && !(scrollY > grid.clientHeight)) frame(now, false)
+    requestAnimationFrame(loop)
+  }
+  function setPaused(value) {
+    if (value) frozen = (performance.now() - t0) / 1000
+    else t0 = performance.now() - frozen * 1000
+    paused = value
+    button.textContent = paused ? '▶ play motion' : '❚❚ pause motion'
+    button.setAttribute('aria-pressed', String(paused))
+    if (paused) frame(performance.now(), true)
+  }
+  button.addEventListener('click', () => setPaused(!paused))
+  reduce.addEventListener('change', e => setPaused(e.matches))
+  addEventListener('resize', size)
+  const start = () => { size(); setPaused(paused); requestAnimationFrame(loop) }
+  if (document.readyState === 'loading') addEventListener('DOMContentLoaded', start)
+  else start()
+})()
+</script>
 <main>
   <header>
     <img src="sticker.png" alt="yatsude mascot: a ninja octopus">
@@ -47,25 +173,65 @@
     <p class="cta"><a class="primary" href="#install">Install</a><a href="https://github.com/pelayomendez/yatsude">GitHub</a></p>
   </header>
 
+<section class="panel" id="intro">
+  <p class="label">01 · intro</p>
+
   <p>A composable framework for AI-driven everyday work. <strong>Skills</strong> each do one job. <strong>Flows</strong> chain them into the loops you run every day. And when your loop isn't here, you <strong>write your own flow</strong>: one markdown file, no code.</p>
   <p class="mute">Claude Code plugin · MIT · works with your tracker (Jira or similar) and forge (GitLab or GitHub)</p>
 
-  <h2>Skills → flows → your flows</h2>
+  <h2>Units → flows → your flows</h2>
   <table>
-    <tr><td class="accent">Skills</td><td><strong>One job each.</strong> Check a claim with a fresh agent, review one MR, hand work to a worker, watch a pipeline, check a fix in a browser. They work alone too.</td></tr>
+    <tr><td class="accent">Units</td><td><strong>One job each.</strong> Check a claim with a fresh agent, review one MR, hand work to a worker, watch a pipeline, check a fix in a browser. They work alone too.</td></tr>
     <tr><td class="accent">Flows</td><td><strong>A daily loop, as a command.</strong> A flow only sets the order of its skills, where it stops for you, and what happens when a step fails.</td></tr>
     <tr><td class="accent">Your flows</td><td><strong>Your loop, your file.</strong> List the skills, write the steps, mark the stops. Or let <code>/new-flow</code> write it with you.</td></tr>
   </table>
 
+</section>
+
+<section class="panel" id="units">
+  <p class="label">02 · units</p>
+  <h2>Units: one job each</h2>
+  <p>The building blocks. The agent reaches for each on its own, inside a flow or outside one. Every unit declares what it does beyond reading; the ones in <span class="amber">amber</span> wait on a stop or on your charter.</p>
+  <div class="carts">
+    <div class="cart"><b>verify-claim</b><span>Checks a claim with a fresh agent</span><em><i class="">spawn</i></em></div>
+    <div class="cart"><b>delegate</b><span>Hands work to a worker agent</span><em><i class="">spawn</i><i class="">write-files</i><i class="">commit</i></em></div>
+    <div class="cart"><b>watch</b><span>Watches a pipeline, MR or deploy</span><em><i class="">spawn</i><i class="">write-files</i></em></div>
+    <div class="cart"><b>handoff</b><span>Writes the file the next session resumes from</span><em><i class="">write-files</i></em></div>
+    <div class="cart"><b>review-change</b><span>Reviews one MR at its current head</span><em><i class="">spawn</i><i class="">write-files</i></em></div>
+    <div class="cart"><b>ui-check</b><span>Checks a fix in a controlled browser</span><em><i class="">browser</i><i class="">spawn</i><i class="">write-files</i></em></div>
+    <div class="cart"><b>qualify</b><span>Checks a bug is ready for an agent</span><em><i class="risky">tracker-write</i><i class="risky">post</i><i class="">browser</i><i class="">write-files</i></em></div>
+    <div class="cart"><b>code-check</b><span>Checks what the code says about tickets</span><em><i class="">write-files</i></em></div>
+    <div class="cart"><b>ticket-pick</b><span>Takes a ready ticket into work</span><em><i class="risky">tracker-write</i></em></div>
+    <div class="cart"><b>tracker-move</b><span>Moves an item on a status board</span><em><i class="risky">tracker-write</i></em></div>
+    <div class="cart"><b>snapshot-backlog</b><span>Reads a backlog into one file</span><em><i class="">write-files</i></em></div>
+    <div class="cart"><b>prune-backlog</b><span>Proposes tickets to close, with evidence</span><em><i class="">write-files</i></em></div>
+    <div class="cart"><b>order-backlog</b><span>Ranks tickets by value and blockers</span><em><i class="">write-files</i></em></div>
+    <div class="cart"><b>check-flow</b><span>Checks a flow file is sound</span><em><i>reads only</i></em></div>
+    <div class="cart"><b>charter</b><span>What the agent may do alone, ask, or never</span><em><i class="">write-files</i></em></div>
+    <div class="cart"><b>reap-procs</b><span>Kills leftover heavy processes</span><em><i class="risky">kill</i><i class="risky">delete</i></em></div>
+    <div class="cart"><b>deps-audit</b><span>Finds dependencies a repo can drop or swap</span><em><i class="">write-files</i><i class="risky">install</i></em></div>
+    <div class="cart"><b>bundle-audit</b><span>Measures what a web app ships and why</span><em><i class="">write-files</i><i class="risky">install</i></em></div>
+  </div>
+
+  <h2>Bring your own skills</h2>
+  <p>Some steps are slots: plug in the skill you already trust, and the flow keeps its stops and checks around it. Unset slots use ours.</p>
+<pre><span class="mute"># ~/.claude/slots.md</span>
+- implement: my-tdd-skill
+- review: my-code-review-skill
+- tests: my-test-review-skill</pre>
+</section>
+
+<section class="panel" id="flows">
+  <p class="label">03 · flows</p>
   <h2>Flows that ship</h2>
-  <p>Start with these, use them as they are, or copy one as the base for yours.</p>
-  <table>
-    <tr><td class="accent">/support</td><td><strong>Bugs piling up in a queue.</strong> Takes each from report to released: qualify, confirm the cause with a fresh agent, fix and review with workers, check in a controlled browser, ship, check again on the test environment, close.</td></tr>
-    <tr><td class="accent">/mr-review</td><td><strong>MRs waiting for review, yours and your team's.</strong> Reviews each at its current head and stops for you on every one.</td></tr>
-    <tr><td class="accent">/backlog</td><td><strong>A backlog nobody trusts any more.</strong> Proposes what can close, with evidence, and ranks the rest by value, urgency and size (WSJF) inside the dependency graph.</td></tr>
-    <tr><td class="accent">/night-shift</td><td><strong>Tickets ready and a night ahead.</strong> One decision round before you leave, then queue → fix → verify → review → browser check → merge, and a morning report.</td></tr>
-    <tr><td class="accent">/ambient-companion</td><td><strong>A day of agents running while you do something else.</strong> Watches your work's event streams, delegates and checks, and brings you only the decisions.</td></tr>
-  </table>
+  <p>A daily loop as a command. A flow only sets the order of its units, where it <span class="amber">⏸</span> stops for you, and what happens when a step fails.</p>
+  <div class="flows">
+    <div class="flow"><b>/support</b> <span class="mute">Takes bugs from report to released</span><br><code>qualify <span class="accent">→</span> code-check <span class="amber">⏸</span> <span class="accent">→</span> verify-claim <span class="accent">→</span> ticket-pick <span class="accent">→</span> delegate <span class="amber">⏸</span> <span class="accent">→</span> ui-check <span class="amber">⏸</span> <span class="accent">→</span> watch <span class="amber">⏸</span></code></div>
+    <div class="flow"><b>/mr-review</b> <span class="mute">Reviews open MRs; you decide on each</span><br><code>review-change <span class="accent">→</span> verify-claim <span class="amber">⏸</span> <span class="accent">→</span> delegate <span class="accent">→</span> ui-check</code></div>
+    <div class="flow"><b>/backlog</b> <span class="mute">Cleans and orders a backlog</span><br><code>snapshot-backlog <span class="accent">→</span> code-check <span class="accent">→</span> prune-backlog <span class="accent">→</span> verify-claim <span class="amber">⏸</span> <span class="accent">→</span> order-backlog <span class="amber">⏸</span></code></div>
+    <div class="flow"><b>/tune-repo</b> <span class="mute">Audits a repo overnight into one report</span><br><code><span class="amber">⏸</span> charter <span class="accent">→</span> reap-procs <span class="accent">→</span> delegate <span class="accent">→</span> verify-claim <span class="accent">→</span> handoff <span class="amber">⏸</span></code></div>
+    <div class="flow"><b>/night-shift</b> <span class="mute">Works tickets while you are away</span><br><code><span class="amber">⏸</span> order-backlog <span class="accent">→</span> reap-procs <span class="accent">→</span> delegate <span class="accent">→</span> review-change <span class="accent">→</span> ui-check <span class="accent">→</span> verify-claim</code></div>
+  </div>
 
   <h2>Write your own flow</h2>
   <p>Type <code>/new-flow</code> and describe a loop you run by hand. It builds the flow with you and writes the file.</p>
@@ -103,42 +269,8 @@ Steps, in order:
 5. <span class="amber">Stop:</span> show the MR, ask before merging.</pre>
   <p>Every skill below is a building block. The flows that ship are worked examples: open <a href="https://github.com/pelayomendez/yatsude/blob/main/skills/flows/support/SKILL.md">/support</a> to see a full one, failures and all.</p>
 
-  <h2>A run, start to finish</h2>
-  <p class="mute">/support, illustrative and shortened. Amber lines are where it stops for you.</p>
-<pre><span class="accent">&gt; /support ~/.claude/flows/shop.md</span>
-qualify   7 bugs read · 3 ready for an agent · 4 need an answer
-<span class="amber">ask</span>       3 ready, smallest first. Start with BUG-121?  › y
-verify    a fresh agent confirms: cart.ts:88 drops the coupon
-pick      BUG-121 → In Progress, assigned to you, on the board
-fix       worker, test-first: 2 commits
-review    a fresh reviewer: ready · guard tests pass
-check     local browser check: 3/3 steps pass
-ship      MR !412 opened · pipeline success on 9f3c2e1
-<span class="amber">ask</span>       Merge !412 at 9f3c2e1?  › y
-release   on the test environment · browser check: 3/3 pass
-close     BUG-121 → Done · board → Released
-next      BUG-124 …</pre>
-
-  <h2>Skills</h2>
-  <p>The building blocks. The agent also reaches for each on its own, inside a flow or outside one.</p>
-  <table>
-    <tr><td>verify-claim</td><td>A fresh agent checks another agent's claim, seeing only the claim and its evidence.</td></tr>
-    <tr><td>delegate<br>watch<br>handoff</td><td>Brief and launch a worker safely, watch a pipeline or MR until it settles, and leave a handoff another session can resume.</td></tr>
-    <tr><td>review-change<br>ui-check</td><td>Review one MR at its current head, read-only; check a fix in a controlled browser, never yours.</td></tr>
-    <tr><td>qualify<br>ticket-pick<br>tracker-move</td><td>Check a bug is ready for an agent, take a ready ticket into work, and move it on the status board.</td></tr>
-    <tr><td>snapshot-backlog<br>prune-backlog<br>order-backlog</td><td>Read a backlog once, propose what can close with evidence, rank the rest inside the dependency graph.</td></tr>
-    <tr><td>check-flow</td><td>Checks a flow file before it runs: its skills exist and can be called, and every push, merge or post has a stop. Changes nothing.</td></tr>
-    <tr><td>charter</td><td>Your permissions file: what the agent may do alone, must ask first, or never, in your own words. Every flow checks it before a merge or a post.</td></tr>
-    <tr><td>reap-procs<br>tidy</td><td>Find what is eating the machine after agent sessions; a weekly and monthly tune-up of your agent setup.</td></tr>
-    <tr><td>high-level-<br>communication</td><td>Always on. Report like a senior engineer to another: why, what changed, impact, trade-offs, risks, next steps.</td></tr>
-  </table>
-
-  <h2>Bring your own skills</h2>
-  <p>Some steps are slots: plug in the skill you already trust and the flow keeps its stops and checks around it. Unset slots use ours.</p>
-<pre><span class="mute"># ~/.claude/slots.md</span>
-- implement: my-tdd-skill
-- review: my-code-review-skill
-- browser-check: my-smoke-skill</pre>
+  <h2>Checked before it runs</h2>
+  <p>Each flow ships with a <code>flow.yaml</code> beside its text: its units, its slots, its stops and what each one guards. CI works out every effect a flow can have from its units, and fails if a push, merge, post or ticket change has neither a stop before it nor a grant in your charter. Flows from the community come in by pull request, labelled <em>experimental</em> until reviewed, and can't lean on your charter.</p>
 
   <h2>The yatsude panel</h2>
   <p>An optional pane beside the chat: every flow in your skills folder, yours included, as a chain of its steps with a ⏸ where it stops for you, and your units with a filter. Click a name to put it in the prompt; <strong>edit</strong> and <strong>+ new flow</strong> open <code>/new-flow</code>. Hover a unit and it lights up in every flow that uses it.</p>
@@ -156,14 +288,17 @@ next      BUG-124 …</pre>
   verify-claim <span class="accent">→</span> delegate <span class="accent">→</span> review-change <span class="accent">→</span> ui-check <span class="amber">⏸</span>
 <strong>support</strong>  <span class="mute">edit</span>
 <span class="mute">  Takes bugs from report to released</span>
-  qualify <span class="amber">⏸</span> <span class="accent">→</span> verify-claim <span class="accent">→</span> ticket-pick <span class="accent">→</span> delegate …
+  qualify <span class="accent">→</span> code-check <span class="amber">⏸</span> <span class="accent">→</span> verify-claim <span class="accent">→</span> ticket-pick <span class="accent">→</span> delegate …
 <span class="mute">  also uses:</span> charter · tracker-move · handoff
 
 <span class="mute">[ filter units ]</span>  <span class="mute">▾ compact</span>
 <strong>Units</strong>
 verify-claim   <span class="mute">Checks an agent's claim with a fresh agent</span>
 review-change  <span class="mute">Reviews one MR at its current head</span></pre>
+</section>
 
+<section class="panel" id="start">
+  <p class="label">insert coin</p>
   <h2 id="install">Install</h2>
 <pre>/plugin marketplace add pelayomendez/yatsude
 /plugin install yatsude@yatsude
@@ -177,6 +312,7 @@ review-change  <span class="mute">Reviews one MR at its current head</span></pre
   <strong>How do I start?</strong> <code>/backlog &lt;epic&gt;</code> only reads. Then <code>/new-flow</code> to turn one of your own loops into a command.</p>
 
   <p class="mute">The name is Japanese: <em>yatsude</em> (八つ手), "eight hands".</p>
+</section>
 
   <footer>MIT · by <a href="https://github.com/pelayomendez">Pelayo Méndez</a></footer>
 </main>
