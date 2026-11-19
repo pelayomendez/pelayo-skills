@@ -67,7 +67,7 @@ Then, per bug:
 
 **5. Fix.** `delegate` the `implement` slot in a fresh worktree from the base branch, test-first, committing at the end. Its brief carries the ticket text, the qualify evidence and fix hint, and the load limits.
 
-**6. Review.** `delegate` a fresh reviewer that runs `review-change` (the `review` slot) over the new commits, running the guard tests, into `REVIEW-<KEY>.md`. Blocking findings go back to an implementer (step 5) with the report. Cap at three rounds; after that, stop and ask.
+**6. Review.** `delegate` a fresh reviewer that runs `review-change` (the `review` slot) over the new commits, running the guard tests, into `REVIEW-<KEY>.md`. Blocking findings go back to an implementer (step 5) with the report. Cap at three rounds; after that, **Stop and ask**.
 
 **7. Check locally.** Write `check-<KEY>.md` from the ticket's expected vs actual, then `ui-check` local. A fail goes back to step 5 with the report.
 
@@ -79,7 +79,7 @@ Then, per bug:
 
 **9. Check on the test environment.** `ui-check` against the test environment URL with the same check file.
 
-**10. Close**, under the charter: ticket to Done, `tracker-move` to Released with the version and date, then remove only the worktree and local branch this run created. One line per bug in the handoff. Telling the reporter is a post under the user's name: draft it and ask.
+**10. Close**, under the charter: ticket to Done, `tracker-move` to Released with the version and date, then remove only the worktree and local branch this run created. One line per bug in the handoff. Telling the reporter is a post under the user's name: draft it, then **Stop and ask**.
 
 **11. Report.** When the queue is empty, or the user stops it: through `handoff`, per bug its end state (released, waiting with the reason, needs you with the question, for a human), what is still open, and the questions.
 

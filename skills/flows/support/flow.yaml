@@ -39,19 +39,29 @@ effects:
 - merge
 - post
 - release
+- deploy
 - tracker-write
 stops:
 - id: pick-bugs
   after: code-check
-  guards:
-  - tracker-write
+  guards: []
   asks: which ready bug to take first
+- id: review-cap
+  after: delegate
+  guards: []
+  asks: what to do after three review rounds
 - id: merge
   after: ui-check
   guards:
   - merge
   - release
+  - deploy
   asks: merge this MR at this head
+- id: tell-reporter
+  after: watch
+  guards:
+  - post
+  asks: the exact text for the reporter
 permissions:
   charter:
   - push
@@ -59,5 +69,6 @@ permissions:
   - merge
   - post
   - release
+  - deploy
   - tracker-write
 on_failure: true

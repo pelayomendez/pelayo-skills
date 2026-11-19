@@ -29,13 +29,24 @@ effects:
 - push
 - open-mr
 - merge
+- post
 - tracker-write
-stops: []
+- install
+- deploy
+stops:
+- id: decision-round
+  after: start
+  guards: []
+  asks: tonight's push, merge, queue, package bumps and product calls
 permissions:
   charter:
   - push
   - open-mr
   - merge
+  - post
   - tracker-write
+  - install
+  - deploy
   - kill
+  - delete
 on_failure: true

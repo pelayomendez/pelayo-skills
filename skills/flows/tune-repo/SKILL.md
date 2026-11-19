@@ -47,7 +47,7 @@ Each run gets one folder, `<run>` = `<tasks>/tune/<repo>-<short sha>/`: the area
 
 ## Steps
 
-**1. Find the config and the commit.** Find the flow config that lists the repo. **None: stop** and ask the user to add the repo to one (`<tasks>` and load limits at least). Read the areas from the argument; none means all five. `git fetch` the repo (fetch only: never check out, pull or touch the user's checkout) and take the base branch's SHA at `origin`; the whole run audits that one SHA.
+**1. Find the config and the commit.** Find the flow config that lists the repo. None: **Stop and ask** the user to add the repo to one (`<tasks>` and load limits at least). Read the areas from the argument; none means all five. `git fetch` the repo (fetch only: never check out, pull or touch the user's checkout) and take the base branch's SHA at `origin`; the whole run audits that one SHA.
 
 **2. Permissions.** Run `charter` for scope `/tune-repo` on this repo: is fetching tools and running the repo's normal install inside a throwaway worktree granted? **Granted**: the briefs lift the install forbid for exactly that, naming the charter line. **Not granted**: the forbid stays; areas use only what the machine already has, and anything they couldn't run is listed as not run. The run never asks.
 

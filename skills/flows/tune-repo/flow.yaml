@@ -37,6 +37,10 @@ slots:
 effects:
 - install
 stops:
+- id: no-config
+  after: start
+  guards: []
+  asks: add the repo to a flow config
 - id: morning
   after: handoff
   guards: []
@@ -45,4 +49,5 @@ permissions:
   charter:
   - install
   - kill
+  - delete
 on_failure: true

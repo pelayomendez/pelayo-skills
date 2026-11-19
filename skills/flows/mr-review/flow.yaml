@@ -34,6 +34,7 @@ effects:
 - merge
 - post
 - release
+- deploy
 - tracker-write
 stops:
 - id: validate
@@ -43,6 +44,7 @@ stops:
   - merge
   - post
   - release
+  - deploy
   - tracker-write
   asks: fix, merge, comment or leave, per MR and head
 permissions:

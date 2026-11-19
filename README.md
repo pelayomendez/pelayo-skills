@@ -143,7 +143,8 @@ Each flow has a `flow.yaml` beside its `SKILL.md`, and each unit a `unit.yaml`. 
 
 - **Units declare their effects**: what they do beyond reading (`push`, `post`, `tracker-write`, `install`…).
 - **Flows declare their stops**, and which risky effects each one guards; the rest are left to your charter.
-- **CI works out every effect a flow can have**, its own plus its units', and fails if a risky one has neither a stop nor a charter permission, or if the manifest and the text disagree.
+- **CI works out every effect a flow can have**, its own plus its units' and its slots' units, and fails if a risky one has neither a stop before it nor a charter permission, or if the manifest and the text disagree.
+- **What the check can't see**: a skill you plug into a slot, and what a spawned worker does. Those are bound by the slot's contract and the worker brief's standing forbids, not by the manifest.
 
 Flows from outside this repo go in [`community/flows/`](./community/README.md), by pull request, labelled `experimental` until reviewed. An experimental flow can't lean on your charter: every risky effect waits on a stop.
 

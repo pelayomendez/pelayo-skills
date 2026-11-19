@@ -24,7 +24,16 @@ skill_modes = {}  # skill name -> True if user-invoked
 plugin = json.loads((repo / ".claude-plugin/plugin.json").read_text())
 registered = {(repo / p.lstrip("./")).resolve() for p in plugin.get("skills", [])}
 
-ALL_SKILLS = sorted(list(repo.glob("skills/**/SKILL.md")) + list(repo.glob("community/**/SKILL.md")))
+CORE_SKILLS = sorted(repo.glob("skills/**/SKILL.md"))
+COMMUNITY_FLOWS = sorted(repo.glob("community/flows/*/SKILL.md"))
+for stray in sorted(repo.glob("community/**/SKILL.md")):
+    if stray not in COMMUNITY_FLOWS:
+        errors.append(f"{stray.relative_to(repo)}: community/ holds flows only, in community/flows/<name>/; a new unit is its own pull request into skills/")
+core_names = {p.parent.name for p in CORE_SKILLS}
+for p in COMMUNITY_FLOWS:
+    if p.parent.name in core_names:
+        errors.append(f"{p.relative_to(repo)}: name {p.parent.name!r} is already a core skill")
+ALL_SKILLS = CORE_SKILLS + COMMUNITY_FLOWS
 for skill_md in ALL_SKILLS:
     skills_checked += 1
     d = skill_md.parent
@@ -185,7 +194,10 @@ for flow_md in sorted(list(repo.glob("skills/flows/*/SKILL.md")) + list(repo.glo
         for key in ("via", "default"):
             if s.get(key) and s[key] not in skill_modes:
                 errors.append(f"{rel}: slot {s['name']!r} {key} {s[key]!r} is not a skill")
-    body = re.sub(r"^(```|~~~).*?^\1", "", text, flags=re.S | re.M)
+    # Only real prose counts as a stop: drop fenced blocks (any indent, 3+ ticks), HTML comments and inline code.
+    body = re.sub(r"^[ \t]*(`{3,}|~{3,}).*?^[ \t]*\1", "", text, flags=re.S | re.M)
+    body = re.sub(r"<!--.*?-->", "", body, flags=re.S)
+    body = re.sub(r"`[^`\n]*`", "", body)
     body = re.sub(r"^## Units\n.*?(?=^## |\Z)", "", body, flags=re.S | re.M)
     marks = len(STOP.findall(body))
     if marks != len(data["stops"]):
@@ -197,11 +209,19 @@ for flow_md in sorted(list(repo.glob("skills/flows/*/SKILL.md")) + list(repo.glo
     if "on_failure" in data and data["on_failure"] != has_failure:
         errors.append(f"{rel}: on_failure is {data['on_failure']}, SKILL.md {'has' if has_failure else 'has no'} a 'When a step fails' section")
     effects = set(data["effects"])
-    for u in steps + throughout:
+    slot_units = [s[k] for s in data.get("slots", []) for k in ("via", "default") if s.get(k)]
+    for u in steps + throughout + slot_units:
         effects |= unit_effects.get(u, set())
     covered = {e for stop in data["stops"] for e in stop["guards"]} | set(data["permissions"]["charter"])
     for e in sorted((effects & RISKY) - covered):
         errors.append(f"{rel}: risky effect {e!r} has no stop guarding it and no charter permission")
+    # A stop guards a step's effect only if it comes before that step (or at the start).
+    position = {"start": -1, **{u: i for i, u in enumerate(steps)}}
+    charter = set(data["permissions"]["charter"])
+    for i, u in enumerate(steps):
+        for e in sorted((unit_effects.get(u, set()) & RISKY) - charter):
+            if not any(e in stop["guards"] and position.get(stop["after"], 99) < i for stop in data["stops"]):
+                errors.append(f"{rel}: risky effect {e!r} of step {u!r} has no stop before it")
     if data["trust"] == "experimental" and data["permissions"]["charter"]:
         errors.append(f"{rel}: an experimental flow may not lean on the charter; guard {data['permissions']['charter']} with stops")
     if d.parent.parent.name == "community" and data["trust"] == "core":

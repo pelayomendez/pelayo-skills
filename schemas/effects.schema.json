@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://raw.githubusercontent.com/pelayomendez/yatsude/main/schemas/effects.schema.json",
   "title": "yatsude effect",
-  "description": "What a unit or a flow does outside reading. Risky effects (push, open-mr, merge, post, tracker-write, release, deploy, delete, install, kill) must each be guarded by a stop or covered by the charter.",
+  "description": "What a unit or a flow does outside reading. Risky effects (push, open-mr, merge, post, tracker-write, release, deploy, delete, install, kill, external-write) must each be guarded by a stop or covered by the charter.",
   "type": "string",
   "enum": [
     "write-files",
@@ -18,9 +18,22 @@
     "deploy",
     "delete",
     "install",
-    "kill"
+    "kill",
+    "external-write"
   ],
-  "x-risky": ["push", "open-mr", "merge", "post", "tracker-write", "release", "deploy", "delete", "install", "kill"],
+  "x-risky": [
+    "push",
+    "open-mr",
+    "merge",
+    "post",
+    "tracker-write",
+    "release",
+    "deploy",
+    "delete",
+    "install",
+    "kill",
+    "external-write"
+  ],
   "x-meaning": {
     "write-files": "writes its own files (reports, run folders, worktrees it creates and removes)",
     "spawn": "starts subagents, headless workers or scheduled checks",
@@ -35,6 +48,7 @@
     "deploy": "deploys to an environment",
     "delete": "deletes or closes something it did not create",
     "install": "installs or fetches software",
-    "kill": "stops processes"
+    "kill": "stops processes it did not start",
+    "external-write": "writes to a system the user doesn't own (another team's service, a shared environment outside the configured test project)"
   }
 }

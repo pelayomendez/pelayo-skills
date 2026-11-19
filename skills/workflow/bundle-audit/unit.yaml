@@ -2,3 +2,4 @@ schema: yatsude/unit@1
 name: bundle-audit
 effects:
 - write-files
+- install

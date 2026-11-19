@@ -56,7 +56,7 @@ Fill these in once, at the start of the decision round, and keep them in the han
 ## 1. Before the user leaves
 
 1. **Read** the newest handoff and the memory index.
-2. **Decision round.** Ask everything in one round, because once they leave you can't ask:
+2. **Stop and ask: the decision round.** Ask everything in one round, because once they leave you can't ask:
    - **Push and open MRs** tonight: yes or no, and for which repos. If no, finished tickets stay as local commits on their branch.
    - **Merge** tonight: yes or no, and for which repos. If yes, an MR merges only when CI is green on its head SHA, the independent review approves and the browser smoke passes. If no, stack commits and leave the MRs for the morning.
    - **Queue**: the ready rows of the newest `queue.md` from `order-backlog`, if there is one, plus extra tickets (follow-ups, bugs from today's smokes).

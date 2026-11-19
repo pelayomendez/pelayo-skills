@@ -2,3 +2,4 @@ schema: yatsude/unit@1
 name: reap-procs
 effects:
 - kill
+- delete

@@ -22,6 +22,8 @@ effects:
 - merge
 - post
 - release
+- tracker-write
+- delete
 stops: []
 permissions:
   charter:
@@ -30,5 +32,7 @@ permissions:
   - merge
   - post
   - release
+  - tracker-write
+  - delete
   - kill
 on_failure: true
